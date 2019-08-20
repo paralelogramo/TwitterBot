@@ -12,32 +12,33 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
       <AnchorPane layoutY="19.0" prefHeight="564.0" prefWidth="1000.0">
          <children>
             <AnchorPane layoutX="234.0" layoutY="378.0" prefHeight="120.0" prefWidth="600.0">
                <children>
                   <TextArea fx:id="msj" layoutX="94.0" layoutY="7.0" onKeyReleased="#progresoTexto" prefHeight="68.0" prefWidth="469.0" promptText="¿Qué está pasando?" />
-                  <Button layoutX="489.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#enviarMensaje" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
-                  <Button layoutX="94.0" layoutY="82.0" mnemonicParsing="false" text="Button" />
+                  <Button layoutX="489.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#sendTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
+                  <Button layoutX="94.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#upImage_Twitter" text="Subir Imagen" />
                   <RadioButton layoutX="468.0" layoutY="86.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" />
                   <ProgressIndicator fx:id="pgA" layoutX="405.0" layoutY="83.0" prefHeight="40.0" prefWidth="74.0" progress="0.0" />
                   <Circle fill="DODGERBLUE" layoutX="55.0" layoutY="41.0" radius="26.0" stroke="BLACK" strokeType="INSIDE" />
+                  <Text fx:id="notificationImage" layoutX="192.0" layoutY="99.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Imagen Subida Con Exito!" visible="false" />
                </children>
             </AnchorPane>
             <WebView layoutX="251.0" layoutY="115.0" prefHeight="226.0" prefWidth="533.0" />
             <Button layoutX="917.0" layoutY="17.0" mnemonicParsing="false" text="_" />
             <Button layoutX="955.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
-            <Button layoutX="875.0" layoutY="282.0" mnemonicParsing="false" text="Button" />
+            <Button layoutX="875.0" layoutY="282.0" mnemonicParsing="false" onMouseClicked="#deleteTwitter" text="Delete" />
             <Button layoutX="875.0" layoutY="329.0" mnemonicParsing="false" text="Button" />
             <Button layoutX="875.0" layoutY="378.0" mnemonicParsing="false" text="Button" />
             <Button layoutX="48.0" layoutY="102.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="119.0" text="Button" />
             <ListView layoutX="8.0" layoutY="150.0" prefHeight="342.0" prefWidth="200.0" />
             <ScrollBar layoutX="193.0" layoutY="152.0" orientation="VERTICAL" prefHeight="342.0" prefWidth="14.0" />
             <Text layoutX="839.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Textsssssssssssssssssss" wrappingWidth="145.13671875" />
-            <Text layoutX="847.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Tsadddddddddext" />
-            <Text layoutX="844.0" layoutY="216.0" strokeType="OUTSIDE" strokeWidth="0.0" text="sddddd@ddsdsdsd.com" wrappingWidth="155.99998784065247" />
+            <Text fx:id="user" layoutX="862.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Tsadddddddddext" />
+            <Text fx:id="email" layoutX="844.0" layoutY="216.0" strokeType="OUTSIDE" strokeWidth="0.0" text="sddddd@ddsdsdsd.com" wrappingWidth="155.99998784065247" />
             <Circle fill="DODGERBLUE" layoutX="901.0" layoutY="115.0" radius="46.0" stroke="BLACK" strokeType="INSIDE" />
             <Text layoutX="437.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Textddffffffffdffdfdf" wrappingWidth="145.13671398162842" />
          </children>
