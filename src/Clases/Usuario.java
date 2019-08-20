@@ -18,6 +18,8 @@ package Clases;
 
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -30,19 +32,28 @@ public class Usuario {
     private String nombreUsuario;    
     private String contraseña;
     private int codigo;   
+    private final Pattern pattern = Pattern.compile("^[a-zA-Z0-9]{6,9}$", Pattern.MULTILINE);
+    private Matcher matcher;
 
     public Usuario(String nombreUsuario, String contraseña) {
         this.nombreUsuario = nombreUsuario;        
         this.contraseña = contraseña;
         this.codigo = getCodigo(contraseña);
+        this.matcher = pattern.matcher("");
     }
 
     public String getNombreUsuario() {
         return nombreUsuario;
     }
 
-    public void setNombreUsuario(String nombreUsuario) {
-        this.nombreUsuario = nombreUsuario;
+    public boolean setNombreUsuario(String nombreUsuario) {
+        this.matcher = pattern.matcher(nombreUsuario);
+        if (matcher.matches()) {
+            this.nombreUsuario = matcher.group(0);
+            return true;          
+        }
+        else
+            return false;
     }    
 
     public void setContraseña(String contraseña) {
