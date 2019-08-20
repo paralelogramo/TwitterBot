@@ -23,6 +23,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ProgressIndicator;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
@@ -40,13 +42,20 @@ import twitter4j.conf.ConfigurationBuilder;
 public class V2_Controller extends ControlVentana implements Initializable {
     
     @FXML TextArea msj;
+    @FXML ProgressIndicator pgA;
     private Twitter twitter;
+    
+    public void progresoTexto(KeyEvent event){     
+        System.out.println("aaaaaaaa");
+        pgA.setProgress(msj.getText().length()/280.0);
+    }
     
     public void enviarMensaje(MouseEvent event) throws TwitterException{       
         Mensaje mensaje = new Mensaje();
         mensaje.setMensaje(msj.getText());              
         if(mensaje.verificar()){
             twitter.updateStatus(mensaje.getMensaje());
+            msj.clear();
         }
     }         
     
