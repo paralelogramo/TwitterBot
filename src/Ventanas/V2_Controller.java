@@ -45,8 +45,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML ProgressIndicator pgA;
     private Twitter twitter;
     
-    public void progresoTexto(KeyEvent event){     
-        System.out.println("aaaaaaaa");
+    public void progresoTexto(KeyEvent event){      
+        if(msj.getText().length()>20)
+            msj.setEditable(true);
         pgA.setProgress(msj.getText().length()/280.0);
     }
     

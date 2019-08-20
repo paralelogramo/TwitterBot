@@ -45,10 +45,6 @@ public class Usuario {
         this.nombreUsuario = nombreUsuario;
     }    
 
-    public int getContraseña() {
-        return contraseña.hashCode();
-    }
-
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
         this.codigo = getCodigo(contraseña);
