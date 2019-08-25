@@ -33,6 +33,8 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.text.Text;
+import javafx.scene.web.WebEngine;
+import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import twitter4j.ResponseList;
@@ -56,13 +58,18 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     @FXML TextArea msj;
     @FXML Text user;
+    @FXML Text user2;
     @FXML Text email;
     @FXML Text notificationImage;
     @FXML ProgressIndicator pgA;
     @FXML ImageView profilePhoto;
+    @FXML ImageView profilePhoto2;
+    @FXML WebView view;
+    private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
     private Twitter twitter;
+    
     
     public void progresoTexto(KeyEvent event){      
         if(msj.getText().length()>20)
@@ -70,6 +77,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         pgA.setProgress(msj.getText().length()/280.0);
     }
     
+    // METODO LISTO
     public int sendTwitter(MouseEvent event) throws TwitterException{       
         Mensaje mensaje = new Mensaje();
         mensaje.setMensaje(msj.getText());              
@@ -88,12 +96,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
         return 0;
     }
     
+    // METODO LISTO
     public void upImage_Twitter(MouseEvent event) throws TwitterException{
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Imagen");
         filech.getExtensionFilters().addAll(
                 new FileChooser.ExtensionFilter("JPG", "*.jpg"),
-                new FileChooser.ExtensionFilter("PNG", "*.png")
+                new FileChooser.ExtensionFilter("PNG", "*.png"),
+                new FileChooser.ExtensionFilter("MP4", "*.mp4")
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
@@ -101,6 +111,20 @@ public class V2_Controller extends ControlVentana implements Initializable {
         }
     }
     
+    // METODO LISTO
+    public void upGif_Twitter(MouseEvent event) throws TwitterException{
+        FileChooser filech = new FileChooser();
+        filech.setTitle("Buscar Gif");
+        filech.getExtensionFilters().addAll(
+                new FileChooser.ExtensionFilter("GIF", "*.gif")
+        );
+        imgFile = filech.showOpenDialog(stage);
+        if (imgFile != null) {
+            notificationImage.setVisible(true);
+        }
+    }
+    
+    // METODO LISTO
     public void deleteTwitter(MouseEvent event) throws TwitterException{
         System.out.println("Entro");
         ResponseList<Status> Line = twitter.getHomeTimeline();
@@ -120,14 +144,20 @@ public class V2_Controller extends ControlVentana implements Initializable {
         }
     }
     
+    
     public void followUser(MouseEvent event) throws TwitterException{
         
     }
+    
     
     public void unfollowUser(MouseEvent event) throws TwitterException{
         
     }
     
+    
+    public void costumeImageView(){
+        
+    }
 
     /**
      * Initializes the controller class.
@@ -146,17 +176,19 @@ public class V2_Controller extends ControlVentana implements Initializable {
         TwitterFactory tf = new TwitterFactory(cb.build());
         twitter = tf.getInstance();
         
+        // ****** ESTO GENERA EL WEBVIEW ******
+        WebEngine engine = view.getEngine();
+        engine.load("https://twitter.com/power_java");
+        view.setZoom(0.50);
+        // ************ HASTA ACA *********
         try {
             User newUser = twitter.showUser(twitter.getScreenName());            
-            user.setText("@"+newUser.getName());
-            /*
+            user.setText("@"+newUser.getScreenName());
+            user2.setText(newUser.getName());
+            profilePhoto.setImage(new Image(newUser.get400x400ProfileImageURL()));
+            profilePhoto2.setImage(new Image(newUser.get400x400ProfileImageURL()));
             email.setText(newUser.getEmail());
-            String urlIm = newUser.getProfileImageURL();
-            Image img = new Image(urlIm);
-            profilePhoto.setImage(img);
-
-            PENDIENTES POR PROBLEMAS CON PRIVACY POLICY
-            */
+            
         } catch (TwitterException | IllegalStateException ex) {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }

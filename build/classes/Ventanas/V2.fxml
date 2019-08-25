@@ -7,12 +7,12 @@
 <?import javafx.scene.control.ScrollBar?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
       <AnchorPane layoutY="19.0" prefHeight="564.0" prefWidth="1000.0">
          <children>
@@ -20,14 +20,15 @@
                <children>
                   <TextArea fx:id="msj" layoutX="94.0" layoutY="7.0" onKeyReleased="#progresoTexto" prefHeight="68.0" prefWidth="469.0" promptText="¿Qué está pasando?" />
                   <Button layoutX="489.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#sendTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
-                  <Button layoutX="94.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#upImage_Twitter" text="Subir Imagen" />
+                  <Button layoutX="94.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#upImage_Twitter" text="Subir Media" />
                   <RadioButton layoutX="468.0" layoutY="86.0" mnemonicParsing="false" prefHeight="0.0" prefWidth="0.0" />
                   <ProgressIndicator fx:id="pgA" layoutX="405.0" layoutY="83.0" prefHeight="40.0" prefWidth="74.0" progress="0.0" />
-                  <Circle fill="DODGERBLUE" layoutX="55.0" layoutY="41.0" radius="26.0" stroke="BLACK" strokeType="INSIDE" />
-                  <Text fx:id="notificationImage" layoutX="192.0" layoutY="99.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Imagen Subida Con Exito!" visible="false" />
+                  <Text fx:id="notificationImage" layoutX="254.0" layoutY="99.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Imagen Subida Con Exito!" visible="false" />
+                  <Button layoutX="182.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#upGif_Twitter" text="Subir Gif" />
+                  <ImageView fx:id="profilePhoto2" fitHeight="50.0" fitWidth="50.0" layoutX="26.0" layoutY="16.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
-            <WebView layoutX="251.0" layoutY="115.0" prefHeight="226.0" prefWidth="533.0" />
+            <WebView fx:id="view" layoutX="251.0" layoutY="115.0" prefHeight="252.0" prefWidth="533.0" />
             <Button layoutX="917.0" layoutY="17.0" mnemonicParsing="false" text="_" />
             <Button layoutX="955.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
             <Button layoutX="875.0" layoutY="282.0" mnemonicParsing="false" onMouseClicked="#deleteTwitter" text="Delete" />
@@ -39,8 +40,8 @@
             <Text layoutX="839.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Textsssssssssssssssssss" wrappingWidth="145.13671875" />
             <Text fx:id="user" layoutX="862.0" layoutY="193.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Tsadddddddddext" />
             <Text fx:id="email" layoutX="844.0" layoutY="216.0" strokeType="OUTSIDE" strokeWidth="0.0" text="sddddd@ddsdsdsd.com" wrappingWidth="155.99998784065247" />
-            <Circle fill="DODGERBLUE" layoutX="901.0" layoutY="115.0" radius="46.0" stroke="BLACK" strokeType="INSIDE" />
-            <Text layoutX="437.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Textddffffffffdffdfdf" wrappingWidth="145.13671398162842" />
+            <Text fx:id="user2" layoutX="437.0" layoutY="34.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Textddffffffffdffdfdf" wrappingWidth="145.13671398162842" />
+            <ImageView fx:id="profilePhoto" fitHeight="100.0" fitWidth="100.0" layoutX="851.0" layoutY="65.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
    </children>
