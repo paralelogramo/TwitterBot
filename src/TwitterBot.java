@@ -19,6 +19,8 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -39,14 +41,14 @@ public class TwitterBot extends Application {
         Parent root = FXMLLoader.load(getClass().getResource("/Ventanas/V1.fxml"));  
         Usuario user = new Usuario("user","admin");
         
-        Scene scene = new Scene(root);
+        Scene scene = new Scene(root);        
         scene.setFill(Color.TRANSPARENT);        
         stage.setScene(scene);
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png")));         
         stage.initStyle(StageStyle.TRANSPARENT);
-        stage.setOpacity(0.83);
+        //stage.setOpacity(0.83);
         stage.setResizable(false);
-        stage.centerOnScreen();            
+        stage.centerOnScreen();  
         stage.show();             
     }
 

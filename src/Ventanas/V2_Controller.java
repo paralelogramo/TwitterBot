@@ -21,6 +21,7 @@ import Clases.Mensaje;
 import java.io.File;
 import javafx.scene.control.TextArea;
 import java.net.URL;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -69,6 +70,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private File imgFile;
     private Stage stage = this.stage;
     private Twitter twitter;
+    private List<Status> lineaDeTiempo;
     
     
     public void progresoTexto(KeyEvent event){      
@@ -179,9 +181,11 @@ public class V2_Controller extends ControlVentana implements Initializable {
         // ****** ESTO GENERA EL WEBVIEW ******
         WebEngine engine = view.getEngine();
         engine.load("https://twitter.com/power_java");
-        view.setZoom(0.50);
+        view.setZoom(0.80);
         // ************ HASTA ACA *********
+        msj.setWrapText(true);
         try {
+            lineaDeTiempo = twitter.getUserTimeline();
             User newUser = twitter.showUser(twitter.getScreenName());            
             user.setText("@"+newUser.getScreenName());
             user2.setText(newUser.getName());
