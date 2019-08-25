@@ -27,7 +27,10 @@ import javafx.scene.layout.AnchorPane;
 import Clases.ControlVentana;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.effect.BlurType;
+import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -66,7 +69,7 @@ public class V1_Control extends ControlVentana implements Initializable {
         stage.setOpacity(1);         
         AnchorPane juegoAp = loader.load();        
         Scene scene = new Scene(juegoAp);     
-        stage.setOpacity(0.95);
+        //stage.setOpacity(0.95);
         stage.setScene(scene);
         stage.initOwner(this.ap.getScene().getWindow());            
         stage.setResizable(false);
@@ -79,7 +82,7 @@ public class V1_Control extends ControlVentana implements Initializable {
         
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {
-         this.arrastrarVentana(this.ap);
+    public void initialize(URL url, ResourceBundle rb) {                
+        this.arrastrarVentana(this.ap);
     }    
 }
