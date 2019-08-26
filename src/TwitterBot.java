@@ -1,19 +1,19 @@
 /*
- * Copyright (C) 2019 TwitterProyectCorp.
- *
- * This program is free software: you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation, either version 3 of the License, or
- * (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
- */
+Copyright(C) 2019 TwitterProyectoCorp.
+Este programa es de sofware libre: puede redistribuirlo y/o modificarlo bajo los
+términos de la Licencia Públic General de GNU publicada por Free Sofware Foundation,
+ya sea la versión 3 de la licencia o (a su elección) cualquier version anterior.
+**
+Este programa se distribuye con la esperanza de que sea útil, pero SIN NINGUNA
+GARANTÍA; sin siquiera la garantía implícita de COMERCIABILIDAD O APTITUD PARA
+UN PROPÓSITO EN PARTICULAR. Ver la Licencia Pública genenral GNU para mas
+detaller.
+**
+Debería haber resivido una copia de la Licencia Pública General de GNU junto con
+este programa. Si no, vea <http://www.gnu.org/licenses/>.
+*/
+
+
 import Clases.Usuario;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
