@@ -28,6 +28,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -66,6 +67,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML ImageView profilePhoto;
     @FXML ImageView profilePhoto2;
     @FXML WebView view;
+    @FXML ListView listaTiempo;
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
@@ -130,9 +132,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
     public void deleteTwitter(MouseEvent event) throws TwitterException{
         System.out.println("Entro");
         ResponseList<Status> Line = twitter.getHomeTimeline();
-        for (Status status : Line) {
+        Line.forEach((status) -> {
             System.out.println("ID: " + status.getId() + " - " + status.getText());
-        }
+        });
         System.out.print("Id del status a eliminar: ");
         Scanner sc = new Scanner(System.in);
         
@@ -180,12 +182,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
         
         // ****** ESTO GENERA EL WEBVIEW ******
         WebEngine engine = view.getEngine();
+        //engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
         engine.load("https://twitter.com/power_java");
+        view.setContextMenuEnabled(false);      
         view.setZoom(0.80);
         // ************ HASTA ACA *********
         msj.setWrapText(true);
         try {
-            lineaDeTiempo = twitter.getUserTimeline();
+            lineaDeTiempo = twitter.getUserTimeline();            
             User newUser = twitter.showUser(twitter.getScreenName());            
             user.setText("@"+newUser.getScreenName());
             user2.setText(newUser.getName());
