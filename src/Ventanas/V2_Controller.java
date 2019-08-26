@@ -19,6 +19,7 @@ package Ventanas;
 import Clases.ControlVentana;
 import Clases.Mensaje;
 import java.io.File;
+import java.io.IOException;
 import javafx.scene.control.TextArea;
 import java.net.URL;
 import java.util.List;
@@ -27,18 +28,22 @@ import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import twitter4j.ResponseList;
 import twitter4j.Status;
 import twitter4j.StatusUpdate;
@@ -58,6 +63,7 @@ import twitter4j.conf.ConfigurationBuilder;
  */
 public class V2_Controller extends ControlVentana implements Initializable {
     
+    @FXML AnchorPane ap;
     @FXML TextArea msj;
     @FXML Text user;
     @FXML Text user2;
@@ -182,7 +188,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         
         // ****** ESTO GENERA EL WEBVIEW ******
         WebEngine engine = view.getEngine();
-        //engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
+        engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
         engine.load("https://twitter.com/power_java");
         view.setContextMenuEnabled(false);      
         view.setZoom(0.80);
@@ -200,5 +206,26 @@ public class V2_Controller extends ControlVentana implements Initializable {
         } catch (TwitterException | IllegalStateException ex) {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }        
+    }  
+    
+    @FXML
+    public void cerrarSesion(MouseEvent event) throws IOException{
+        FXMLLoader loader = new FXMLLoader();
+        URL location = V1_Control.class.getResource("V1.fxml");
+        loader.setLocation(location);
+        Stage v1 = new Stage();
+        v1.setTitle(" TwitterBot_ | Inicio");
+        v1.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png"))); 
+        v1.setOpacity(1);         
+        AnchorPane inicioSesion = loader.load();        
+        Scene scene = new Scene(inicioSesion);     
+        //stage.setOpacity(0.95);
+        v1.setScene(scene);
+        v1.initOwner(this.ap.getScene().getWindow());            
+        v1.setResizable(false);
+        ((Stage)this.ap.getScene().getWindow()).close();     
+        v1.initStyle(StageStyle.TRANSPARENT);
+        v1.centerOnScreen();
+        v1.show();  
+    }
 }

@@ -26,6 +26,8 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import Clases.ControlVentana;
 import Clases.Usuario;
+import java.awt.Toolkit;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.fxml.FXMLLoader;
@@ -51,7 +53,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     @FXML private PasswordField clave;
     private final Pattern pattern = Pattern.compile("^[a-zA-Z0-9]{6,9}$", Pattern.MULTILINE);
     private Matcher matcher;
-    private Usuario administrador = new Usuario("user","admin");
+    private final ArrayList<Usuario> usuarios = new ArrayList<>();    
     //Shape forma = new RoundRectangle2D.Double(0, 0, ap.getBoundsInLocal().getWidth(), ap.getBoundsInLocal().getHeight(), 30, 30); 
     
     public void minimizarVentana(MouseEvent event){       
@@ -61,14 +63,17 @@ public class V1_Control extends ControlVentana implements Initializable {
     
     @FXML
     public void inicioSesion(Event evento) throws IOException{   
-        System.out.println(usuario.getText());
-        System.out.println(clave.getText());
-        if(this.ingresar(usuario.getText()+"", clave.getText()+"", administrador))
-            iniciarSesion();         
+        if(this.ingresar(usuario.getText(), clave.getText(), new Usuario (usuario.getText(), clave.getText())))
+            iniciarSesion();  
+        else{
+            Toolkit.getDefaultToolkit().beep();
+            this.popUp("Error", "Nombre de usuario y contraseña invalida");
+            
+        }
     }
     
-    private boolean ingresar(String usuario,String clave,Usuario usuarioRemoto){
-        return usuarioRemoto.contraseñaValida(clave);
+    private boolean ingresar(String usuario,String clave,Usuario usuarioRemoto){        
+        return usuarios.contains(usuarioRemoto) && usuarioRemoto.contraseñaValida(clave);
     }
     @FXML
     private void iniciarSesion() throws IOException{
@@ -79,8 +84,8 @@ public class V1_Control extends ControlVentana implements Initializable {
         stage.setTitle(" TwitterBot_ | Panel de Control");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png"))); 
         stage.setOpacity(1);         
-        AnchorPane juegoAp = loader.load();        
-        Scene scene = new Scene(juegoAp);     
+        AnchorPane panelControl = loader.load();        
+        Scene scene = new Scene(panelControl);     
         //stage.setOpacity(0.95);
         stage.setScene(scene);
         stage.initOwner(this.ap.getScene().getWindow());            
@@ -93,7 +98,8 @@ public class V1_Control extends ControlVentana implements Initializable {
         
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {                
+    public void initialize(URL url, ResourceBundle rb) {      
+        usuarios.add(new Usuario("user","admin"));
         this.arrastrarVentana(this.ap);
     }    
 }
