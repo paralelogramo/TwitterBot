@@ -62,19 +62,34 @@ public class V1_Control extends ControlVentana implements Initializable {
     }    
     
     @FXML
-    public void inicioSesion(Event evento) throws IOException{   
+    public void inicioSesion(Event evento) throws IOException{ 
+        usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
+        clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
         if(this.ingresar(usuario.getText(), clave.getText(), new Usuario (usuario.getText(), clave.getText())))
             iniciarSesion();  
         else{
             Toolkit.getDefaultToolkit().beep();
             this.popUp("Error", "Nombre de usuario y contraseña invalida");
-            
+            clave.clear();
         }
+    }
+    
+    @FXML
+    public void efectoUsuario(MouseEvent event){
+        usuario.setStyle("-fx-text-fill: black; -fx-background-color: rgba(0,0,0,0.1);");
+        clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
+    }
+    
+    @FXML
+    public void efectoClave(MouseEvent event){
+        clave.setStyle("-fx-text-fill: black; -fx-background-color: rgba(0,0,0,0.1);");
+        usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
     }
     
     private boolean ingresar(String usuario,String clave,Usuario usuarioRemoto){        
         return usuarios.contains(usuarioRemoto) && usuarioRemoto.contraseñaValida(clave);
     }
+    
     @FXML
     private void iniciarSesion() throws IOException{
         FXMLLoader loader = new FXMLLoader();
