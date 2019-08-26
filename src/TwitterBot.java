@@ -19,8 +19,6 @@ import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
@@ -38,9 +36,7 @@ public class TwitterBot extends Application {
     
     @Override
     public void start(Stage stage) throws Exception {       
-        Parent root = FXMLLoader.load(getClass().getResource("/Ventanas/V1.fxml"));  
-        Usuario user = new Usuario("user","admin");
-        
+        Parent root = FXMLLoader.load(getClass().getResource("/Ventanas/V1.fxml"));       
         Scene scene = new Scene(root);        
         scene.setFill(Color.TRANSPARENT);        
         stage.setScene(scene);

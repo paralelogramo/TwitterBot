@@ -30,15 +30,15 @@ import java.util.regex.Pattern;
  */
 public class Usuario {
     private String nombreUsuario;    
-    private String contraseña;
+    private String clave;
     private int codigo;   
     private final Pattern pattern = Pattern.compile("^[a-zA-Z0-9]{6,9}$", Pattern.MULTILINE);
-    private Matcher matcher;
+    private Matcher matcher;    
 
-    public Usuario(String nombreUsuario, String contraseña) {
+    public Usuario(String nombreUsuario, String clave) {
         this.nombreUsuario = nombreUsuario;        
-        this.contraseña = contraseña;
-        this.codigo = getCodigo(contraseña);
+        this.clave = clave;
+        this.codigo = getCodigo(clave);
         this.matcher = pattern.matcher("");
     }
 
@@ -56,9 +56,9 @@ public class Usuario {
             return false;
     }    
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
-        this.codigo = getCodigo(contraseña);
+    public void setClave(String clave) {
+        this.clave = clave;
+        this.codigo = getCodigo(clave);
     }   
     
     private int getCodigo(String aux){

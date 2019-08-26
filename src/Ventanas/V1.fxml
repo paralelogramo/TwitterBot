@@ -21,11 +21,11 @@
                   <Font size="47.0" />
                </font>
             </Text>
-            <TextField layoutX="31.0" layoutY="185.0" opacity="0.5" prefHeight="25.0" prefWidth="243.0" promptText="nombre usuario" style="-fx-background-color: rgba(0,0,0,1);">
+            <TextField fx:id="usuario" layoutX="31.0" layoutY="185.0" opacity="0.5" prefHeight="25.0" prefWidth="243.0" promptText="nombre usuario" style="-fx-background-color: rgba(0,0,0,1);">
                <effect>
                   <InnerShadow />
                </effect></TextField>
-            <PasswordField layoutX="31.0" layoutY="230.0" opacity="0.5" prefHeight="25.0" prefWidth="243.0" promptText="contraseña" style="-fx-background-color: rgba(0,0,0,1);">
+            <PasswordField fx:id="clave" layoutX="31.0" layoutY="230.0" opacity="0.5" prefHeight="25.0" prefWidth="243.0" promptText="contraseña" style="-fx-background-color: rgba(0,0,0,1);">
                <effect>
                   <InnerShadow />
                </effect></PasswordField>

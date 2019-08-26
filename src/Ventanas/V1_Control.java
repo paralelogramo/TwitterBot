@@ -25,12 +25,14 @@ import javafx.fxml.Initializable;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import Clases.ControlVentana;
+import Clases.Usuario;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.effect.BlurType;
-import javafx.scene.effect.DropShadow;
+import javafx.scene.control.PasswordField;
+import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
-import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -45,6 +47,11 @@ import javafx.stage.StageStyle;
 public class V1_Control extends ControlVentana implements Initializable {
     
     @FXML private AnchorPane ap;
+    @FXML private TextField usuario;
+    @FXML private PasswordField clave;
+    private final Pattern pattern = Pattern.compile("^[a-zA-Z0-9]{6,9}$", Pattern.MULTILINE);
+    private Matcher matcher;
+    private Usuario administrador = new Usuario("user","admin");
     //Shape forma = new RoundRectangle2D.Double(0, 0, ap.getBoundsInLocal().getWidth(), ap.getBoundsInLocal().getHeight(), 30, 30); 
     
     public void minimizarVentana(MouseEvent event){       
@@ -53,11 +60,16 @@ public class V1_Control extends ControlVentana implements Initializable {
     }    
     
     @FXML
-    public void inicioSesion(Event evento) throws IOException{        
-        iniciarSesion();        
+    public void inicioSesion(Event evento) throws IOException{   
+        System.out.println(usuario.getText());
+        System.out.println(clave.getText());
+        if(this.ingresar(usuario.getText()+"", clave.getText()+"", administrador))
+            iniciarSesion();         
     }
     
-    
+    private boolean ingresar(String usuario,String clave,Usuario usuarioRemoto){
+        return usuarioRemoto.contraseñaValida(clave);
+    }
     @FXML
     private void iniciarSesion() throws IOException{
         FXMLLoader loader = new FXMLLoader();
@@ -76,8 +88,7 @@ public class V1_Control extends ControlVentana implements Initializable {
         ((Stage)this.ap.getScene().getWindow()).close();     
         stage.initStyle(StageStyle.TRANSPARENT);
         stage.centerOnScreen();
-        stage.show();
-        
+        stage.show();       
     }
         
     
