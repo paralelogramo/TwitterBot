@@ -63,14 +63,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     @FXML AnchorPane ap;
     @FXML TextArea msj;
-    @FXML Text user;
-    @FXML Text user2;
-    @FXML Text email;
-    @FXML Text notificationImage;
+    @FXML Text usuario;
+    @FXML Text usuario2;
+    @FXML Text correo;
+    @FXML Text notificacionImagen;
     @FXML ProgressIndicator pgA;
-    @FXML ImageView profilePhoto;
-    @FXML ImageView profilePhoto2;
-    @FXML WebView view;
+    @FXML ImageView imagenPerfil;
+    @FXML ImageView imagenPerfil2;
+    @FXML WebView vista;
     @FXML ListView listaTiempo;
     private Image profilePhotoImage;
     private File imgFile;
@@ -86,26 +86,26 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     // METODO LISTO
-    public int sendTwitter(MouseEvent event) throws TwitterException{       
+    public int enviarTwitter(MouseEvent event) throws TwitterException{       
         Mensaje mensaje = new Mensaje();
         mensaje.setMensaje(msj.getText());              
         StatusUpdate status = new StatusUpdate(mensaje.getMensaje());
         if (imgFile != null) {
             status.setMedia(imgFile);
             twitter.updateStatus(status);
-            notificationImage.setVisible(false);
+            notificacionImagen.setVisible(false);
             return 0;
         }
         if(mensaje.verificar() && imgFile == null){
             twitter.updateStatus(status);
             msj.clear();
-            notificationImage.setVisible(false);
+            notificacionImagen.setVisible(false);
         }
         return 0;
     }
     
     // METODO LISTO
-    public void upImage_Twitter(MouseEvent event) throws TwitterException{
+    public void subirImagen_Twitter(MouseEvent event) throws TwitterException{
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Imagen");
         filech.getExtensionFilters().addAll(
@@ -115,12 +115,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
-            notificationImage.setVisible(true);
+            notificacionImagen.setVisible(true);
         }
     }
     
     // METODO LISTO
-    public void upGif_Twitter(MouseEvent event) throws TwitterException{
+    public void subirGif_Twitter(MouseEvent event) throws TwitterException{
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Gif");
         filech.getExtensionFilters().addAll(
@@ -128,12 +128,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
-            notificationImage.setVisible(true);
+            notificacionImagen.setVisible(true);
         }
     }
     
     // METODO LISTO
-    public void deleteTwitter(MouseEvent event) throws TwitterException{
+    public void eliminarTwitter(MouseEvent event) throws TwitterException{
         System.out.println("Entro");
         ResponseList<Status> Line = twitter.getHomeTimeline();
         Line.forEach((status) -> {
@@ -153,16 +153,16 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     
-    public void followUser(MouseEvent event) throws TwitterException{
+    public void seguirUsuario(MouseEvent event) throws TwitterException{
         
     }
     
     
-    public void unfollowUser(MouseEvent event) throws TwitterException{
+    public void noSeguirUsuario(MouseEvent event) throws TwitterException{
         
     }
     
-    
+    //vista protegida?
     public void costumeImageView(){
         
     }
@@ -185,21 +185,21 @@ public class V2_Controller extends ControlVentana implements Initializable {
         twitter = tf.getInstance();
         
         // ****** ESTO GENERA EL WEBVIEW ******
-        WebEngine engine = view.getEngine();
+        WebEngine engine = vista.getEngine();
         engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
         engine.load("https://twitter.com/power_java");
-        view.setContextMenuEnabled(false);      
-        view.setZoom(0.80);
+        vista.setContextMenuEnabled(false);      
+        vista.setZoom(0.80);
         // ************ HASTA ACA *********
         msj.setWrapText(true);
         try {
             lineaDeTiempo = twitter.getUserTimeline();            
             User newUser = twitter.showUser(twitter.getScreenName());            
-            user.setText("@"+newUser.getScreenName());
-            user2.setText(newUser.getName());
-            profilePhoto.setImage(new Image(newUser.get400x400ProfileImageURL()));
-            profilePhoto2.setImage(new Image(newUser.get400x400ProfileImageURL()));
-            email.setText(newUser.getEmail());
+            usuario.setText("@"+newUser.getScreenName());
+            usuario2.setText(newUser.getName());
+            imagenPerfil.setImage(new Image(newUser.get400x400ProfileImageURL()));
+            imagenPerfil2.setImage(new Image(newUser.get400x400ProfileImageURL()));
+            correo.setText(newUser.getEmail());
             
         } catch (TwitterException | IllegalStateException ex) {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);

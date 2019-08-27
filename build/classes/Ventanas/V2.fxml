@@ -30,12 +30,12 @@
                         <InnerShadow choke="0.12" color="#000000ba" height="44.72" radius="19.6375" width="35.83" />
                      </effect>
                   </TextArea>
-                  <Button layoutX="467.0" layoutY="73.0" mnemonicParsing="false" onMouseClicked="#sendTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
-                  <Button layoutX="73.0" layoutY="74.0" mnemonicParsing="false" onMouseClicked="#upImage_Twitter" text="Subir Media" />
+                  <Button layoutX="467.0" layoutY="73.0" mnemonicParsing="false" onMouseClicked="#enviarTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
+                  <Button layoutX="73.0" layoutY="74.0" mnemonicParsing="false" onMouseClicked="#subirImagen_Twitter" text="Subir Media" />
                   <ProgressIndicator fx:id="pgA" accessibleText=" " layoutX="390.0" layoutY="75.0" prefHeight="40.0" prefWidth="24.0" progress="0.0" />
-                  <Text fx:id="notificationImage" layoutX="254.0" layoutY="99.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Imagen Subida Con Exito!" visible="false" />
-                  <Button layoutX="165.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#upGif_Twitter" text="Subir Gif" />
-                  <ImageView fx:id="profilePhoto2" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
+                  <Text fx:id="notificacionImagen" layoutX="254.0" layoutY="99.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Imagen Subida Con Exito!" visible="false" />
+                  <Button layoutX="165.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" text="Subir Gif" />
+                  <ImageView fx:id="imagenPerfil2" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                      <effect>
                         <DropShadow height="32.86" radius="15.93" width="32.86" />
                      </effect></ImageView>
@@ -43,31 +43,31 @@
                   <Button layoutX="425.0" layoutY="75.0" mnemonicParsing="false" text="+" />
                </children>
             </AnchorPane>
-            <WebView fx:id="view" layoutX="260.0" layoutY="102.0" opacity="0.96" prefHeight="252.0" prefWidth="574.0">
+            <WebView fx:id="vista" layoutX="260.0" layoutY="102.0" opacity="0.96" prefHeight="252.0" prefWidth="574.0">
                <effect>
                   <DropShadow color="#000000fd" height="75.86" radius="35.575" width="68.44" />
                </effect></WebView>
             <Button layoutX="918.0" layoutY="16.0" mnemonicParsing="false" text="_" />
             <Button layoutX="954.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
-            <Button layoutX="890.0" layoutY="282.0" mnemonicParsing="false" onMouseClicked="#deleteTwitter" text="Delete" />
+            <Button layoutX="890.0" layoutY="282.0" mnemonicParsing="false" onMouseClicked="#eliminarTwitter" text="Delete" />
             <Button layoutX="889.0" layoutY="323.0" mnemonicParsing="false" text="Button" />
             <Button layoutX="889.0" layoutY="362.0" mnemonicParsing="false" text="Button" />
             <Button layoutX="22.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Button" />
             <ListView layoutX="22.0" layoutY="152.0" prefHeight="342.0" prefWidth="200.0" />
             <Text layoutX="839.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Textsssssssssssssssssss" wrappingWidth="145.13671875" />
-            <Text fx:id="user" fill="#96deffe9" layoutX="845.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Usuario" textAlignment="CENTER" wrappingWidth="145.1367437839508">
+            <Text fx:id="usuario" fill="#96deffe9" layoutX="845.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Usuario" textAlignment="CENTER" wrappingWidth="145.1367437839508">
                <font>
                   <Font size="18.0" />
                </font></Text>
-            <Text fx:id="email" fill="#5a8aa1d5" layoutX="845.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" text="usuario@correo.com" textAlignment="CENTER" wrappingWidth="145.1367437839508">
+            <Text fx:id="correo" fill="#5a8aa1d5" layoutX="845.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" text="usuario@correo.com" textAlignment="CENTER" wrappingWidth="145.1367437839508">
                <font>
                   <Font size="15.0" />
                </font></Text>
-            <Text fx:id="user2" fill="#94ddffc7" layoutX="423.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre Usuario" textAlignment="CENTER" wrappingWidth="235.13671398162842">
+            <Text fx:id="usuario2" fill="#94ddffc7" layoutX="423.0" layoutY="78.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre Usuario" textAlignment="CENTER" wrappingWidth="235.13671398162842">
                <font>
                   <Font size="32.0" />
                </font></Text>
-            <ImageView fx:id="profilePhoto" fitHeight="100.0" fitWidth="100.0" layoutX="868.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imagenPerfil" fitHeight="100.0" fitWidth="100.0" layoutX="868.0" layoutY="90.0" pickOnBounds="true" preserveRatio="true">
                <effect>
                   <DropShadow color="#000000cf" height="85.5" radius="40.95" width="80.3" />
                </effect></ImageView>
