@@ -14,7 +14,6 @@ este programa. Si no, vea <http://www.gnu.org/licenses/>.
 */
 
 
-import Clases.Usuario;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
