@@ -147,7 +147,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         for (Status status : Line) {
             if (id==status.getId()) {
                 twitter.destroyStatus(id);
-                System.out.println("status eliminado");
+                System.out.println("Twitt eliminado");
             }
         }
     }
