@@ -142,16 +142,26 @@ public class V2_Controller extends ControlVentana implements Initializable {
         System.out.println("Entro");
         ResponseList<Status> Line = twitter.getHomeTimeline();
         Line.forEach((status) -> {
-            //String idmsj = Long.toString(status.getId());
             mensajeId.add(status.getId());
             textoMsj.add(status.getText());
             //System.out.println("ID: " + status.getId() + " - " + status.getText());
         });
-       
-        /*System.out.print("Id del status a eliminar: ");
+        System.out.println("talla ids: "+mensajeId.size());
+        System.out.println("talla textos " + textoMsj.size());
+         for (int i = 0; i<mensajeId.size(); i++) {
+            System.out.println(i+"."+textoMsj.get(i));
+        }
+         
+        System.out.print("numero del twitt a eliminar: ");
         Scanner sc = new Scanner(System.in);
+        int opcion = sc.nextInt();
         
-        long id = sc.nextLong();
+        twitter.destroyStatus(mensajeId.get(opcion));
+        mensajeId.remove(opcion);
+        textoMsj.remove(opcion);
+        System.out.println("mesaje eliminado");
+        vista.getEngine().reload();
+        /* long id = sc.nextLong();
         
         for (Status status : Line) {
             if (id==status.getId()) {
@@ -163,10 +173,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         
   
         
-        for (int i = 0; i<mensajeId.size(); i++) {
-            System.out.println("id array: "+mensajeId.get(i)+", msj: "+textoMsj.get(i));
-  
-        }
+       
         
     }
     
