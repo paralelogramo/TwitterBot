@@ -26,11 +26,11 @@ import Clases.ControlVentana;
 import Clases.Usuario;
 import java.awt.Toolkit;
 import java.util.ArrayList;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.PasswordField;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
@@ -47,10 +47,14 @@ import javafx.stage.StageStyle;
 public class V1_Control extends ControlVentana implements Initializable {
     
     @FXML private AnchorPane ap;
+    @FXML private AnchorPane ingresar;
+    @FXML private AnchorPane recuperar;
+    @FXML private ProgressIndicator cargando;
     @FXML private TextField usuario;
     @FXML private PasswordField clave;
-    private final Pattern pattern = Pattern.compile("^[a-zA-Z0-9]{6,9}$", Pattern.MULTILINE);
-    private Matcher matcher;
+    private final Pattern patronUsuario = Pattern.compile("^[a-zA-Z0-9]{6,10}$", Pattern.MULTILINE);
+    private final Pattern patronCorreo = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$", Pattern.MULTILINE);
+    
     private final ArrayList<Usuario> usuarios = new ArrayList<>();    
     //Shape forma = new RoundRectangle2D.Double(0, 0, ap.getBoundsInLocal().getWidth(), ap.getBoundsInLocal().getHeight(), 30, 30); 
     
@@ -63,13 +67,14 @@ public class V1_Control extends ControlVentana implements Initializable {
     public void inicioSesion(Event evento) throws IOException{ 
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
         clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
-        if(this.ingresar(usuario.getText(), clave.getText(), new Usuario (usuario.getText(), clave.getText())))
-            iniciarSesion();  
-        else{
-            Toolkit.getDefaultToolkit().beep();
-            this.popUp("Error", "Nombre de usuario y contraseña invalida");
-            clave.clear();
-        }
+        if(this.esCompatible(usuario.getText(), clave.getText()))           
+            if(this.ingresar(usuario.getText(), clave.getText(), new Usuario (usuario.getText(), clave.getText(),"")))
+                iniciarSesion();  
+            else{
+                Toolkit.getDefaultToolkit().beep();
+                this.popUp("Error", "Nombre usuario y/o clave no valida");
+                clave.clear();
+            }
     }
     
     @FXML
@@ -84,8 +89,13 @@ public class V1_Control extends ControlVentana implements Initializable {
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
     }
     
-    private boolean ingresar(String usuario,String clave,Usuario usuarioRemoto){        
-        return usuarios.contains(usuarioRemoto) && usuarioRemoto.contraseñaValida(clave);
+    
+    private boolean esCompatible(String usuario,String clave){       
+        return patronUsuario.matcher(usuario).matches() && patronUsuario.matcher(clave).matches();
+    }
+    
+    private boolean ingresar(String usuario,String clave,Usuario usuarioRemoto){              
+        return usuarios.contains(usuarioRemoto) && usuarios.get(usuarios.indexOf(usuarioRemoto)).contraseñaValida(clave);
     }
     
     @FXML
@@ -109,10 +119,22 @@ public class V1_Control extends ControlVentana implements Initializable {
         stage.show();       
     }
         
+    @FXML
+    private void recuperarUsuario(MouseEvent event){
+        ingresar.setVisible(false);
+        recuperar.setVisible(true);
+        
+    }
+    
+    @FXML
+    private void volver(MouseEvent event){
+        ingresar.setVisible(true);
+        recuperar.setVisible(false);        
+    }
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {      
-        usuarios.add(new Usuario("user","admin"));
+        usuarios.add(new Usuario("user","admin",""));
         this.arrastrarVentana(this.ap);
     }    
 }

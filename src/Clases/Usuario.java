@@ -29,13 +29,15 @@ import java.util.regex.Pattern;
 public class Usuario {
     private String nombreUsuario;    
     private String clave;
+    private String correo;
     private int codigo;   
     private final Pattern pattern = Pattern.compile("^[a-zA-Z0-9]{6,9}$", Pattern.MULTILINE);
     private Matcher matcher;    
 
-    public Usuario(String nombreUsuario, String clave) {
+    public Usuario(String nombreUsuario, String clave,String correo) {
         this.nombreUsuario = nombreUsuario;        
         this.clave = clave;
+        this.correo = correo;
         this.codigo = getCodigo(clave);
         this.matcher = pattern.matcher("");
     }
