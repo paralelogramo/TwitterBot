@@ -51,6 +51,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.util.ArrayList;
 /**
  * 
  * FXML Controller class
@@ -78,6 +79,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Twitter twitter;
     private List<Status> lineaDeTiempo;
     
+    ArrayList<Long> mensajeId = new ArrayList();
+    ArrayList<String> textoMsj = new ArrayList();
     
     public void progresoTexto(KeyEvent event){      
         if(msj.getText().length()>20)
@@ -100,6 +103,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             twitter.updateStatus(status);
             msj.clear();
             notificacionImagen.setVisible(false);
+            vista.getEngine().reload();
         }
         return 0;
     }
@@ -134,12 +138,17 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     // METODO LISTO
     public void eliminarTwitter(MouseEvent event) throws TwitterException{
+        
         System.out.println("Entro");
         ResponseList<Status> Line = twitter.getHomeTimeline();
         Line.forEach((status) -> {
-            System.out.println("ID: " + status.getId() + " - " + status.getText());
+            //String idmsj = Long.toString(status.getId());
+            mensajeId.add(status.getId());
+            textoMsj.add(status.getText());
+            //System.out.println("ID: " + status.getId() + " - " + status.getText());
         });
-        System.out.print("Id del status a eliminar: ");
+       
+        /*System.out.print("Id del status a eliminar: ");
         Scanner sc = new Scanner(System.in);
         
         long id = sc.nextLong();
@@ -147,9 +156,18 @@ public class V2_Controller extends ControlVentana implements Initializable {
         for (Status status : Line) {
             if (id==status.getId()) {
                 twitter.destroyStatus(id);
-                System.out.println("status eliminado");
+                System.out.println("Twitt "+id+" eliminado");
+                vista.getEngine().reload();
             }
+        }*/
+        
+  
+        
+        for (int i = 0; i<mensajeId.size(); i++) {
+            System.out.println("id array: "+mensajeId.get(i)+", msj: "+textoMsj.get(i));
+  
         }
+        
     }
     
     
