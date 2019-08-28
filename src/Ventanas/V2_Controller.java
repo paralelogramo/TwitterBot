@@ -51,6 +51,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
+import java.util.ArrayList;
 /**
  * 
  * FXML Controller class
@@ -78,6 +79,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Twitter twitter;
     private List<Status> lineaDeTiempo;
     
+    ArrayList<Long> mensajeId = new ArrayList();
+    ArrayList<String> textoMsj = new ArrayList();
     
     public void progresoTexto(KeyEvent event){      
         if(msj.getText().length()>20)
@@ -135,15 +138,30 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     // METODO LISTO
     public void eliminarTwitter(MouseEvent event) throws TwitterException{
+        
         System.out.println("Entro");
         ResponseList<Status> Line = twitter.getHomeTimeline();
         Line.forEach((status) -> {
-            System.out.println("ID: " + status.getId() + " - " + status.getText());
+            mensajeId.add(status.getId());
+            textoMsj.add(status.getText());
+            //System.out.println("ID: " + status.getId() + " - " + status.getText());
         });
-        System.out.print("Id del status a eliminar: ");
+        System.out.println("talla ids: "+mensajeId.size());
+        System.out.println("talla textos " + textoMsj.size());
+         for (int i = 0; i<mensajeId.size(); i++) {
+            System.out.println(i+"."+textoMsj.get(i));
+        }
+         
+        System.out.print("numero del twitt a eliminar: ");
         Scanner sc = new Scanner(System.in);
+        int opcion = sc.nextInt();
         
-        long id = sc.nextLong();
+        twitter.destroyStatus(mensajeId.get(opcion));
+        mensajeId.remove(opcion);
+        textoMsj.remove(opcion);
+        System.out.println("mesaje eliminado");
+        vista.getEngine().reload();
+        /* long id = sc.nextLong();
         
         for (Status status : Line) {
             if (id==status.getId()) {
@@ -151,7 +169,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 System.out.println("Twitt "+id+" eliminado");
                 vista.getEngine().reload();
             }
-        }
+        }*/
+        
+  
+        
+       
+        
     }
     
     
