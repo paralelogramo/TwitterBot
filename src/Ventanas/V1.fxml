@@ -66,7 +66,7 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <ProgressIndicator layoutX="230.0" layoutY="103.0" prefHeight="112.0" prefWidth="540.0" />
+      <ProgressIndicator fx:id="cargando" layoutX="230.0" layoutY="103.0" prefHeight="112.0" prefWidth="540.0" visible="false" />
    </children>
    <effect>
       <DropShadow color="#0000007e" height="50.65" radius="25.5675" spread="0.68" width="53.62" />

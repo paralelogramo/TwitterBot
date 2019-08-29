@@ -25,6 +25,7 @@ import javafx.scene.layout.AnchorPane;
 import Clases.ControlVentana;
 import Clases.Usuario;
 import java.awt.Toolkit;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import javafx.fxml.FXMLLoader;
@@ -52,7 +53,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     @FXML private ProgressIndicator cargando;
     @FXML private TextField usuario;
     @FXML private PasswordField clave;
-    private final Pattern patronUsuario = Pattern.compile("^[a-zA-Z0-9]{6,10}$", Pattern.MULTILINE);
+    private final Pattern patronUsuario = Pattern.compile("^[a-zA-Z0-9]{4,10}$", Pattern.MULTILINE);
     private final Pattern patronCorreo = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$", Pattern.MULTILINE);
     
     private final ArrayList<Usuario> usuarios = new ArrayList<>();    
@@ -64,7 +65,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     }    
     
     @FXML
-    public void inicioSesion(Event evento) throws IOException{ 
+    public void inicioSesion(Event evento) throws IOException, InterruptedException{         
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
         clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
         if(this.esCompatible(usuario.getText(), clave.getText()))           
@@ -74,7 +75,15 @@ public class V1_Control extends ControlVentana implements Initializable {
                 Toolkit.getDefaultToolkit().beep();
                 this.popUp("Error", "Nombre usuario y/o clave no valida");
                 clave.clear();
-            }
+                cargando.setVisible(false);
+            }        
+    }
+    
+    @FXML 
+    public void clickEnter(KeyEvent event){
+        if(event.getKeyCode()==KeyEvent.VK_ENTER){
+            cargando.setVisible(true);  
+        }
     }
     
     @FXML
@@ -84,7 +93,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     }
     
     @FXML
-    public void efectoClave(MouseEvent event){
+    public void efectoClave(MouseEvent event){        
         clave.setStyle("-fx-text-fill: black; -fx-background-color: rgba(0,0,0,0.1);");
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
     }

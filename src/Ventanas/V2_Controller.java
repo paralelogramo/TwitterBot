@@ -213,8 +213,13 @@ public class V2_Controller extends ControlVentana implements Initializable {
         WebEngine engine = vista.getEngine();
         engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
         engine.load("https://twitter.com/power_java");
+        String webViewContents = (String) engine
+            .executeScript("document.documentElement.outerHTML");
+        StringBuilder scrollHtml = scrollWebView(0, 50);
+        String appendContent = "<div id='append'>Appended html content</div> Appended text content";
+        //engine.loadContent(scrollHtml + webViewContents);
         vista.setContextMenuEnabled(false);      
-        vista.setZoom(0.80);
+        vista.setZoom(0.80);        
         // ************ HASTA ACA *********
         msj.setWrapText(true);
         try {
@@ -250,5 +255,18 @@ public class V2_Controller extends ControlVentana implements Initializable {
         v1.initStyle(StageStyle.TRANSPARENT);
         v1.centerOnScreen();
         v1.show();  
+    }
+    
+    public static StringBuilder scrollWebView(int xPos, int yPos) {
+        StringBuilder script = new StringBuilder().append("<html>");
+        script.append("<head>");
+        script.append("   <script language=\"javascript\" type=\"text/javascript\">");
+        script.append("       function toBottom(){");
+        script.append("           window.scrollTo(" + xPos + ", " + yPos + ");");
+        script.append("       }");
+        script.append("   </script>");
+        script.append("</head>");
+        script.append("<body onload='toBottom()'>");
+        return script;
     }
 }
