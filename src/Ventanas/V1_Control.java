@@ -26,6 +26,10 @@ import Clases.ControlVentana;
 import Clases.Usuario;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import javafx.fxml.FXMLLoader;
@@ -36,6 +40,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -53,6 +58,10 @@ public class V1_Control extends ControlVentana implements Initializable {
     @FXML private ProgressIndicator cargando;
     @FXML private TextField usuario;
     @FXML private PasswordField clave;
+    private final String servidorDB = "jdbc:mysql://sql10.freesqldatabase.com:3306/sql10303413";
+    private final String usuarioDB = "sql10303413";
+    private final String claveDB = "HAW2rTnKZ4";
+    private Connection coneccionDB;
     private final Pattern patronUsuario = Pattern.compile("^[a-zA-Z0-9]{4,10}$", Pattern.MULTILINE);
     private final Pattern patronCorreo = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$", Pattern.MULTILINE);
     
@@ -65,9 +74,17 @@ public class V1_Control extends ControlVentana implements Initializable {
     }    
     
     @FXML
-    public void inicioSesion(Event evento) throws IOException, InterruptedException{         
+    public void inicioSesion(Event evento) throws IOException {         
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
         clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
+        
+        String consulta = "SELECT * FROM Usuario WHERE usuario='"+usuario.getText()+"' && clave='"+clave.getText()+"'";
+        try{
+        ResultSet resultado = coneccionDB.createStatement().executeQuery(consulta);
+        String aux = resultado.getString(consulta);
+        }catch (SQLException e){
+            
+        }
         if(this.esCompatible(usuario.getText(), clave.getText()))           
             if(this.ingresar(usuario.getText(), clave.getText(), new Usuario (usuario.getText(), clave.getText(),"")))
                 iniciarSesion();  
@@ -142,7 +159,14 @@ public class V1_Control extends ControlVentana implements Initializable {
     }
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {      
+    public void initialize(URL url, ResourceBundle rb) {  
+        try {                      
+            this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(null, "Conectado a servidor con exito", "Conección", 1);            
+        } catch ( SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error en coneccion con servidor", "Conección", 0);       
+        }
         usuarios.add(new Usuario("user","admin",""));
         this.arrastrarVentana(this.ap);
     }    
