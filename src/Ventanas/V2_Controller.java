@@ -16,7 +16,10 @@ package Ventanas;
 
 import Clases.ControlVentana;
 import Clases.Mensaje;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import javafx.scene.control.TextArea;
 import java.net.URL;
@@ -52,6 +55,7 @@ import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
+import javax.imageio.ImageIO;
 /**
  * 
  * FXML Controller class
@@ -73,6 +77,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML ImageView imagenPerfil2;
     @FXML WebView vista;
     @FXML ListView listaTiempo;
+    @FXML ImageView preImage;
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
@@ -109,7 +114,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     // METODO LISTO
-    public void subirImagen_Twitter(MouseEvent event) throws TwitterException{
+    public void subirImagen_Twitter(MouseEvent event) throws TwitterException, FileNotFoundException{
+        String extension;
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Imagen");
         filech.getExtensionFilters().addAll(
@@ -119,12 +125,36 @@ public class V2_Controller extends ControlVentana implements Initializable {
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
+            extension = obtenerExtension(imgFile.getAbsolutePath());
             notificacionImagen.setVisible(true);
+            notificacionImagen.setText(extension.toUpperCase()+" Subido Con Exito!!");
+            if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")) {
+                if (imgFile.length()>1000000) {
+                    System.out.println("tamaño no permitido");
+                    imgFile = null;
+                    notificacionImagen.setText("Tamaño Archivo No Soportado!!");
+                    this.preImage.setImage(null);
+                    // INGRESAR IMAGEN PREDETERMINADA
+//                    this.preImage.setImage(new Image("src\\Imagenes\\Overflow.png"));
+                }
+                else{
+                    Image imagen123 = new Image(new FileInputStream(imgFile));
+                    this.preImage.setImage(imagen123);
+                    notificacionImagen.setVisible(true);
+                }
+            }
+            else
+                if(extension.equalsIgnoreCase("mp4") && imgFile.length()>512000000){
+                    System.out.println("tamaño no permitido");
+                    imgFile = null;
+                    notificacionImagen.setText("Tamaño Archivo No Soportado!!");
+                    this.preImage.setImage(null);
+                }
         }
     }
     
     // METODO LISTO
-    public void subirGif_Twitter(MouseEvent event) throws TwitterException{
+    public void subirGif_Twitter(MouseEvent event) throws TwitterException, FileNotFoundException{
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Gif");
         filech.getExtensionFilters().addAll(
@@ -132,9 +162,30 @@ public class V2_Controller extends ControlVentana implements Initializable {
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
+            notificacionImagen.setText("GIF Subido Con Exito!!");
+            if (imgFile.length()>15000000) {
+                System.out.println("tamaño no permitido");
+                imgFile = null;
+                notificacionImagen.setText("Tamaño Archivo No Soportado!!");
+                this.preImage.setImage(null);
+            }
+            Image imagen123 = new Image(new FileInputStream(imgFile));
+            this.preImage.setImage(imagen123);
             notificacionImagen.setVisible(true);
         }
     }
+    
+    // METODO LISTO
+    private static String obtenerExtension(String filename){
+        int index = filename.lastIndexOf('.');
+        if (index == -1) {
+            return "";
+        }
+        else{
+            return filename.substring(index+1);
+        }
+    }
+    
     
     // METODO LISTO
     public void eliminarTwitter(MouseEvent event) throws TwitterException{
