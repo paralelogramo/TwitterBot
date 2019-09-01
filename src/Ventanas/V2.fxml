@@ -16,7 +16,7 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
       <AnchorPane layoutY="24.0" prefHeight="559.0" prefWidth="1000.0">
          <children>
@@ -33,7 +33,6 @@
                   <Button layoutX="467.0" layoutY="73.0" mnemonicParsing="false" onMouseClicked="#enviarTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
                   <Button layoutX="73.0" layoutY="74.0" mnemonicParsing="false" onMouseClicked="#subirImagen_Twitter" text="Subir Media" />
                   <ProgressIndicator fx:id="pgA" accessibleText=" " layoutX="390.0" layoutY="75.0" prefHeight="40.0" prefWidth="24.0" progress="0.0" />
-                  <Text fx:id="notificacionImagen" layoutX="254.0" layoutY="99.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Imagen Subida Con Exito!" visible="false" />
                   <Button layoutX="165.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" text="Subir Gif" />
                   <ImageView fx:id="imagenPerfil2" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                      <effect>
@@ -41,6 +40,7 @@
                      </effect></ImageView>
                   <Line endX="34.0" layoutX="428.0" layoutY="73.0" opacity="0.72" startX="34.0" startY="26.0" />
                   <Button layoutX="425.0" layoutY="75.0" mnemonicParsing="false" text="+" />
+                  <Text fx:id="notificacionImagen" layoutX="73.0" layoutY="116.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Archivo Subido Con Exito!!" visible="false" wrappingWidth="200.0" />
                </children>
             </AnchorPane>
             <WebView fx:id="vista" layoutX="260.0" layoutY="102.0" opacity="0.96" prefHeight="252.0" prefWidth="574.0">
@@ -53,7 +53,7 @@
             <Button layoutX="889.0" layoutY="323.0" mnemonicParsing="false" text="Button" />
             <Button layoutX="889.0" layoutY="362.0" mnemonicParsing="false" text="Button" />
             <Button layoutX="22.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Button" />
-            <ListView layoutX="22.0" layoutY="152.0" prefHeight="342.0" prefWidth="200.0" />
+            <ListView layoutX="22.0" layoutY="152.0" prefHeight="201.0" prefWidth="200.0" />
             <Text layoutX="839.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Textsssssssssssssssssss" wrappingWidth="145.13671875" />
             <Text fx:id="usuario" fill="#96deffe9" layoutX="845.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Usuario" textAlignment="CENTER" wrappingWidth="145.1367437839508">
                <font>
@@ -71,6 +71,7 @@
                <effect>
                   <DropShadow color="#000000cf" height="85.5" radius="40.95" width="80.3" />
                </effect></ImageView>
+            <ImageView fx:id="preImage" fitHeight="150.0" fitWidth="200.0" layoutX="22.0" layoutY="375.0" pickOnBounds="true" preserveRatio="true" />
          </children>
       </AnchorPane>
       <GridPane layoutX="34.0" layoutY="-104.0" prefHeight="230.0" prefWidth="453.0">
