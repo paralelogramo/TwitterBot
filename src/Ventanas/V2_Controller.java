@@ -52,6 +52,7 @@ import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
+
 /**
  * 
  * FXML Controller class
@@ -82,6 +83,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     ArrayList<Long> mensajeId = new ArrayList();
     ArrayList<String> textoMsj = new ArrayList();
     
+    Scanner sc = new Scanner(System.in);
+
     public void progresoTexto(KeyEvent event){      
         if(msj.getText().length()>20)
             msj.setEditable(true);
@@ -138,48 +141,44 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     // METODO LISTO
     public void eliminarTwitter(MouseEvent event) throws TwitterException{
-        
-        System.out.println("Entro");
+                
         ResponseList<Status> Line = twitter.getHomeTimeline();
+        
+        int opcion;
+        
         Line.forEach((status) -> {
+                       
             mensajeId.add(status.getId());
             textoMsj.add(status.getText());
-            //System.out.println("ID: " + status.getId() + " - " + status.getText());
+            
         });
-        System.out.println("talla ids: "+mensajeId.size());
-        System.out.println("talla textos " + textoMsj.size());
-         for (int i = 0; i<mensajeId.size(); i++) {
-            System.out.println(i+"."+textoMsj.get(i));
+                
+        for (int i = 0; i < mensajeId.size(); i++) {
+            System.out.println(i+". "+textoMsj.get(i));
         }
-         
-        System.out.print("numero del twitt a eliminar: ");
-        Scanner sc = new Scanner(System.in);
-        int opcion = sc.nextInt();
         
-        twitter.destroyStatus(mensajeId.get(opcion));
-        mensajeId.remove(opcion);
-        textoMsj.remove(opcion);
-        System.out.println("mesaje eliminado");
-        vista.getEngine().reload();
-        /* long id = sc.nextLong();
-        
-        for (Status status : Line) {
-            if (id==status.getId()) {
-                twitter.destroyStatus(id);
-                System.out.println("Twitt "+id+" eliminado");
+        do{
+            System.out.print("numero del twitt a eliminar: ");
+            opcion = sc.nextInt();
+            
+            if(opcion>=0 && opcion<mensajeId.size()){
+                twitter.destroyStatus(mensajeId.get(opcion));
+                mensajeId.remove(opcion);
+                textoMsj.remove(opcion);
+                System.out.println("mensaje eliminado!!!");
                 vista.getEngine().reload();
             }
-        }*/
-        
-  
-        
-       
+            else{
+                System.out.println("Opcion Invalida!!!!!!!!");
+            }
+            
+        }while(opcion<0 || opcion>mensajeId.size());
         
     }
     
     
     public void seguirUsuario(MouseEvent event) throws TwitterException{
-        
+       //necesito ids de los usuarios
     }
     
     
