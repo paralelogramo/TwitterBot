@@ -13,6 +13,7 @@
 
 <AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-border-radius: 50px; -fx-background-radius: 50px; -fx-background-image: url('/Imagenes/background1.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V1_Control">
    <children>
+      <ProgressIndicator fx:id="cargando" layoutX="230.0" layoutY="103.0" prefHeight="112.0" prefWidth="540.0" />
       <Button layoutX="954.0" layoutY="28.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
       <Button layoutX="920.0" layoutY="28.0" mnemonicParsing="false" onMouseClicked="#minimizarVentana" text="_" />
       <AnchorPane fx:id="ingresar" layoutX="348.0" layoutY="136.0" prefHeight="351.0" prefWidth="304.0" style="-fx-background-color: rgba(255,255,255,0.3); -fx-border-radius: 50px; -fx-background-radius: 50px;">
@@ -22,11 +23,11 @@
                   <Font size="47.0" />
                </font>
             </Text>
-            <TextField fx:id="usuario" layoutX="31.0" layoutY="185.0" onMouseClicked="#efectoUsuario" prefHeight="25.0" prefWidth="243.0" promptText="nombre usuario" style="-fx-background-color: rgba(0,0,0,0.6);">
+            <TextField fx:id="usuario" layoutX="31.0" layoutY="185.0" onMouseClicked="#efectoUsuario" prefHeight="25.0" prefWidth="243.0" promptText="nombre usuario" style="-fx-background-color: rgba(0,0,0,0.6); -fx-text-fill: rgba(255,255,255,1);;" text="user">
                <effect>
                   <InnerShadow />
                </effect></TextField>
-            <PasswordField fx:id="clave" layoutX="31.0" layoutY="230.0" onMouseClicked="#efectoClave" prefHeight="25.0" prefWidth="243.0" promptText="clave" style="-fx-background-color: rgba(0,0,0,0.6);">
+            <PasswordField fx:id="clave" layoutX="31.0" layoutY="230.0" onMouseClicked="#efectoClave" prefHeight="25.0" prefWidth="243.0" promptText="clave" style="-fx-background-color: rgba(0,0,0,0.6); -fx-text-fill: rgba(255,255,255,1);;" text="admin">
                <effect>
                   <InnerShadow />
                </effect></PasswordField>
@@ -66,7 +67,6 @@
             </AnchorPane>
          </children>
       </AnchorPane>
-      <ProgressIndicator fx:id="cargando" layoutX="230.0" layoutY="103.0" prefHeight="112.0" prefWidth="540.0" visible="false" />
    </children>
    <effect>
       <DropShadow color="#0000007e" height="50.65" radius="25.5675" spread="0.68" width="53.62" />

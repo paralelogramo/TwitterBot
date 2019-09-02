@@ -32,6 +32,7 @@ import javafx.stage.Stage;
  * @version 1.0
  */
 public class ControlVentana {
+    
     public void arrastrarVentana(AnchorPane panel) {
         AtomicReference<Double> x = new AtomicReference<>((double) 0);
         AtomicReference<Double> y = new AtomicReference<>((double) 0);
@@ -46,12 +47,13 @@ public class ControlVentana {
             stage.setY(e.getScreenY() + y.get());           
         });
     }
+    
     public void cerrarPrograma(MouseEvent event){
         System.exit(0); 
-    }
+    } 
+    
     public void popUp(String title, String menssaje) {
-        final Stage dialog = new Stage();        
-        dialog.initModality(Modality.APPLICATION_MODAL);       
+        final Stage dialog = new Stage();                      
         dialog.setTitle(title);
         VBox dialogVbox = new VBox(20);
         Text msj = new Text("/ ! \\  "+menssaje+"  / ! \\");
@@ -63,7 +65,7 @@ public class ControlVentana {
         dialog.setScene(dialogScene);
         dialog.setResizable(false);
         dialog.setAlwaysOnTop(true);
-        dialog.initModality(Modality.WINDOW_MODAL);
+        dialog.initModality(Modality.APPLICATION_MODAL);
         dialog.show();        
     }  
 }

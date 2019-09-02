@@ -31,6 +31,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -57,7 +59,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     @FXML private AnchorPane recuperar;
     @FXML private ProgressIndicator cargando;
     @FXML private TextField usuario;
-    @FXML private PasswordField clave;
+    @FXML private PasswordField clave; 
     private final String servidorDB = "jdbc:mysql://sql10.freesqldatabase.com:3306/sql10303413";
     private final String usuarioDB = "sql10303413";
     private final String claveDB = "HAW2rTnKZ4";
@@ -74,7 +76,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     }    
     
     @FXML
-    public void inicioSesion(Event evento) throws IOException {         
+    public void inicioSesion(MouseEvent evento){         
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
         clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
         
@@ -87,30 +89,42 @@ public class V1_Control extends ControlVentana implements Initializable {
         }
         if(this.esCompatible(usuario.getText(), clave.getText()))           
             if(this.ingresar(usuario.getText(), clave.getText(), new Usuario (usuario.getText(), clave.getText(),"")))
-                iniciarSesion();  
+                try {  
+                    iniciarSesion();
+                } catch (IOException ex) {
+                    Logger.getLogger(V1_Control.class.getName()).log(Level.SEVERE, null, ex);
+                }  
             else{
                 Toolkit.getDefaultToolkit().beep();
-                this.popUp("Error", "Nombre usuario y/o clave no valida");
+                this.popUp("Error", "Nombre usuario y/o clave incorrecta");
                 clave.clear();
                 cargando.setVisible(false);
-            }        
+            }  
+        else{
+            Toolkit.getDefaultToolkit().beep();
+            this.popUp("Error", "Nombre usuario y/o clave no valida");
+            clave.clear();
+            cargando.setVisible(false);
+        }
     }
+    
+    
     
     @FXML 
     public void clickEnter(KeyEvent event){
         if(event.getKeyCode()==KeyEvent.VK_ENTER){
-            cargando.setVisible(true);  
+            //cargando.setVisible(true);                   
         }
     }
     
     @FXML
-    public void efectoUsuario(MouseEvent event){
+    public void efectoUsuario(Event event){
         usuario.setStyle("-fx-text-fill: black; -fx-background-color: rgba(0,0,0,0.1);");
         clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
     }
     
     @FXML
-    public void efectoClave(MouseEvent event){        
+    public void efectoClave(Event event){        
         clave.setStyle("-fx-text-fill: black; -fx-background-color: rgba(0,0,0,0.1);");
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
     }
@@ -163,11 +177,11 @@ public class V1_Control extends ControlVentana implements Initializable {
         try {                      
             this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);
             Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(null, "Conectado a servidor con exito", "Conección", 1);            
+            JOptionPane.showMessageDialog(null, "Conectado a servidor con exito", "Conección", 1);              
         } catch ( SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error en coneccion con servidor", "Conección", 0);       
         }
         usuarios.add(new Usuario("user","admin",""));
-        this.arrastrarVentana(this.ap);
+        this.arrastrarVentana(this.ap);            
     }    
 }
