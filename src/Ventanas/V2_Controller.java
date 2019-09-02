@@ -16,7 +16,6 @@ package Ventanas;
 
 import Clases.ControlVentana;
 import Clases.Mensaje;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -36,7 +35,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -55,7 +53,7 @@ import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
-import javax.imageio.ImageIO;
+import javafx.event.Event;
 /**
  * 
  * FXML Controller class
@@ -87,10 +85,26 @@ public class V2_Controller extends ControlVentana implements Initializable {
     ArrayList<Long> mensajeId = new ArrayList();
     ArrayList<String> textoMsj = new ArrayList();
     
-    public void progresoTexto(KeyEvent event){      
-        if(msj.getText().length()>20)
-            msj.setEditable(true);
-        pgA.setProgress(msj.getText().length()/280.0);
+    public void progresoTexto(Event event){   
+        System.out.println(msj.getAnchor());
+        pgA.setProgress(msj.getText().length()/280.0);  
+        pgA.progressProperty().addListener((ov, oldValue, newValue) -> {
+            Text text = (Text) pgA.lookup(" .percentage");
+            if(text!=null){
+               text.setText(Integer.toString(280-msj.getText().length()));               
+               // pgA.setPrefWidth(text.getLayoutBounds().getWidth());
+            }
+        });                      
+        if(msj.getText().length()==280)
+            pgA.setProgress(0.999999);
+        if(msj.getText().length()>=281){
+            pgA.setProgress((msj.getText().length()/280.0)-1.0);            
+            pgA.setStyle("-fx-progress-color: crimson;");
+            if(pgA.getProgress()>0.99)            
+                pgA.setProgress(0.999999);
+        }else{
+            pgA.setStyle("-fx-progress-color: darkblue;");
+        }
     }
     
     // METODO LISTO
@@ -285,6 +299,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
         } catch (TwitterException | IllegalStateException ex) {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.arrastrarVentana(this.ap);                
+        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));      
     }  
     
     @FXML
