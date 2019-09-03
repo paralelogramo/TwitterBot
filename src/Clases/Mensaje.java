@@ -23,12 +23,9 @@ package Clases;
  */
 public class Mensaje {
    
-    private String texto; //texto a twitear  
+    private String texto; //texto a twitear     
     
-    
-    
-    public Mensaje(){  
-       
+    public Mensaje(){         
     }   
     
     public void setMensaje(String mensaje){        
@@ -39,8 +36,7 @@ public class Mensaje {
         return texto;
     }
     
-    public void twittear(){
-       
+    public void twittear(){       
     }
     
     public boolean verificar(){
@@ -51,7 +47,5 @@ public class Mensaje {
             System.out.println("Ingresa texto!!!!!!!");            
         }               
         return largo<280&&largo>0;
-    }
-    
+    }    
 }
-

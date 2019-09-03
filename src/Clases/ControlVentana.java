@@ -14,6 +14,7 @@ este programa. Si no, vea <http://www.gnu.org/licenses/>.
 */
 package Clases;
 
+import java.awt.Toolkit;
 import java.util.concurrent.atomic.AtomicReference;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -66,6 +67,7 @@ public class ControlVentana {
         dialog.setResizable(false);
         dialog.setAlwaysOnTop(true);
         dialog.initModality(Modality.APPLICATION_MODAL);
+        Toolkit.getDefaultToolkit().beep();
         dialog.show();        
     }  
 }

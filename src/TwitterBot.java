@@ -22,7 +22,6 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import twitter4j.TwitterException;
 
 /**
  *
@@ -49,9 +48,8 @@ public class TwitterBot extends Application {
 
     /**
      * @param args the command line arguments
-     * @throws twitter4j.TwitterException
      */
-    public static void main(String[] args) throws TwitterException {           
+    public static void main(String[] args){           
     /*  ConfigurationBuilder cb = new ConfigurationBuilder();
         cb.setDebugEnabled(true)
         .setOAuthConsumerKey("FI7zwXVxcqKBAozpTrqxJNfIA")
