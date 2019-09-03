@@ -16,6 +16,7 @@ package Ventanas;
 
 import Clases.ControlVentana;
 import Clases.Mensaje;
+import java.awt.Toolkit;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -107,6 +108,10 @@ public class V2_Controller extends ControlVentana implements Initializable {
         }
     }
     
+    public void minimizarVentana(MouseEvent event){    
+        ((Stage) ap.getScene().getWindow()).setIconified(true);        
+    }    
+    
     // METODO LISTO
     public int enviarTwitter(MouseEvent event) throws TwitterException{       
         Mensaje mensaje = new Mensaje();
@@ -123,6 +128,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
             msj.clear();
             notificacionImagen.setVisible(false);
             vista.getEngine().reload();
+        }else{
+            Toolkit.getDefaultToolkit().beep();
+            this.popUp("TwitterBot_ | Error", "Demasiado Largo !!!!!");
         }
         return 0;
     }
@@ -147,9 +155,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     System.out.println("tamaño no permitido");
                     imgFile = null;
                     notificacionImagen.setText("Tamaño Archivo No Soportado!!");
-                    this.preImage.setImage(null);
-                    // INGRESAR IMAGEN PREDETERMINADA
-//                    this.preImage.setImage(new Image("src\\Imagenes\\Overflow.png"));
+                    this.preImage.setImage(null);                    
                 }
                 else{
                     Image imagen123 = new Image(new FileInputStream(imgFile));
@@ -165,6 +171,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     this.preImage.setImage(null);
                 }
         }
+        if(this.preImage.getImage() == null)
+            this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));   
     }
     
     // METODO LISTO
@@ -299,8 +307,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
         } catch (TwitterException | IllegalStateException ex) {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
-        this.arrastrarVentana(this.ap);                
-        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));      
+        this.arrastrarVentana(this.ap);           
+        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));             
     }  
     
     @FXML

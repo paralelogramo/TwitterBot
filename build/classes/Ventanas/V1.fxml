@@ -6,6 +6,8 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
@@ -13,9 +15,9 @@
 
 <AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-border-radius: 50px; -fx-background-radius: 50px; -fx-background-image: url('/Imagenes/background1.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V1_Control">
    <children>
-      <ProgressIndicator fx:id="cargando" layoutX="230.0" layoutY="103.0" prefHeight="112.0" prefWidth="540.0" />
-      <Button layoutX="954.0" layoutY="28.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
-      <Button layoutX="920.0" layoutY="28.0" mnemonicParsing="false" onMouseClicked="#minimizarVentana" text="_" />
+      <ProgressIndicator fx:id="cargando" layoutX="348.0" layoutY="55.0" prefHeight="162.0" prefWidth="304.0" />
+      <Button layoutX="967.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
+      <Button layoutX="939.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#minimizarVentana" text="_" />
       <AnchorPane fx:id="ingresar" layoutX="348.0" layoutY="136.0" prefHeight="351.0" prefWidth="304.0" style="-fx-background-color: rgba(255,255,255,0.3); -fx-border-radius: 50px; -fx-background-radius: 50px;">
          <children>
             <Text fill="#000000dc" layoutX="75.0" layoutY="119.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Ingreso" textAlignment="CENTER">
@@ -38,6 +40,12 @@
                <font>
                   <Font size="13.0" />
                </font></Text>
+            <Line endX="100.0" layoutX="160.0" layoutY="148.0" startX="-117.0" />
+            <ImageView fitHeight="120.0" fitWidth="120.0" layoutX="92.0" layoutY="-54.0">
+               <image>
+                  <Image url="@../Imagenes/icon.png" />
+               </image>
+            </ImageView>
          </children>
          <effect>
             <DropShadow color="#000000d9" height="12.1" radius="9.2575" width="26.93" />
@@ -67,6 +75,11 @@
             </AnchorPane>
          </children>
       </AnchorPane>
+      <Text fill="#03e2ffd6" layoutX="835.0" layoutY="592.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LosJavaPowerRanger®" textAlignment="CENTER" wrappingWidth="169.13671875">
+         <font>
+            <Font name="System Bold Italic" size="15.0" />
+         </font>
+      </Text>
    </children>
    <effect>
       <DropShadow color="#0000007e" height="50.65" radius="25.5675" spread="0.68" width="53.62" />

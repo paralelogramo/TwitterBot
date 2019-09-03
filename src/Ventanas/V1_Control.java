@@ -42,6 +42,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 
 /**
@@ -70,9 +71,8 @@ public class V1_Control extends ControlVentana implements Initializable {
     private final ArrayList<Usuario> usuarios = new ArrayList<>();    
     //Shape forma = new RoundRectangle2D.Double(0, 0, ap.getBoundsInLocal().getWidth(), ap.getBoundsInLocal().getHeight(), 30, 30); 
     
-    public void minimizarVentana(MouseEvent event){       
-        //ap.setVisible(false);
-        // url('/Imagenes/background1.png')
+    public void minimizarVentana(MouseEvent event){    
+        ((Stage) ap.getScene().getWindow()).setIconified(true);        
     }    
     
     @FXML
@@ -106,9 +106,7 @@ public class V1_Control extends ControlVentana implements Initializable {
             clave.clear();
             cargando.setVisible(false);
         }
-    }
-    
-    
+    }      
     
     @FXML 
     public void clickEnter(KeyEvent event){
@@ -176,10 +174,21 @@ public class V1_Control extends ControlVentana implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {  
         try {                      
             this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);
+            Toolkit.getDefaultToolkit().beep();            
+            JOptionPane auxiliar = new JOptionPane();
+            auxiliar.setMessage("Conectado a servidor con exito");
+            auxiliar.setMessageType(1);
+            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Conexión ");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);            
+        } catch (SQLException ex) {
             Toolkit.getDefaultToolkit().beep();
-            JOptionPane.showMessageDialog(null, "Conectado a servidor con exito", "Conección", 1);              
-        } catch ( SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Error en coneccion con servidor", "Conección", 0);       
+            JOptionPane auxiliar = new JOptionPane();
+            auxiliar.setMessage("Error en conexión a servidor");
+            auxiliar.setMessageType(0);
+            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Conexión ");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);       
         }
         usuarios.add(new Usuario("user","admin",""));
         this.arrastrarVentana(this.ap);            
