@@ -96,15 +96,19 @@ public class V2_Controller extends ControlVentana implements Initializable {
                // pgA.setPrefWidth(text.getLayoutBounds().getWidth());
             }
         });                      
+        if(msj.getText().length()>=260){
+            pgA.setStyle("-fx-progress-color: darkorange;");
+            System.out.println("aaa");
+        }else{
+            pgA.setStyle("-fx-progress-color: darkblue;");
+        }
         if(msj.getText().length()==280)
             pgA.setProgress(0.999999);
         if(msj.getText().length()>=281){
-            pgA.setProgress((msj.getText().length()/280.0)-1.0);            
+            //pgA.setProgress((msj.getText().length()/280.0)-1.0);            
             pgA.setStyle("-fx-progress-color: crimson;");
-            if(pgA.getProgress()>0.99)            
-                pgA.setProgress(0.999999);
-        }else{
-            pgA.setStyle("-fx-progress-color: darkblue;");
+            //if(pgA.getProgress()>0.99)            
+            pgA.setProgress(0.999999);
         }
     }
     
@@ -137,7 +141,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     // METODO LISTO
-    public void subirImagen_Twitter(MouseEvent event) throws TwitterException, FileNotFoundException{
+    public void subirImagen_Twitter(MouseEvent event) throws FileNotFoundException{
         String extension;
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Imagen");
@@ -177,7 +181,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     // METODO LISTO
-    public void subirGif_Twitter(MouseEvent event) throws TwitterException, FileNotFoundException{
+    public void subirGif_Twitter(MouseEvent event) throws FileNotFoundException{
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Gif");
         filech.getExtensionFilters().addAll(
@@ -286,12 +290,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         // ****** ESTO GENERA EL WEBVIEW ******
         WebEngine engine = vista.getEngine();
         //engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
-        engine.load("https://twitter.com/power_java");
-        String webViewContents = (String) engine
-            .executeScript("document.documentElement.outerHTML");
-        StringBuilder scrollHtml = scrollWebView(0, 50);
-        String appendContent = "<div id='append'>Appended html content</div> Appended text content";
-        //engine.loadContent(scrollHtml + webViewContents);
+        engine.load("https://twitter.com/power_java");        
         vista.setContextMenuEnabled(false);      
         vista.setZoom(0.50);        
         // ************ HASTA ACA *********
@@ -331,18 +330,5 @@ public class V2_Controller extends ControlVentana implements Initializable {
         v1.initStyle(StageStyle.TRANSPARENT);
         v1.centerOnScreen();
         v1.show();  
-    }
-    
-    public static StringBuilder scrollWebView(int xPos, int yPos) {
-        StringBuilder script = new StringBuilder().append("<html>");
-        script.append("<head>");
-        script.append("   <script language=\"javascript\" type=\"text/javascript\">");
-        script.append("       function toBottom(){");
-        script.append("           window.scrollTo(" + xPos + ", " + yPos + ");");
-        script.append("       }");
-        script.append("   </script>");
-        script.append("</head>");
-        script.append("<body onload='toBottom()'>");
-        return script;
     }
 }

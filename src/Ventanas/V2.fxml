@@ -95,7 +95,7 @@
                   <Font name="System Bold" size="19.0" />
                </font>
             </Text>
-            <ImageView fitHeight="43.0" fitWidth="43.0" layoutX="914.0" layoutY="323.0" onMouseClicked="#eliminarTwitter">
+            <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="891.0" layoutY="336.0" onMouseClicked="#eliminarTwitter">
                <image>
                   <Image url="@../Imagenes/delete.png" />
                </image>
