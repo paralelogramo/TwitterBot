@@ -126,13 +126,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
         if(mensaje.verificar() && imgFile == null){
             twitter.updateStatus(status);
             msj.clear();
-            notificacionImagen.setVisible(false);
-            vista.getEngine().reload();
+            notificacionImagen.setVisible(false);            
         }else{
             Toolkit.getDefaultToolkit().beep();
             this.popUp("TwitterBot_ | Error", "Demasiado Largo !!!!!");
         }
-        return 0;
+        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));     
+        vista.getEngine().reload();
+        return 0;        
     }
     
     // METODO LISTO
@@ -284,7 +285,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         
         // ****** ESTO GENERA EL WEBVIEW ******
         WebEngine engine = vista.getEngine();
-        engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
+        //engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
         engine.load("https://twitter.com/power_java");
         String webViewContents = (String) engine
             .executeScript("document.documentElement.outerHTML");
@@ -292,7 +293,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         String appendContent = "<div id='append'>Appended html content</div> Appended text content";
         //engine.loadContent(scrollHtml + webViewContents);
         vista.setContextMenuEnabled(false);      
-        vista.setZoom(0.80);        
+        vista.setZoom(0.50);        
         // ************ HASTA ACA *********
         msj.setWrapText(true);
         try {
@@ -317,7 +318,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         URL location = V1_Control.class.getResource("V1.fxml");
         loader.setLocation(location);
         Stage v1 = new Stage();
-        v1.setTitle(" TwitterBot_ | Inicio");
+        v1.setTitle("TwitterBot_ | Inicio");
         v1.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png"))); 
         v1.setOpacity(1);         
         AnchorPane inicioSesion = loader.load();        
