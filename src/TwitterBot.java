@@ -59,6 +59,5 @@ public class TwitterBot extends Application {
         TwitterFactory tf = new TwitterFactory(cb.build());
         Twitter twitter = tf.getInstance();   */        
         launch(args);
-    }
-    
+    }   
 }
