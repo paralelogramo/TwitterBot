@@ -77,6 +77,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML WebView vista;
     @FXML ListView listaTiempo;
     @FXML ImageView preImage;
+    @FXML Text avisolimite;
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
@@ -96,19 +97,26 @@ public class V2_Controller extends ControlVentana implements Initializable {
                // pgA.setPrefWidth(text.getLayoutBounds().getWidth());
             }
         });                      
-        if(msj.getText().length()>=260){
+        if(msj.getText().length()>=250){
             pgA.setStyle("-fx-progress-color: darkorange;");
             System.out.println("aaa");
+            
         }else{
             pgA.setStyle("-fx-progress-color: darkblue;");
         }
-        if(msj.getText().length()==280)
+        if(msj.getText().length()==280){
             pgA.setProgress(0.999999);
-        if(msj.getText().length()>=281){
+            avisolimite.setVisible(false);
+        }
+        if(msj.getText().length()>=270){
             //pgA.setProgress((msj.getText().length()/280.0)-1.0);            
             pgA.setStyle("-fx-progress-color: crimson;");
+            if(msj.getText().length()>280){
+                avisolimite.setVisible(true);
+                pgA.setProgress(0.999999);
+            }
             //if(pgA.getProgress()>0.99)            
-            pgA.setProgress(0.999999);
+            
         }
     }
     
