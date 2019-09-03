@@ -8,12 +8,8 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-<<<<<<< Updated upstream
-    <jar href="TwitterBot.jar" size="1970555" download="eager" />
+    <jar href="TwitterBot.jar" size="1971194" download="eager" />
     <jar href="lib\mysql-connector-java-8.0.17.jar" size="2321813" download="eager" />
-=======
-    <jar href="TwitterBot.jar" size="1969938" download="eager" />
->>>>>>> Stashed changes
     <jar href="lib\twitter4j-core-4.0.7.jar" size="318006" download="eager" />
   </resources>
   <applet-desc  width="800" height="600" main-class="com.javafx.main.NoJavaFXFallback"  name="TwitterBot" >

@@ -144,37 +144,104 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 
         ResponseList<Status> Line = twitter.getHomeTimeline();
         
-        int opcion;
-        
+        int opcion=-1;
+        String opcion2;
+        int largoArreglo;
         Line.forEach((status) -> {
-                       
             mensajeId.add(status.getId());
             textoMsj.add(status.getText());
-            
         });
+        
+        largoArreglo = mensajeId.size();
+        
+        if(largoArreglo>0){
+            for (int i = 0; i < mensajeId.size(); i++) {
+                System.out.println(i+". "+textoMsj.get(i));
+            }
+
+            do{
                 
-        for (int i = 0; i < mensajeId.size(); i++) {
-            System.out.println(i+". "+textoMsj.get(i));
+                System.out.print("numero del twitt a eliminar: ");
+                
+                try{
+                    opcion2 = sc.nextLine();
+                    if(opcion2.equalsIgnoreCase("")){
+                        opcion =-1;
+                    }
+                    else{
+                        opcion = Integer.parseInt(opcion2);
+                    }
+                    if(opcion>=0 && opcion<mensajeId.size()){
+                        twitter.destroyStatus(mensajeId.get(opcion));
+                        mensajeId.remove(opcion);
+                        textoMsj.remove(opcion);
+                        System.out.println("mensaje eliminado!!!");
+                        vista.getEngine().reload();
+                    }
+                }catch(Exception e){
+                          System.out.println("Opcion Invalida!!!!!!!!");  
+                }
+
+            }while(opcion<0 || opcion>mensajeId.size());
+        
         }
-        
-        do{
-            System.out.print("numero del twitt a eliminar: ");
-            opcion = sc.nextInt();
-            
-            if(opcion>=0 && opcion<mensajeId.size()){
-                twitter.destroyStatus(mensajeId.get(opcion));
-                mensajeId.remove(opcion);
-                textoMsj.remove(opcion);
-                System.out.println("mensaje eliminado!!!");
-                vista.getEngine().reload();
-            }
-            else{
-                System.out.println("Opcion Invalida!!!!!!!!");
-            }
-            
-        }while(opcion<0 || opcion>mensajeId.size());
-        
+        else{
+            System.out.println("no existen tweets publicados!!!");
+        }
     }
+    
+    public void retweetear(MouseEvent event) throws TwitterException{
+        
+        ResponseList<Status> Line = twitter.getHomeTimeline();
+        Mensaje mensaje = new Mensaje();
+        int opcion=-1;
+        String opcion2;
+        int largoArreglo;
+        
+        Line.forEach((status) -> {
+            mensajeId.add(status.getId());
+            textoMsj.add(status.getText());
+        });
+        
+        largoArreglo = mensajeId.size();
+
+        //muestra lista de tweets existentes en la cuenta
+        if(largoArreglo>0){
+            for (int i = 0; i < mensajeId.size(); i++) {
+                System.out.println(i+". "+textoMsj.get(i));
+            }
+
+            do{
+                System.out.print("numero del twitt a retweetear: ");
+                try{
+                    opcion2 = sc.nextLine();
+                    if(opcion2.equalsIgnoreCase("")){
+                        opcion =-1;
+                    }
+                    else{
+                        opcion = Integer.parseInt(opcion2);
+                    }
+                    if(opcion>=0 && opcion<mensajeId.size()){
+                        twitter.retweetStatus(mensajeId.get(opcion));
+                        System.out.println("mensaje Retwitteado");
+                        vista.getEngine().reload();
+                    }
+                }catch(Exception e){
+                    System.out.println("Opcion Invalida!!!");
+                }
+                
+            }while(opcion<0 || opcion>mensajeId.size()); 
+        }
+        else{
+            System.out.println("no existen tweets publicados!!!");
+        }
+    }
+    
+    
+    
+    
+    
+    
     
     
     public void seguirUsuario(MouseEvent event) throws TwitterException{

@@ -50,7 +50,7 @@
             <Button layoutX="918.0" layoutY="16.0" mnemonicParsing="false" text="_" />
             <Button layoutX="954.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
             <Button layoutX="890.0" layoutY="282.0" mnemonicParsing="false" onMouseClicked="#eliminarTwitter" text="Delete" />
-            <Button layoutX="889.0" layoutY="323.0" mnemonicParsing="false" text="Button" />
+            <Button layoutX="889.0" layoutY="323.0" mnemonicParsing="false" onMouseClicked ="#retweetear" text="Retweetear" />
             <Button layoutX="889.0" layoutY="362.0" mnemonicParsing="false" text="Button" />
             <Button layoutX="22.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Button" />
             <ListView layoutX="22.0" layoutY="152.0" prefHeight="342.0" prefWidth="200.0" />
