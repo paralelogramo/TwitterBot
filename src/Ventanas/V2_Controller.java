@@ -87,6 +87,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     ArrayList<Long> mensajeId = new ArrayList();
     ArrayList<String> textoMsj = new ArrayList();
     
+    Scanner sc = new Scanner(System.in);
+    
     public void progresoTexto(Event event){   
         System.out.println(msj.getAnchor());
         pgA.setProgress(msj.getText().length()/280.0);  
@@ -224,6 +226,104 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     // METODO LISTO
     public void eliminarTwitter(MouseEvent event) throws TwitterException{
+                
+        ResponseList<Status> Line = twitter.getHomeTimeline();
+        
+        int opcion=-1;
+        String opcion2;
+        int largoArreglo;
+        Line.forEach((status) -> {
+            mensajeId.add(status.getId());
+            textoMsj.add(status.getText());
+        });
+        
+        largoArreglo = mensajeId.size();
+        
+        if(largoArreglo>0){
+            for (int i = 0; i < mensajeId.size(); i++) {
+                System.out.println(i+". "+textoMsj.get(i));
+            }
+
+            do{
+                
+                System.out.print("numero del twitt a eliminar: ");
+                
+                try{
+                    opcion2 = sc.nextLine();
+                    if(opcion2.equalsIgnoreCase("")){
+                        opcion =-1;
+                    }
+                    else{
+                        opcion = Integer.parseInt(opcion2);
+                    }
+                    if(opcion>=0 && opcion<mensajeId.size()){
+                        twitter.destroyStatus(mensajeId.get(opcion));
+                        mensajeId.remove(opcion);
+                        textoMsj.remove(opcion);
+                        System.out.println("mensaje eliminado!!!");
+                        vista.getEngine().reload();
+                    }
+                }catch(Exception e){
+                          System.out.println("Opcion Invalida!!!!!!!!");  
+                }
+
+            }while(opcion<0 || opcion>mensajeId.size());
+        
+        }
+        else{
+            System.out.println("no existen tweets publicados!!!");
+        }
+    }
+    
+    public void retweetear(MouseEvent event) throws TwitterException{
+        
+        ResponseList<Status> Line = twitter.getHomeTimeline();
+        Mensaje mensaje = new Mensaje();
+        int opcion=-1;
+        String opcion2;
+        int largoArreglo;
+        
+        Line.forEach((status) -> {
+            mensajeId.add(status.getId());
+            textoMsj.add(status.getText());
+        });
+        
+        largoArreglo = mensajeId.size();
+
+        //muestra lista de tweets existentes en la cuenta
+        if(largoArreglo>0){
+            for (int i = 0; i < mensajeId.size(); i++) {
+                System.out.println(i+". "+textoMsj.get(i));
+            }
+
+            do{
+                System.out.print("numero del twitt a retweetear: ");
+                try{
+                    opcion2 = sc.nextLine();
+                    if(opcion2.equalsIgnoreCase("")){
+                        opcion =-1;
+                    }
+                    else{
+                        opcion = Integer.parseInt(opcion2);
+                    }
+                    if(opcion>=0 && opcion<mensajeId.size()){
+                        twitter.retweetStatus(mensajeId.get(opcion));
+                        System.out.println("mensaje Retwitteado");
+                        vista.getEngine().reload();
+                    }
+                }catch(Exception e){
+                    System.out.println("Opcion Invalida!!!");
+                }
+                
+            }while(opcion<0 || opcion>mensajeId.size()); 
+        }
+        else{
+            System.out.println("no existen tweets publicados!!!");
+        }
+    }
+    
+    /* Obsoleto eliminarTwitter
+    public void eliminarTwitter(MouseEvent event) throws TwitterException{
         
         System.out.println("Entro");
         ResponseList<Status> Line = twitter.getHomeTimeline();
@@ -247,7 +347,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         textoMsj.remove(opcion);
         System.out.println("mesaje eliminado");
         vista.getEngine().reload();
-        /* long id = sc.nextLong();
+         long id = sc.nextLong();
         
         for (Status status : Line) {
             if (id==status.getId()) {
@@ -255,13 +355,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 System.out.println("Twitt "+id+" eliminado");
                 vista.getEngine().reload();
             }
-        }*/
-        
-  
-        
-       
-        
-    }
+        }       
+    }*/ 
     
     
     public void seguirUsuario(MouseEvent event) throws TwitterException{

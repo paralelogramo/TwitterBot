@@ -31,47 +31,32 @@
                         <InnerShadow choke="0.12" color="#000000ba" height="44.72" radius="19.6375" width="35.83" />
                      </effect>
                   </TextArea>
-                  <Button layoutX="467.0" layoutY="86.0" mnemonicParsing="false" onMouseClicked="#enviarTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
-                  <Button layoutX="73.0" layoutY="87.0" mnemonicParsing="false" onMouseClicked="#subirImagen_Twitter" text="Subir Media" />
-                  <ProgressIndicator fx:id="pgA" accessibleText=" " layoutX="384.0" layoutY="85.0" opacity="0.95" prefHeight="50.0" prefWidth="29.0" progress="0.0" style="-fx-progress-color: darkblue;">
-                     <effect>
-                        <InnerShadow choke="0.26" />
-                     </effect></ProgressIndicator>
-                  <Button layoutX="165.0" layoutY="87.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" text="Subir Gif" />
-                  <ImageView fx:id="imagenPerfil2" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                  <Button layoutX="467.0" layoutY="73.0" mnemonicParsing="false" onMouseClicked="#enviarTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
+                  <Button layoutX="73.0" layoutY="74.0" mnemonicParsing="false" onMouseClicked="#subirImagen_Twitter" text="Subir Media" />
+                  <ProgressIndicator fx:id="pgA" accessibleText=" " layoutX="390.0" layoutY="75.0" prefHeight="40.0" prefWidth="24.0" progress="0.0" />
+                  <Text fx:id="notificacionImagen" layoutX="254.0" layoutY="99.0" smooth="false" strokeType="OUTSIDE" strokeWidth="0.0" text="Imagen Subida Con Exito!" visible="false" />
+                  <Button layoutX="165.0" layoutY="75.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" text="Subir Gif" />
+                  <ImageView fx:id="imagenPerfil2" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="13.0" pickOnBounds="true" preserveRatio="true">
                      <effect>
                         <DropShadow height="32.86" radius="15.93" width="32.86" />
                      </effect></ImageView>
-                  <Line endX="34.0" endY="-6.0" layoutX="426.0" layoutY="90.0" opacity="0.72" startX="34.0" startY="26.0" />
-                  <Button layoutX="424.0" layoutY="88.0" mnemonicParsing="false" text="+" />
-                  <Text fx:id="notificacionImagen" fill="#ee0202" layoutX="73.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Archivo Subido Con Exito!!" visible="false" wrappingWidth="294.0000077188015">
-                     <font>
-                        <Font name="System Bold Italic" size="14.0" />
-                     </font></Text>
-                  <Text fx:id="avisolimite" layoutX="283.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Se ha pasado en:" visible="false" wrappingWidth="159.21875">
-                     <font>
-                        <Font size="14.0" />
-                     </font>
-                     <fill>
-                        <RadialGradient centerX="0.5" centerY="0.580952380952381" radius="0.5">
-                           <stops>
-                              <Stop color="#c30000" />
-                              <Stop color="#720000" offset="1.0" />
-                           </stops>
-                        </RadialGradient>
-                     </fill>
-                  </Text>
+                  <Line endX="34.0" layoutX="428.0" layoutY="73.0" opacity="0.72" startX="34.0" startY="26.0" />
+                  <Button layoutX="425.0" layoutY="75.0" mnemonicParsing="false" text="+" />
                </children>
             </AnchorPane>
             <WebView fx:id="vista" layoutX="260.0" layoutY="52.0" opacity="0.97" prefHeight="292.0" prefWidth="589.0">
                <effect>
-                  <DropShadow color="#000000fd" height="130.0" radius="64.5" width="130.0" />
+                  <DropShadow color="#000000fd" height="75.86" radius="35.575" width="68.44" />
                </effect></WebView>
-            <Button layoutX="907.0" layoutY="389.0" mnemonicParsing="false" text="Button" />
-            <Button layoutX="907.0" layoutY="436.0" mnemonicParsing="false" text="Button" />
-            <Button layoutX="22.0" layoutY="74.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Button" />
-            <ListView layoutX="22.0" layoutY="108.0" opacity="0.55" prefHeight="222.0" prefWidth="200.0" style="-fx-background-radius: 15px;" />
-            <Text fill="#03e2ffd6" layoutX="832.0" layoutY="568.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LosJavaPowerRanger®" textAlignment="CENTER" wrappingWidth="169.13671875">
+            <Button layoutX="918.0" layoutY="16.0" mnemonicParsing="false" text="_" />
+            <Button layoutX="954.0" layoutY="17.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
+            <Button layoutX="890.0" layoutY="282.0" mnemonicParsing="false" onMouseClicked="#eliminarTwitter" text="Delete" />
+            <Button layoutX="889.0" layoutY="323.0" mnemonicParsing="false" text="Button" />
+            <Button layoutX="889.0" layoutY="362.0" mnemonicParsing="false" text="Button" />
+            <Button layoutX="22.0" layoutY="115.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Button" />
+            <ListView layoutX="22.0" layoutY="152.0" prefHeight="342.0" prefWidth="200.0" />
+            <Text layoutX="839.0" layoutY="546.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Textsssssssssssssssssss" wrappingWidth="145.13671875" />
+            <Text fx:id="usuario" fill="#96deffe9" layoutX="845.0" layoutY="209.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Usuario" textAlignment="CENTER" wrappingWidth="145.1367437839508">
                <font>
                   <Font name="System Bold Italic" size="15.0" />
                </font></Text>
@@ -91,30 +76,6 @@
                <effect>
                   <DropShadow color="#000000cf" height="85.5" radius="40.95" width="80.3" />
                </effect></ImageView>
-            <ImageView fx:id="preImage" fitHeight="203.0" fitWidth="262.0" layoutX="14.0" layoutY="373.0" pickOnBounds="true" preserveRatio="true">
-               <effect>
-                  <DropShadow color="#00364af7" height="94.01" radius="45.5775" spread="0.07" width="90.3" />
-               </effect></ImageView>
-            <Text fill="#07c0e0f0" layoutX="14.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Previsualizacion:" wrappingWidth="116.986328125">
-               <font>
-                  <Font name="System Bold Italic" size="14.0" />
-               </font>
-            </Text>
-            <Circle fill="#2197ff39" layoutX="274.0" layoutY="374.0" opacity="0.9" radius="16.0" stroke="#006296da" strokeType="INSIDE">
-               <effect>
-                  <DropShadow />
-               </effect>
-            </Circle>
-            <Text fill="#000000c9" layoutX="268.0" layoutY="381.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X" wrappingWidth="12.99999624490738">
-               <font>
-                  <Font name="System Bold" size="19.0" />
-               </font>
-            </Text>
-            <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="891.0" layoutY="336.0" onMouseClicked="#eliminarTwitter">
-               <image>
-                  <Image url="@../Imagenes/delete.png" />
-               </image>
-            </ImageView>
          </children>
       </AnchorPane>
       <Button layoutX="963.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
@@ -124,3 +85,119 @@
       <InnerShadow color="#000000a6" height="78.82" radius="40.022499999999994" width="83.27" />
    </effect>
 </AnchorPane>
+
+                  <Button layoutX="467.0" layoutY="86.0" mnemonicParsing="false" onMouseClicked="#enviarTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
+                  <ProgressIndicator fx:id="pgA" accessibleText=" " layoutX="384.0" layoutY="85.0" opacity="0.95" prefHeight="50.0" prefWidth="29.0" progress="0.0" style="-fx-progress-color: darkblue;">
+                        <InnerShadow choke="0.32" radius="13.7075" width="35.83" />
+                     </effect></ProgressIndicator>
+                  <ImageView fx:id="imagenPerfil2" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
+                     <effect>
+                  <Line endX="34.0" endY="-6.0" layoutX="426.0" layoutY="90.0" opacity="0.72" startX="34.0" startY="26.0" />
+                  <Text fx:id="notificacionImagen" fill="#ee0202" layoutX="73.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Archivo Subido Con Exito!!" visible="false" wrappingWidth="294.0000077188015">
+                     <font>
+                        <Font name="System Bold Italic" size="14.0" />
+                     </font></Text>
+                  <Text fx:id="avisolimite" layoutX="283.0" layoutY="128.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Se ha pasado en:" visible="false" wrappingWidth="159.21875">
+                     <font>
+                        <Font size="14.0" />
+                     </font>
+                     <fill>
+                        <RadialGradient centerX="0.5" centerY="0.580952380952381" radius="0.5">
+                           <stops>
+                              <Stop color="#c30000" />
+                              <Stop color="#720000" offset="1.0" />
+                           </stops>
+                        </RadialGradient>
+                     </fill>
+                  </Text>
+                  <ImageView fitHeight="32.0" fitWidth="37.0" layoutX="126.0" layoutY="81.0">
+                     <image>
+                        <Image url="@../Imagenes/gif.png" />
+                     </image>
+                     <effect>
+                        <DropShadow height="70.0" radius="34.5" width="70.0" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fitHeight="37.0" fitWidth="40.0" layoutX="86.0" layoutY="81.0">
+                     <image>
+                        <Image url="@../Imagenes/file.png" />
+                     </image>
+                     <effect>
+                        <DropShadow height="70.0" radius="34.5" width="70.0" />
+                     </effect>
+                  </ImageView>
+                  <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="420.0" layoutY="84.0">
+                     <image>
+                        <Image url="@../Imagenes/plus.png" />
+                     </image>
+                     <effect>
+                        <DropShadow>
+                           <input>
+                              <InnerShadow height="3.0" radius="1.0" width="3.0" />
+                           </input>
+                        </DropShadow>
+                     </effect>
+                  </ImageView>
+                  <Button layoutX="90.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirImagen_Twitter" opacity="0.0" prefHeight="37.0" prefWidth="32.0" />
+                  <Button layoutX="129.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" opacity="0.0" prefHeight="32.0" prefWidth="32.0" />
+                  <InnerShadow>
+                     <input>
+                        <DropShadow height="89.2" radius="48.5475" spread="0.17" width="106.99" />
+                     </input>
+                  </InnerShadow>
+            <Button layoutX="908.0" layoutY="442.0" mnemonicParsing="false" text="Button" />
+            <ListView layoutX="22.0" layoutY="108.0" opacity="0.55" prefHeight="222.0" prefWidth="200.0" style="-fx-background-radius: 15px;" />
+            <Text fill="#03e2ffd6" layoutX="832.0" layoutY="568.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LosJavaPowerRanger®" textAlignment="CENTER" wrappingWidth="169.13671875">
+            <ImageView fx:id="preImage" fitHeight="203.0" fitWidth="262.0" layoutX="14.0" layoutY="373.0" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <DropShadow color="#00364af7" height="94.01" radius="45.5775" spread="0.07" width="90.3" />
+               </effect>
+            </ImageView>
+            <Text fill="#07c0e0f0" layoutX="14.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Previsualizacion:" wrappingWidth="116.986328125">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+            </Text>
+            <Circle fill="#2197ff39" layoutX="274.0" layoutY="374.0" opacity="0.9" radius="16.0" stroke="#006296da" strokeType="INSIDE" visible="false">
+               <effect>
+                  <DropShadow />
+               </effect>
+            </Circle>
+            <Text fill="#000000c9" layoutX="268.0" layoutY="381.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X" visible="false" wrappingWidth="12.99999624490738">
+               <font>
+                  <Font name="System Bold" size="19.0" />
+               </font>
+            </Text>
+            <ImageView fitHeight="58.0" fitWidth="56.0" layoutX="908.0" layoutY="290.0" onMouseClicked="#eliminarTwitter">
+               <image>
+                  <Image url="@../Imagenes/delete.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="911.0" layoutY="365.0" onMouseClicked="#retweetear">
+               <image>
+                  <Image url="@../Imagenes/retweet.png" />
+               </image>
+               <effect>
+                  <InnerShadow blurType="GAUSSIAN" height="11.86" radius="3.2075" width="2.97">
+                     <input>
+                        <DropShadow height="44.72" radius="21.86" width="44.72" />
+                     </input>
+                  </InnerShadow>
+               </effect>
+            </ImageView>
+            <Line endX="100.0" layoutX="128.0" layoutY="99.0" startX="-113.0" />
+            <ImageView fitHeight="37.0" fitWidth="40.0" layoutX="102.0" layoutY="62.0">
+               <image>
+                  <Image url="@../Imagenes/user.png" />
+               </image>
+               <effect>
+                  <DropShadow>
+                     <input>
+                        <InnerShadow height="3.0" radius="1.0" width="3.0" />
+                     </input>
+                  </DropShadow>
+               </effect>
+            </ImageView>
