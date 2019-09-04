@@ -16,7 +16,10 @@ package Ventanas;
 
 import Clases.ControlVentana;
 import Clases.Mensaje;
+import java.awt.Toolkit;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import javafx.scene.control.TextArea;
 import java.net.URL;
@@ -33,7 +36,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.ProgressIndicator;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
@@ -52,7 +54,7 @@ import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
-
+import javafx.event.Event;
 /**
  * 
  * FXML Controller class
@@ -74,6 +76,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML ImageView imagenPerfil2;
     @FXML WebView vista;
     @FXML ListView listaTiempo;
+    @FXML ImageView preImage;
+    @FXML Text avisolimite;
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
@@ -84,12 +88,43 @@ public class V2_Controller extends ControlVentana implements Initializable {
     ArrayList<String> textoMsj = new ArrayList();
     
     Scanner sc = new Scanner(System.in);
-
-    public void progresoTexto(KeyEvent event){      
-        if(msj.getText().length()>20)
-            msj.setEditable(true);
-        pgA.setProgress(msj.getText().length()/280.0);
+    
+    public void progresoTexto(Event event){   
+        System.out.println(msj.getAnchor());
+        pgA.setProgress(msj.getText().length()/280.0);  
+        pgA.progressProperty().addListener((ov, oldValue, newValue) -> {
+            Text text = (Text) pgA.lookup(" .percentage");
+            if(text!=null){
+               text.setText(Integer.toString(280-msj.getText().length()));               
+               // pgA.setPrefWidth(text.getLayoutBounds().getWidth());
+            }
+        });                      
+        if(msj.getText().length()>=250){
+            pgA.setStyle("-fx-progress-color: darkorange;");
+            System.out.println("aaa");
+            
+        }else{
+            pgA.setStyle("-fx-progress-color: darkblue;");
+        }
+        if(msj.getText().length()==280){
+            pgA.setProgress(0.999999);
+            avisolimite.setVisible(false);
+        }
+        if(msj.getText().length()>=270){
+            //pgA.setProgress((msj.getText().length()/280.0)-1.0);            
+            pgA.setStyle("-fx-progress-color: crimson;");
+            if(msj.getText().length()>280){
+                avisolimite.setVisible(true);
+                pgA.setProgress(0.999999);
+            }
+            //if(pgA.getProgress()>0.99)            
+            
+        }
     }
+    
+    public void minimizarVentana(MouseEvent event){    
+        ((Stage) ap.getScene().getWindow()).setIconified(true);        
+    }    
     
     // METODO LISTO
     public int enviarTwitter(MouseEvent event) throws TwitterException{       
@@ -105,14 +140,19 @@ public class V2_Controller extends ControlVentana implements Initializable {
         if(mensaje.verificar() && imgFile == null){
             twitter.updateStatus(status);
             msj.clear();
-            notificacionImagen.setVisible(false);
-            vista.getEngine().reload();
+            notificacionImagen.setVisible(false);            
+        }else{
+            Toolkit.getDefaultToolkit().beep();
+            this.popUp("TwitterBot_ | Error", "Demasiado Largo !!!!!");
         }
-        return 0;
+        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));     
+        vista.getEngine().reload();
+        return 0;        
     }
     
     // METODO LISTO
-    public void subirImagen_Twitter(MouseEvent event) throws TwitterException{
+    public void subirImagen_Twitter(MouseEvent event) throws FileNotFoundException{
+        String extension;
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Imagen");
         filech.getExtensionFilters().addAll(
@@ -122,12 +162,36 @@ public class V2_Controller extends ControlVentana implements Initializable {
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
+            extension = obtenerExtension(imgFile.getAbsolutePath());
             notificacionImagen.setVisible(true);
+            notificacionImagen.setText(extension.toUpperCase()+" Subido Con Exito!!");
+            if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")) {
+                if (imgFile.length()>1000000) {
+                    System.out.println("tamaño no permitido");
+                    imgFile = null;
+                    notificacionImagen.setText("Tamaño Archivo No Soportado!!");
+                    this.preImage.setImage(null);                    
+                }
+                else{
+                    Image imagen123 = new Image(new FileInputStream(imgFile));
+                    this.preImage.setImage(imagen123);
+                    notificacionImagen.setVisible(true);
+                }
+            }
+            else
+                if(extension.equalsIgnoreCase("mp4") && imgFile.length()>512000000){
+                    System.out.println("tamaño no permitido");
+                    imgFile = null;
+                    notificacionImagen.setText("Tamaño Archivo No Soportado!!");
+                    this.preImage.setImage(null);
+                }
         }
+        if(this.preImage.getImage() == null)
+            this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));   
     }
     
     // METODO LISTO
-    public void subirGif_Twitter(MouseEvent event) throws TwitterException{
+    public void subirGif_Twitter(MouseEvent event) throws FileNotFoundException{
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Gif");
         filech.getExtensionFilters().addAll(
@@ -135,9 +199,30 @@ public class V2_Controller extends ControlVentana implements Initializable {
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
+            notificacionImagen.setText("GIF Subido Con Exito!!");
+            if (imgFile.length()>15000000) {
+                System.out.println("tamaño no permitido");
+                imgFile = null;
+                notificacionImagen.setText("Tamaño Archivo No Soportado!!");
+                this.preImage.setImage(null);
+            }
+            Image imagen123 = new Image(new FileInputStream(imgFile));
+            this.preImage.setImage(imagen123);
             notificacionImagen.setVisible(true);
         }
     }
+    
+    // METODO LISTO
+    private static String obtenerExtension(String filename){
+        int index = filename.lastIndexOf('.');
+        if (index == -1) {
+            return "";
+        }
+        else{
+            return filename.substring(index+1);
+        }
+    }
+    
     
     // METODO LISTO
     public void eliminarTwitter(MouseEvent event) throws TwitterException{
@@ -237,15 +322,45 @@ public class V2_Controller extends ControlVentana implements Initializable {
         }
     }
     
-    
-    
-    
-    
-    
+    /* Obsoleto eliminarTwitter
+    public void eliminarTwitter(MouseEvent event) throws TwitterException{
+        
+        System.out.println("Entro");
+        ResponseList<Status> Line = twitter.getHomeTimeline();
+        Line.forEach((status) -> {
+            mensajeId.add(status.getId());
+            textoMsj.add(status.getText());
+            //System.out.println("ID: " + status.getId() + " - " + status.getText());
+        });
+        System.out.println("talla ids: "+mensajeId.size());
+        System.out.println("talla textos " + textoMsj.size());
+         for (int i = 0; i<mensajeId.size(); i++) {
+            System.out.println(i+"."+textoMsj.get(i));
+        }
+         
+        System.out.print("numero del twitt a eliminar: ");
+        Scanner sc = new Scanner(System.in);
+        int opcion = sc.nextInt();
+        
+        twitter.destroyStatus(mensajeId.get(opcion));
+        mensajeId.remove(opcion);
+        textoMsj.remove(opcion);
+        System.out.println("mesaje eliminado");
+        vista.getEngine().reload();
+         long id = sc.nextLong();
+        
+        for (Status status : Line) {
+            if (id==status.getId()) {
+                twitter.destroyStatus(id);
+                System.out.println("Twitt "+id+" eliminado");
+                vista.getEngine().reload();
+            }
+        }       
+    }*/ 
     
     
     public void seguirUsuario(MouseEvent event) throws TwitterException{
-       //necesito ids de los usuarios
+        
     }
     
     
@@ -277,15 +392,10 @@ public class V2_Controller extends ControlVentana implements Initializable {
         
         // ****** ESTO GENERA EL WEBVIEW ******
         WebEngine engine = vista.getEngine();
-        engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
-        engine.load("https://twitter.com/power_java");
-        String webViewContents = (String) engine
-            .executeScript("document.documentElement.outerHTML");
-        StringBuilder scrollHtml = scrollWebView(0, 50);
-        String appendContent = "<div id='append'>Appended html content</div> Appended text content";
-        //engine.loadContent(scrollHtml + webViewContents);
+        //engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
+        engine.load("https://twitter.com/power_java");        
         vista.setContextMenuEnabled(false);      
-        vista.setZoom(0.80);        
+        vista.setZoom(0.50);        
         // ************ HASTA ACA *********
         msj.setWrapText(true);
         try {
@@ -300,6 +410,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
         } catch (TwitterException | IllegalStateException ex) {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
+        this.arrastrarVentana(this.ap);           
+        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));             
     }  
     
     @FXML
@@ -308,7 +420,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         URL location = V1_Control.class.getResource("V1.fxml");
         loader.setLocation(location);
         Stage v1 = new Stage();
-        v1.setTitle(" TwitterBot_ | Inicio");
+        v1.setTitle("TwitterBot_ | Inicio");
         v1.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png"))); 
         v1.setOpacity(1);         
         AnchorPane inicioSesion = loader.load();        
@@ -321,18 +433,5 @@ public class V2_Controller extends ControlVentana implements Initializable {
         v1.initStyle(StageStyle.TRANSPARENT);
         v1.centerOnScreen();
         v1.show();  
-    }
-    
-    public static StringBuilder scrollWebView(int xPos, int yPos) {
-        StringBuilder script = new StringBuilder().append("<html>");
-        script.append("<head>");
-        script.append("   <script language=\"javascript\" type=\"text/javascript\">");
-        script.append("       function toBottom(){");
-        script.append("           window.scrollTo(" + xPos + ", " + yPos + ");");
-        script.append("       }");
-        script.append("   </script>");
-        script.append("</head>");
-        script.append("<body onload='toBottom()'>");
-        return script;
     }
 }
