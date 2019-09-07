@@ -55,6 +55,8 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
 import javafx.event.Event;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 /**
  * 
  * FXML Controller class
@@ -82,7 +84,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private File imgFile;
     private Stage stage = this.stage;
     private Twitter twitter;
+    private Twitter sender;
     private List<Status> lineaDeTiempo;
+    private Text mensajeDirecto;
     
     ArrayList<Long> mensajeId = new ArrayList();
     ArrayList<String> textoMsj = new ArrayList();
@@ -141,9 +145,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
             twitter.updateStatus(status);
             msj.clear();
             notificacionImagen.setVisible(false);            
-        }else{
-            Toolkit.getDefaultToolkit().beep();
-            this.popUp("TwitterBot_ | Error", "Demasiado Largo !!!!!");
+        }else{            
+            Toolkit.getDefaultToolkit().beep();            
+            JOptionPane auxiliar = new JOptionPane();
+            auxiliar.setMessage("Texto de Tweet demasiado largo");
+            auxiliar.setMessageType(0);
+            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);   
         }
         this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));     
         vista.getEngine().reload();
@@ -360,59 +369,34 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     
     public void seguirUsuario(MouseEvent event) throws TwitterException{
+        twitter.friendsFollowers().createFriendship("fapm10");
         
     }
     
     
     public void noSeguirUsuario(MouseEvent event) throws TwitterException{
-        
+        Toolkit.getDefaultToolkit().beep();            
+        JOptionPane auxiliar = new JOptionPane();
+        auxiliar.setMessage("Nombre usuario y/o clave incorrecta");
+        auxiliar.setMessageType(3);
+        JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error");
+        dialog.setAlwaysOnTop(true);
+        dialog.setVisible(true);   
+        twitter.destroyFriendship("fapm10");
     }
     
     //vista protegida?
     public void costumeImageView(){
         
     }
-
-    /**
-     * Initializes the controller class.
-     * @param url
-     * @param rb
-     */
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-        .setOAuthConsumerKey("FI7zwXVxcqKBAozpTrqxJNfIA")
-        .setOAuthConsumerSecret("bNjRO185DPOXnFqMOXJ2arJOQF1EG3TLFKXQPGCoCrM7649Lpe")
-        .setOAuthAccessToken("1160640022971867138-WMcI6McTZAjpQ81949F6pr8NhfyO5a")
-        .setOAuthAccessTokenSecret("2YtfMfSlpMUO3QlS3adHSw9AJmTqJMXiZC9D4BEcyhP7Q")
-        .setIncludeEmailEnabled(true);
-        TwitterFactory tf = new TwitterFactory(cb.build());
-        twitter = tf.getInstance();
+    
+    public void mensajeDirecto(MouseEvent event) throws TwitterException{          
+        User user = twitter.showUser("fapm10");
+        long userId = user.getId();
+        System.out.println(userId);
+        twitter.directMessages().sendDirectMessage(userId, mensajeDirecto.getText());            
         
-        // ****** ESTO GENERA EL WEBVIEW ******
-        WebEngine engine = vista.getEngine();
-        //engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
-        engine.load("https://twitter.com/power_java");        
-        vista.setContextMenuEnabled(false);      
-        vista.setZoom(0.50);        
-        // ************ HASTA ACA *********
-        msj.setWrapText(true);
-        try {
-            lineaDeTiempo = twitter.getUserTimeline();            
-            User newUser = twitter.showUser(twitter.getScreenName());            
-            usuario.setText("@"+newUser.getScreenName());
-            usuario2.setText(newUser.getName());
-            imagenPerfil.setImage(new Image(newUser.get400x400ProfileImageURL()));
-            imagenPerfil2.setImage(new Image(newUser.get400x400ProfileImageURL()));
-            correo.setText(newUser.getEmail());
-            
-        } catch (TwitterException | IllegalStateException ex) {
-            Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        this.arrastrarVentana(this.ap);           
-        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));             
-    }  
+    }
     
     @FXML
     public void cerrarSesion(MouseEvent event) throws IOException{
@@ -434,4 +418,46 @@ public class V2_Controller extends ControlVentana implements Initializable {
         v1.centerOnScreen();
         v1.show();  
     }
+
+    /**
+     * Initializes the controller class.
+     * @param url
+     * @param rb
+     */
+    @Override
+    public void initialize(URL url, ResourceBundle rb) {
+        ConfigurationBuilder cb = new ConfigurationBuilder();
+        cb.setDebugEnabled(true)
+        .setOAuthConsumerKey("re7Dqm5XXdntquMGMhfPGmyvb")
+        .setOAuthConsumerSecret("PClBZjCdfMYcjdFt9vMeMoh3KJc8dkNeT9urrIvov3XAqfmnnD")
+        .setOAuthAccessToken("1160640022971867138-pKnQdWR1CPjRZoyAd7BwOBWIgWt56u")
+        .setOAuthAccessTokenSecret("nW7iSxt9oHdyzukWKwQGEfLHIcZQFr8V0rZvqZl28DdFG")                
+        .setIncludeEmailEnabled(true);        
+        TwitterFactory tf = new TwitterFactory(cb.build());
+        twitter = tf.getInstance();              
+        
+        // ****** ESTO GENERA EL WEBVIEW ******
+        WebEngine engine = vista.getEngine();
+        //engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
+        engine.load("https://twitter.com/power_java");        
+        vista.setContextMenuEnabled(false);      
+        vista.setZoom(0.50);        
+        // ************ HASTA ACA *********
+        msj.setWrapText(true);
+        try {
+            lineaDeTiempo = twitter.getUserTimeline();            
+            User newUser = twitter.showUser(twitter.getScreenName());            
+            usuario.setText("@"+newUser.getScreenName());
+            usuario2.setText(newUser.getName());
+            imagenPerfil.setImage(new Image(newUser.get400x400ProfileImageURL()));
+            imagenPerfil2.setImage(new Image(newUser.get400x400ProfileImageURL()));                 
+            System.out.println(newUser.getEmail());
+            correo.setText(newUser.getEmail());
+            
+        } catch (TwitterException | IllegalStateException ex) {
+            Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        this.arrastrarVentana(this.ap);           
+        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));             
+    }  
 }

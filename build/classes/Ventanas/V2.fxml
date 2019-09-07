@@ -17,11 +17,11 @@
 <?import javafx.scene.text.Text?>
 <?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
-      <AnchorPane layoutY="24.0" prefHeight="576.0" prefWidth="1000.0">
+      <AnchorPane prefHeight="602.0" prefWidth="1002.0">
          <children>
-            <AnchorPane layoutX="304.0" layoutY="389.0" prefHeight="150.0" prefWidth="574.0">
+            <AnchorPane layoutX="304.0" layoutY="416.0" prefHeight="109.0" prefWidth="574.0">
                <children>
                   <TextArea fx:id="msj" layoutX="73.0" layoutY="14.0" onKeyPressed="#progresoTexto" onKeyReleased="#progresoTexto" onMouseReleased="#progresoTexto" opacity="0.89" prefHeight="62.0" prefWidth="468.0" promptText="¿Qué está pasando?" style="-fx-border-radius: 10px; -fx-background-radius: 10px;">
                      <font>
@@ -32,28 +32,15 @@
                      </effect>
                   </TextArea>
                   <Button layoutX="467.0" layoutY="86.0" mnemonicParsing="false" onMouseClicked="#enviarTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
-<<<<<<< HEAD
-                  <Button layoutX="73.0" layoutY="87.0" mnemonicParsing="false" onMouseClicked="#subirImagen_Twitter" text="Subir Media" />
-                  <ProgressIndicator fx:id="pgA" accessibleText=" " layoutX="384.0" layoutY="85.0" opacity="0.95" prefHeight="50.0" prefWidth="29.0" progress="0.0" style="-fx-progress-color: darkblue;">
-                     <effect>
-                        <InnerShadow choke="0.26" />
-                     </effect></ProgressIndicator>
-                  <Button layoutX="165.0" layoutY="87.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" text="Subir Gif" />
-=======
                   <ProgressIndicator fx:id="pgA" accessibleText=" " layoutX="384.0" layoutY="85.0" opacity="0.95" prefHeight="50.0" prefWidth="29.0" progress="0.0" style="-fx-progress-color: darkblue;">
                      <effect>
                         <InnerShadow choke="0.32" radius="13.7075" width="35.83" />
                      </effect></ProgressIndicator>
->>>>>>> Carmen
                   <ImageView fx:id="imagenPerfil2" fitHeight="50.0" fitWidth="50.0" layoutX="14.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true">
                      <effect>
                         <DropShadow height="32.86" radius="15.93" width="32.86" />
                      </effect></ImageView>
                   <Line endX="34.0" endY="-6.0" layoutX="426.0" layoutY="90.0" opacity="0.72" startX="34.0" startY="26.0" />
-<<<<<<< HEAD
-                  <Button layoutX="424.0" layoutY="88.0" mnemonicParsing="false" text="+" />
-=======
->>>>>>> Carmen
                   <Text fx:id="notificacionImagen" fill="#ee0202" layoutX="73.0" layoutY="132.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Archivo Subido Con Exito!!" visible="false" wrappingWidth="294.0000077188015">
                      <font>
                         <Font name="System Bold Italic" size="14.0" />
@@ -71,8 +58,6 @@
                         </RadialGradient>
                      </fill>
                   </Text>
-<<<<<<< HEAD
-=======
                   <ImageView fitHeight="32.0" fitWidth="37.0" layoutX="126.0" layoutY="81.0">
                      <image>
                         <Image url="@../Imagenes/gif.png" />
@@ -103,26 +88,13 @@
                   </ImageView>
                   <Button layoutX="90.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirImagen_Twitter" opacity="0.0" prefHeight="37.0" prefWidth="32.0" />
                   <Button layoutX="129.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" opacity="0.0" prefHeight="32.0" prefWidth="32.0" />
->>>>>>> Carmen
                </children>
             </AnchorPane>
-            <WebView fx:id="vista" layoutX="260.0" layoutY="52.0" opacity="0.97" prefHeight="292.0" prefWidth="589.0">
+            <WebView fx:id="vista" layoutX="276.0" layoutY="95.0" opacity="0.97" prefHeight="292.0" prefWidth="574.0">
                <effect>
-<<<<<<< HEAD
                   <DropShadow color="#000000fd" height="130.0" radius="64.5" width="130.0" />
                </effect></WebView>
-            <Button layoutX="907.0" layoutY="389.0" mnemonicParsing="false" text="Button" />
-            <Button layoutX="907.0" layoutY="436.0" mnemonicParsing="false" text="Button" />
-            <Button layoutX="22.0" layoutY="74.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="200.0" text="Button" />
-=======
-                  <InnerShadow>
-                     <input>
-                        <DropShadow height="89.2" radius="48.5475" spread="0.17" width="106.99" />
-                     </input>
-                  </InnerShadow>
-               </effect></WebView>
-            <Button layoutX="908.0" layoutY="442.0" mnemonicParsing="false" text="Button" />
->>>>>>> Carmen
+            <Button layoutX="900.0" layoutY="442.0" mnemonicParsing="false" onMouseClicked="#mensajeDirecto" prefHeight="22.0" prefWidth="85.0" text="Mensaje" />
             <ListView layoutX="22.0" layoutY="108.0" opacity="0.55" prefHeight="222.0" prefWidth="200.0" style="-fx-background-radius: 15px;" />
             <Text fill="#03e2ffd6" layoutX="832.0" layoutY="568.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LosJavaPowerRanger®" textAlignment="CENTER" wrappingWidth="169.13671875">
                <font>
@@ -132,11 +104,11 @@
                <font>
                   <Font size="18.0" />
                </font></Text>
-            <Text fx:id="correo" fill="#5a8aa1d5" layoutX="855.0" layoutY="251.0" strokeType="OUTSIDE" strokeWidth="0.0" text="usuario@correo.com" textAlignment="CENTER" wrappingWidth="145.1367437839508">
+            <Text fx:id="correo" fill="#5a8aa1d5" layoutX="855.0" layoutY="247.0" strokeType="OUTSIDE" strokeWidth="0.0" text="usuario@correo.com" textAlignment="CENTER" wrappingWidth="145.13672000169754">
                <font>
                   <Font size="15.0" />
                </font></Text>
-            <Text fx:id="usuario2" fill="#94ddffc7" layoutX="429.0" layoutY="35.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre Usuario" textAlignment="CENTER" wrappingWidth="235.13671398162842">
+            <Text fx:id="usuario2" fill="#94ddffc7" layoutX="445.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre Usuario" textAlignment="CENTER" wrappingWidth="235.13671398162842">
                <font>
                   <Font size="32.0" />
                </font></Text>
@@ -147,41 +119,23 @@
             <ImageView fx:id="preImage" fitHeight="203.0" fitWidth="262.0" layoutX="14.0" layoutY="373.0" pickOnBounds="true" preserveRatio="true">
                <effect>
                   <DropShadow color="#00364af7" height="94.01" radius="45.5775" spread="0.07" width="90.3" />
-<<<<<<< HEAD
-               </effect></ImageView>
-=======
                </effect>
             </ImageView>
->>>>>>> Carmen
             <Text fill="#07c0e0f0" layoutX="14.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Previsualizacion:" wrappingWidth="116.986328125">
                <font>
                   <Font name="System Bold Italic" size="14.0" />
                </font>
             </Text>
-<<<<<<< HEAD
-            <Circle fill="#2197ff39" layoutX="274.0" layoutY="374.0" opacity="0.9" radius="16.0" stroke="#006296da" strokeType="INSIDE">
-=======
             <Circle fill="#2197ff39" layoutX="274.0" layoutY="374.0" opacity="0.9" radius="16.0" stroke="#006296da" strokeType="INSIDE" visible="false">
->>>>>>> Carmen
                <effect>
                   <DropShadow />
                </effect>
             </Circle>
-<<<<<<< HEAD
-            <Text fill="#000000c9" layoutX="268.0" layoutY="381.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X" wrappingWidth="12.99999624490738">
-=======
             <Text fill="#000000c9" layoutX="268.0" layoutY="381.0" strokeType="OUTSIDE" strokeWidth="0.0" text="X" visible="false" wrappingWidth="12.99999624490738">
->>>>>>> Carmen
                <font>
                   <Font name="System Bold" size="19.0" />
                </font>
             </Text>
-<<<<<<< HEAD
-            <ImageView fitHeight="32.0" fitWidth="32.0" layoutX="891.0" layoutY="336.0" onMouseClicked="#eliminarTwitter">
-               <image>
-                  <Image url="@../Imagenes/delete.png" />
-               </image>
-=======
             <ImageView fitHeight="58.0" fitWidth="56.0" layoutX="908.0" layoutY="290.0" onMouseClicked="#eliminarTwitter">
                <image>
                   <Image url="@../Imagenes/delete.png" />
@@ -214,8 +168,9 @@
                      </input>
                   </DropShadow>
                </effect>
->>>>>>> Carmen
             </ImageView>
+            <Button layoutX="900.0" layoutY="475.0" mnemonicParsing="false" onMouseClicked="#seguirUsuario" prefHeight="22.0" prefWidth="85.0" text="Seguir" />
+            <Button layoutX="900.0" layoutY="510.0" mnemonicParsing="false" onMouseClicked="#noSeguirUsuario" prefHeight="22.0" prefWidth="85.0" text="No Seguir" />
          </children>
       </AnchorPane>
       <Button layoutX="963.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />

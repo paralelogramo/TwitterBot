@@ -24,8 +24,10 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import Clases.ControlVentana;
 import Clases.Usuario;
+import java.awt.HeadlessException;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -61,10 +63,14 @@ public class V1_Control extends ControlVentana implements Initializable {
     @FXML private ProgressIndicator cargando;
     @FXML private TextField usuario;
     @FXML private PasswordField clave; 
-    private final String servidorDB = "jdbc:mysql://sql10.freesqldatabase.com:3306/sql10303413";
-    private final String usuarioDB = "sql10303413";
-    private final String claveDB = "HAW2rTnKZ4";
+    private final String servidorDB = "jdbc:mysql://sql10.freesqldatabase.com:3306/sql10304415";
+    private final String usuarioDB = "sql10304415";
+    private final String claveDB = "55M5SGgfTH";
     private Connection coneccionDB;
+    private final String dirWeb = "www.twitter.com";
+    private final int puerto = 80;
+    private String usuarioRed;
+    private String claveRed;            
     private final Pattern patronUsuario = Pattern.compile("^[a-zA-Z0-9]{4,10}$", Pattern.MULTILINE);
     private final Pattern patronCorreo = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$", Pattern.MULTILINE);
     
@@ -78,34 +84,34 @@ public class V1_Control extends ControlVentana implements Initializable {
     @FXML
     public void inicioSesion(MouseEvent evento){         
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
-        clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
-        
-        String consulta = "SELECT * FROM Usuario WHERE usuario='"+usuario.getText()+"' && clave='"+clave.getText()+"'";
-        try{
-        ResultSet resultado = coneccionDB.createStatement().executeQuery(consulta);
-        String aux = resultado.getString(consulta);
-        }catch (SQLException e){
-            
-        }
+        clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");        
+        String consulta = "SELECT * FROM Usuario WHERE Usuarios='"+usuario.getText()+"' && clave='"+clave.getText()+"'";         
+        //ResultSet resultado = coneccionDB.createStatement().executeQuery(consulta);
+        //String aux = resultado.getString(consulta);
+        //System.out.println(aux);
         if(this.esCompatible(usuario.getText(), clave.getText()))           
             if(this.ingresar(usuario.getText(), clave.getText(), new Usuario (usuario.getText(), clave.getText(),"")))
-                try {  
-                    iniciarSesion();
-                } catch (IOException ex) {
-                    Logger.getLogger(V1_Control.class.getName()).log(Level.SEVERE, null, ex);
-                }  
-            else{
-                Toolkit.getDefaultToolkit().beep();
-                this.popUp("Error", "Nombre usuario y/o clave incorrecta");
-                clave.clear();
-                cargando.setVisible(false);
+                iniciarSesion();  
+            else{                
+                Toolkit.getDefaultToolkit().beep();            
+                JOptionPane auxiliar = new JOptionPane();
+                auxiliar.setMessage("Nombre usuario y/o clave incorrecta");
+                auxiliar.setMessageType(0);
+                JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error");
+                dialog.setAlwaysOnTop(true);
+                dialog.setVisible(true);    
+                clave.clear();                
             }  
-        else{
-            Toolkit.getDefaultToolkit().beep();
-            this.popUp("Error", "Nombre usuario y/o clave no valida");
-            clave.clear();
-            cargando.setVisible(false);
-        }
+        else{            
+            Toolkit.getDefaultToolkit().beep();            
+            JOptionPane auxiliar = new JOptionPane();
+            auxiliar.setMessage("Nombre usuario y/o clave no valida");
+            auxiliar.setMessageType(0);
+            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);    
+            clave.clear();            
+        }       
     }      
     
     @FXML 
@@ -137,7 +143,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     }
     
     @FXML
-    private void iniciarSesion() throws IOException{
+    private void iniciarSesion(){
         FXMLLoader loader = new FXMLLoader();
         URL location = V1_Control.class.getResource("V2.fxml");
         loader.setLocation(location);
@@ -145,10 +151,21 @@ public class V1_Control extends ControlVentana implements Initializable {
         stage.setTitle(" TwitterBot_ | Panel de Control");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png"))); 
         stage.setOpacity(1);         
-        AnchorPane panelControl = loader.load();        
-        Scene scene = new Scene(panelControl);     
-        //stage.setOpacity(0.95);
-        stage.setScene(scene);
+        AnchorPane panelControl;        
+        try {
+            panelControl = loader.load();
+            Scene scene = new Scene(panelControl); 
+            stage.setScene(scene);
+        } catch (IOException ex) {
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane auxiliar = new JOptionPane();
+            auxiliar.setMessage("El proceso no puede cargar la ventana (archivo: V2.fxml)");
+            auxiliar.setMessageType(0);
+            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error ");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);       
+        }            
+        //stage.setOpacity(0.95);        
         stage.initOwner(this.ap.getScene().getWindow());            
         stage.setResizable(false);
         ((Stage)this.ap.getScene().getWindow()).close();     
@@ -171,7 +188,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     }
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {  
+    public void initialize(URL url, ResourceBundle rb) {          
         try {                      
             this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);
             Toolkit.getDefaultToolkit().beep();            
@@ -190,7 +207,26 @@ public class V1_Control extends ControlVentana implements Initializable {
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);       
         }
+        try{
+            Socket s = new Socket(dirWeb, puerto);
+            Toolkit.getDefaultToolkit().beep();            
+            JOptionPane auxiliar = new JOptionPane();
+            auxiliar.setMessage("Conectado a Twitter.com con exito");
+            auxiliar.setMessageType(1);
+            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Conexión ");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);            
+        } catch (HeadlessException | IOException | SecurityException ex) {
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane auxiliar = new JOptionPane();
+            auxiliar.setMessage("Error en conexión a Twitter.com");
+            auxiliar.setMessageType(0);
+            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Conexión ");
+            dialog.setAlwaysOnTop(true);
+            dialog.setVisible(true);       
+        }
         usuarios.add(new Usuario("user","admin",""));
+        System.out.println(new Usuario("user","admin","").getClave());
         this.arrastrarVentana(this.ap);            
     }    
 }

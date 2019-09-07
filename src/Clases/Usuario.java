@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
  *          Vicente Rojas, Kevin Douglas.
  * @version 1.0
  */
-public class Usuario {
+public class Usuario { 
     private String nombreUsuario;    
     private String clave;
     private String correo;
@@ -67,7 +67,15 @@ public class Usuario {
     
     public boolean contraseñaValida(String aux){       
         return getCodigo(aux)==codigo;
-    }   
+    }     
+    
+    public boolean recuperacionValida(int aux){       
+        return aux==getCodigo(clave);
+    }       
+    
+    public int getClave(){
+        return this.codigo;
+    }    
 
     @Override
     public boolean equals(Object obj) {
