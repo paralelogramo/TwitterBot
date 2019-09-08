@@ -133,11 +133,11 @@ public class V1_Control extends ControlVentana implements Initializable {
         stage.setTitle(" TwitterBot_ | Panel de Control");
         stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png"))); 
         stage.setOpacity(1);         
-        AnchorPane panelControl;        
-        try {
-            panelControl = loader.load();
+        
+        try {            
+            AnchorPane panelControl = loader.load();
             Scene scene = new Scene(panelControl); 
-            stage.setScene(scene);
+            stage.setScene(scene);            
         } catch (IOException ex) {
             this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml)", "Error");                              
         }            
