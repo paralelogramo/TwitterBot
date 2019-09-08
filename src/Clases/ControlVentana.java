@@ -24,6 +24,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -70,4 +72,15 @@ public class ControlVentana {
         Toolkit.getDefaultToolkit().beep();
         dialog.show();        
     }  
+    
+    public void popUp(int tipo, String mensaje, String titulo){        
+        Toolkit.getDefaultToolkit().beep();            
+        JOptionPane auxiliar = new JOptionPane();
+        auxiliar.setMessage(mensaje);
+        auxiliar.setMessageType(tipo);       
+        JDialog dialogo = auxiliar.createDialog("TwitterBot_ | "+titulo);  
+        dialogo.setModal(true);
+        dialogo.setAlwaysOnTop(true);
+        dialogo.setVisible(true);            
+    }    
 }

@@ -25,16 +25,12 @@ import javafx.scene.layout.AnchorPane;
 import Clases.ControlVentana;
 import Clases.Usuario;
 import java.awt.HeadlessException;
-import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
 import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import java.util.regex.Pattern;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -44,8 +40,6 @@ import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-import javax.swing.JDialog;
-import javax.swing.JOptionPane;
 
 /**
  *
@@ -92,24 +86,12 @@ public class V1_Control extends ControlVentana implements Initializable {
         if(this.esCompatible(usuario.getText(), clave.getText()))           
             if(this.ingresar(usuario.getText(), clave.getText(), new Usuario (usuario.getText(), clave.getText(),"")))
                 iniciarSesion();  
-            else{                
-                Toolkit.getDefaultToolkit().beep();            
-                JOptionPane auxiliar = new JOptionPane();
-                auxiliar.setMessage("Nombre usuario y/o clave incorrecta");
-                auxiliar.setMessageType(0);
-                JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error");
-                dialog.setAlwaysOnTop(true);
-                dialog.setVisible(true);    
+            else{                  
+                this.popUp(0, "Nombre usuario y/o clave incorrecta", "Error");                
                 clave.clear();                
             }  
         else{            
-            Toolkit.getDefaultToolkit().beep();            
-            JOptionPane auxiliar = new JOptionPane();
-            auxiliar.setMessage("Nombre usuario y/o clave no valida");
-            auxiliar.setMessageType(0);
-            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);    
+            this.popUp(0, "Nombre usuario y/o clave no valida", "Error");                 
             clave.clear();            
         }       
     }      
@@ -157,13 +139,7 @@ public class V1_Control extends ControlVentana implements Initializable {
             Scene scene = new Scene(panelControl); 
             stage.setScene(scene);
         } catch (IOException ex) {
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane auxiliar = new JOptionPane();
-            auxiliar.setMessage("El proceso no puede cargar la ventana (archivo: V2.fxml)");
-            auxiliar.setMessageType(0);
-            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error ");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);       
+            this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml)", "Error");                              
         }            
         //stage.setOpacity(0.95);        
         stage.initOwner(this.ap.getScene().getWindow());            
@@ -177,8 +153,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     @FXML
     private void recuperarUsuario(MouseEvent event){
         ingresar.setVisible(false);
-        recuperar.setVisible(true);
-        
+        recuperar.setVisible(true);        
     }
     
     @FXML
@@ -190,43 +165,18 @@ public class V1_Control extends ControlVentana implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {          
         try {                      
-            this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);
-            Toolkit.getDefaultToolkit().beep();            
-            JOptionPane auxiliar = new JOptionPane();
-            auxiliar.setMessage("Conectado a servidor con exito");
-            auxiliar.setMessageType(1);
-            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Conexión ");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);            
+            this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);            
+            this.popUp(1, "Conectado a servidor de datos con exito", "Conexión");         
         } catch (SQLException ex) {
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane auxiliar = new JOptionPane();
-            auxiliar.setMessage("Error en conexión a servidor");
-            auxiliar.setMessageType(0);
-            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Conexión ");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);       
+            this.popUp(0, "Error en conexión con servidor de datos", "Conexión");       
         }
         try{
             Socket s = new Socket(dirWeb, puerto);
-            Toolkit.getDefaultToolkit().beep();            
-            JOptionPane auxiliar = new JOptionPane();
-            auxiliar.setMessage("Conectado a Twitter.com con exito");
-            auxiliar.setMessageType(1);
-            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Conexión ");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);            
+            this.popUp(1, "Conectado a Twitter.com con exito", "Conexión ");                      
         } catch (HeadlessException | IOException | SecurityException ex) {
-            Toolkit.getDefaultToolkit().beep();
-            JOptionPane auxiliar = new JOptionPane();
-            auxiliar.setMessage("Error en conexión a Twitter.com");
-            auxiliar.setMessageType(0);
-            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Conexión ");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);       
+            this.popUp(0, "Error en conexión a Twitter.com", "Conexión");               
         }
-        usuarios.add(new Usuario("user","admin",""));
-        System.out.println(new Usuario("user","admin","").getClave());
-        this.arrastrarVentana(this.ap);            
+        usuarios.add(new Usuario("user","admin",""));        
+        //this.arrastrarVentana(this.ap);            
     }    
 }
