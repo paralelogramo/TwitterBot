@@ -55,8 +55,11 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
 import javafx.event.Event;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import twitter4j.IDs;
 /**
  * 
  * FXML Controller class
@@ -87,6 +90,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Twitter sender;
     private List<Status> lineaDeTiempo;
     private Text mensajeDirecto;
+    private final char arroa = 64;
+    private final ArrayList<String> usuariosSeguidos = new ArrayList<>();     
     
     ArrayList<Long> mensajeId = new ArrayList();
     ArrayList<String> textoMsj = new ArrayList();
@@ -368,21 +373,53 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }*/ 
     
     
-    public void seguirUsuario(MouseEvent event) throws TwitterException{
-        twitter.friendsFollowers().createFriendship("fapm10");
+    public void seguirUsuario(MouseEvent event){
+        this.ap.setDisable(true);
+        JOptionPane entrada = new JOptionPane();        
+        entrada.setMessage("Ingrese nombre de usuario a seguir"); 
+        entrada.setWantsInput(true);
+        JDialog dialogo = entrada.createDialog("TwitterBot_ | Seguir");       
+        dialogo.setAlwaysOnTop(true);
+        dialogo.setVisible(true);   
+        String seguirUsuario = entrada.getToolTipText();
+     
+        if(seguirUsuario != null) {       
+            try {
+                twitter.friendsFollowers().createFriendship(seguirUsuario);
+            } catch (TwitterException ex) {
+                this.popUp(0, seguirUsuario+" no existe", "Error");
+            }                
+        } else {
+            
+        }
+        
+        usuariosSeguidos.add(arroa+seguirUsuario);
         
     }
     
     
     public void noSeguirUsuario(MouseEvent event) throws TwitterException{
-        Toolkit.getDefaultToolkit().beep();            
-        JOptionPane auxiliar = new JOptionPane();
-        auxiliar.setMessage("Nombre usuario y/o clave incorrecta");
-        auxiliar.setMessageType(3);
-        JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error");
-        dialog.setAlwaysOnTop(true);
-        dialog.setVisible(true);   
-        twitter.destroyFriendship("fapm10");
+        User u1 = null ;
+        long contador = -1;
+        IDs ids;       
+        do {
+            ids = twitter.getFriendsIDs(twitter.getScreenName(), contador);
+            for (long id : ids.getIDs()) {                    
+                System.out.println(contador);
+                User user = twitter.showUser(id);
+                System.out.println(user.getScreenName());
+                usuariosSeguidos.add(arroa+user.getScreenName());
+            }
+        } while ((contador = ids.getNextCursor()) != 0);
+        if(usuariosSeguidos.isEmpty())
+            this.popUp(0, twitter.getScreenName()+" no sigue a ningun usuario", "Error");
+        else{            
+            String [] seguidos = usuariosSeguidos.toArray(new String[usuariosSeguidos.size()]); 
+            Icon icono = new ImageIcon("/Imagenes/icon.png");       
+            String seleccionado = (String) JOptionPane.showInputDialog(null, "Seleccionar usuario para dejar de seguir", "TwitterBot_ | Dejar de Seguir", JOptionPane.DEFAULT_OPTION, icono, seguidos, seguidos[0]);            
+            twitter.destroyFriendship(seleccionado);            
+            usuariosSeguidos.remove(seleccionado);
+        }
     }
     
     //vista protegida?
