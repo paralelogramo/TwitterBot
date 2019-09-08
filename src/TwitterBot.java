@@ -49,15 +49,7 @@ public class TwitterBot extends Application {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args){           
-    /*  ConfigurationBuilder cb = new ConfigurationBuilder();
-        cb.setDebugEnabled(true)
-        .setOAuthConsumerKey("FI7zwXVxcqKBAozpTrqxJNfIA")
-        .setOAuthConsumerSecret("bNjRO185DPOXnFqMOXJ2arJOQF1EG3TLFKXQPGCoCrM7649Lpe")
-        .setOAuthAccessToken("1160640022971867138-WMcI6McTZAjpQ81949F6pr8NhfyO5a")
-        .setOAuthAccessTokenSecret("2YtfMfSlpMUO3QlS3adHSw9AJmTqJMXiZC9D4BEcyhP7Q");
-        TwitterFactory tf = new TwitterFactory(cb.build());
-        Twitter twitter = tf.getInstance();   */        
+    public static void main(String[] args){                  
         launch(args);
     }   
 }

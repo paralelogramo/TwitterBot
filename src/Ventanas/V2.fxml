@@ -21,7 +21,7 @@
    <children>
       <AnchorPane prefHeight="602.0" prefWidth="1002.0">
          <children>
-            <AnchorPane layoutX="304.0" layoutY="416.0" prefHeight="109.0" prefWidth="574.0">
+            <AnchorPane layoutX="291.0" layoutY="418.0" prefHeight="136.0" prefWidth="574.0">
                <children>
                   <TextArea fx:id="msj" layoutX="73.0" layoutY="14.0" onKeyPressed="#progresoTexto" onKeyReleased="#progresoTexto" onMouseReleased="#progresoTexto" opacity="0.89" prefHeight="62.0" prefWidth="468.0" promptText="¿Qué está pasando?" style="-fx-border-radius: 10px; -fx-background-radius: 10px;">
                      <font>
@@ -90,17 +90,17 @@
                   <Button layoutX="129.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" opacity="0.0" prefHeight="32.0" prefWidth="32.0" />
                </children>
             </AnchorPane>
-            <WebView fx:id="vista" layoutX="276.0" layoutY="95.0" opacity="0.97" prefHeight="292.0" prefWidth="574.0">
+            <WebView fx:id="vista" layoutX="291.0" layoutY="75.0" opacity="0.97" prefHeight="320.0" prefWidth="543.0">
                <effect>
                   <DropShadow color="#000000fd" height="130.0" radius="64.5" width="130.0" />
                </effect></WebView>
-            <Button layoutX="900.0" layoutY="442.0" mnemonicParsing="false" onMouseClicked="#mensajeDirecto" prefHeight="22.0" prefWidth="85.0" text="Mensaje" />
-            <ListView layoutX="22.0" layoutY="108.0" opacity="0.55" prefHeight="222.0" prefWidth="200.0" style="-fx-background-radius: 15px;" />
-            <Text fill="#03e2ffd6" layoutX="832.0" layoutY="568.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LosJavaPowerRanger®" textAlignment="CENTER" wrappingWidth="169.13671875">
+            <Button layoutX="879.0" layoutY="430.0" mnemonicParsing="false" onMouseClicked="#mensajeDirecto" prefHeight="22.0" prefWidth="85.0" text="Mensaje" />
+            <ListView layoutX="26.0" layoutY="134.0" opacity="0.55" prefHeight="193.0" prefWidth="169.0" style="-fx-background-radius: 15px;" />
+            <Text fill="#03e2ffd6" layoutX="826.0" layoutY="594.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LosJavaPowerRanger®" textAlignment="CENTER" wrappingWidth="169.13671875">
                <font>
                   <Font name="System Bold Italic" size="15.0" />
                </font></Text>
-            <Text fx:id="usuario" fill="#96deffe9" layoutX="855.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Usuario" textAlignment="CENTER" wrappingWidth="145.1367437839508">
+            <Text fx:id="usuario" fill="#96deffe9" layoutX="849.0" layoutY="226.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Usuario" textAlignment="CENTER" wrappingWidth="145.1367437839508">
                <font>
                   <Font size="18.0" />
                </font></Text>
@@ -108,11 +108,11 @@
                <font>
                   <Font size="15.0" />
                </font></Text>
-            <Text fx:id="usuario2" fill="#94ddffc7" layoutX="445.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre Usuario" textAlignment="CENTER" wrappingWidth="235.13671398162842">
+            <Text fx:id="usuario2" fill="#94ddffc7" layoutX="445.0" layoutY="63.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nombre Usuario" textAlignment="CENTER" wrappingWidth="235.13671398162842">
                <font>
                   <Font size="32.0" />
                </font></Text>
-            <ImageView fx:id="imagenPerfil" fitHeight="100.0" fitWidth="100.0" layoutX="878.0" layoutY="87.0" pickOnBounds="true" preserveRatio="true">
+            <ImageView fx:id="imagenPerfil" fitHeight="100.0" fitWidth="100.0" layoutX="878.0" layoutY="100.0" pickOnBounds="true" preserveRatio="true">
                <effect>
                   <DropShadow color="#000000cf" height="85.5" radius="40.95" width="80.3" />
                </effect></ImageView>
@@ -136,7 +136,7 @@
                   <Font name="System Bold" size="19.0" />
                </font>
             </Text>
-            <ImageView fitHeight="58.0" fitWidth="56.0" layoutX="908.0" layoutY="290.0" onMouseClicked="#eliminarTwitter">
+            <ImageView fitHeight="58.0" fitWidth="56.0" layoutX="894.0" layoutY="280.0" onMouseClicked="#eliminarTwitter">
                <image>
                   <Image url="@../Imagenes/delete.png" />
                </image>
@@ -144,7 +144,7 @@
                   <DropShadow />
                </effect>
             </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="911.0" layoutY="365.0" onMouseClicked="#retweetear">
+            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="897.0" layoutY="361.0" onMouseClicked="#retweetear">
                <image>
                   <Image url="@../Imagenes/retweet.png" />
                </image>
@@ -156,8 +156,8 @@
                   </InnerShadow>
                </effect>
             </ImageView>
-            <Line endX="100.0" layoutX="128.0" layoutY="99.0" startX="-113.0" />
-            <ImageView fitHeight="37.0" fitWidth="40.0" layoutX="102.0" layoutY="62.0">
+            <Line endX="79.0" layoutX="127.0" layoutY="124.0" startX="-113.0" />
+            <ImageView fitHeight="37.0" fitWidth="40.0" layoutX="91.0" layoutY="82.0">
                <image>
                   <Image url="@../Imagenes/user.png" />
                </image>
@@ -169,8 +169,8 @@
                   </DropShadow>
                </effect>
             </ImageView>
-            <Button layoutX="900.0" layoutY="475.0" mnemonicParsing="false" onMouseClicked="#seguirUsuario" prefHeight="22.0" prefWidth="85.0" text="Seguir" />
-            <Button layoutX="900.0" layoutY="510.0" mnemonicParsing="false" onMouseClicked="#noSeguirUsuario" prefHeight="22.0" prefWidth="85.0" text="No Seguir" />
+            <Button layoutX="879.0" layoutY="464.0" mnemonicParsing="false" onMouseClicked="#seguirUsuario" prefHeight="22.0" prefWidth="85.0" text="Seguir" />
+            <Button layoutX="880.0" layoutY="497.0" mnemonicParsing="false" onMouseClicked="#noSeguirUsuario" prefHeight="22.0" prefWidth="85.0" text="No Seguir" />
          </children>
       </AnchorPane>
       <Button layoutX="963.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />

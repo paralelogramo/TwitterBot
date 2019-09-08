@@ -55,6 +55,7 @@ import twitter4j.conf.ConfigurationBuilder;
 
 import java.util.ArrayList;
 import javafx.event.Event;
+import javafx.scene.paint.Color;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -86,10 +87,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
-    private Twitter twitter;
+    protected static Twitter twitter;
     private Twitter sender;
-    private List<Status> lineaDeTiempo;
-    private Text mensajeDirecto;
+    private List<Status> lineaDeTiempo;   
     private final char arroa = 64;
     private final ArrayList<String> usuariosSeguidos = new ArrayList<>();     
     
@@ -277,7 +277,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         System.out.println("mensaje eliminado!!!");
                         vista.getEngine().reload();
                     }
-                }catch(Exception e){
+                }catch(NumberFormatException | TwitterException e){
                           System.out.println("Opcion Invalida!!!!!!!!");  
                 }
 
@@ -325,7 +325,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         System.out.println("mensaje Retwitteado");
                         vista.getEngine().reload();
                     }
-                }catch(Exception e){
+                }catch(NumberFormatException | TwitterException e){
                     System.out.println("Opcion Invalida!!!");
                 }
                 
@@ -373,70 +373,65 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }*/ 
     
     
-    public void seguirUsuario(MouseEvent event){
-        this.ap.setDisable(true);
-        JOptionPane entrada = new JOptionPane();        
-        entrada.setMessage("Ingrese nombre de usuario a seguir"); 
-        entrada.setWantsInput(true);
-        JDialog dialogo = entrada.createDialog("TwitterBot_ | Seguir");       
-        dialogo.setAlwaysOnTop(true);
-        dialogo.setVisible(true);   
-        String seguirUsuario = entrada.getToolTipText();
-     
-        if(seguirUsuario != null) {       
+    public void seguirUsuario(MouseEvent event){  
+        try{
+            String seguirUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a seguir","@Ususario").substring(1);                 
             try {
                 twitter.friendsFollowers().createFriendship(seguirUsuario);
             } catch (TwitterException ex) {
-                this.popUp(0, seguirUsuario+" no existe", "Error");
-            }                
-        } else {
-            
+                this.popUp(0, arroa+seguirUsuario+"  no existe", "Error");
+            }                 
+        } catch (NullPointerException e){
+            this.popUp(0, "No ha ingresado usuario", "Error");
         }
-        
-        usuariosSeguidos.add(arroa+seguirUsuario);
-        
     }
     
     
-    public void noSeguirUsuario(MouseEvent event) throws TwitterException{
+    public void noSeguirUsuario(MouseEvent event){
         User u1 = null ;
-        long contador = -1;
-        IDs ids;       
-        do {
-            ids = twitter.getFriendsIDs(twitter.getScreenName(), contador);
-            for (long id : ids.getIDs()) {                    
-                System.out.println(contador);
-                User user = twitter.showUser(id);
-                System.out.println(user.getScreenName());
-                usuariosSeguidos.add(arroa+user.getScreenName());
-            }
-        } while ((contador = ids.getNextCursor()) != 0);
+        long indicador = -1;
+        try{
+            IDs ids;       
+            do {    
+                ids = twitter.getFriendsIDs(twitter.getScreenName(), indicador);
+                for (long id : ids.getIDs()) {
+                    System.out.println(indicador);
+                    User user = twitter.showUser(id);
+                    System.out.println(user.getScreenName());
+                    usuariosSeguidos.add(arroa+user.getScreenName());              
+                }
+            } while ((indicador = ids.getNextCursor()) != 0);
+        } catch (TwitterException | IllegalStateException ex) {                
+            this.popUp(0, "Esta cuenta no sigue a ningun usuario", "Error");
+        }
         if(usuariosSeguidos.isEmpty())
-            this.popUp(0, twitter.getScreenName()+" no sigue a ningun usuario", "Error");
+            this.popUp(0, "Esta cuenta no sigue a ningun usuario", "Error");
         else{            
             String [] seguidos = usuariosSeguidos.toArray(new String[usuariosSeguidos.size()]); 
             Icon icono = new ImageIcon("/Imagenes/icon.png");       
             String seleccionado = (String) JOptionPane.showInputDialog(null, "Seleccionar usuario para dejar de seguir", "TwitterBot_ | Dejar de Seguir", JOptionPane.DEFAULT_OPTION, icono, seguidos, seguidos[0]);            
-            twitter.destroyFriendship(seleccionado);            
+            try {            
+                twitter.destroyFriendship(seleccionado);
+            } catch (TwitterException ex) {
+                this.popUp(0, "Elemento seleccionado no es valido para la función", "Error");
+            }
             usuariosSeguidos.remove(seleccionado);
         }
+        this.usuariosSeguidos.clear();
+    }
+    
+    @FXML
+    public void mensajeDirecto(MouseEvent event){
+        this.ventanaMensajes();
     }
     
     //vista protegida?
     public void costumeImageView(){
         
-    }
-    
-    public void mensajeDirecto(MouseEvent event) throws TwitterException{          
-        User user = twitter.showUser("fapm10");
-        long userId = user.getId();
-        System.out.println(userId);
-        twitter.directMessages().sendDirectMessage(userId, mensajeDirecto.getText());            
-        
-    }
+    }  
     
     @FXML
-    public void cerrarSesion(MouseEvent event) throws IOException{
+    public void cerrarSesion(MouseEvent event){
         FXMLLoader loader = new FXMLLoader();
         URL location = V1_Control.class.getResource("V1.fxml");
         loader.setLocation(location);
@@ -444,16 +439,39 @@ public class V2_Controller extends ControlVentana implements Initializable {
         v1.setTitle("TwitterBot_ | Inicio");
         v1.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png"))); 
         v1.setOpacity(1);         
-        AnchorPane inicioSesion = loader.load();        
-        Scene scene = new Scene(inicioSesion);     
-        //stage.setOpacity(0.95);
-        v1.setScene(scene);
+        AnchorPane inicioSesion;        
+        try {
+            inicioSesion = loader.load();
+            Scene scene = new Scene(inicioSesion);  
+            v1.setScene(scene);
+        } catch (IOException ex) {
+            this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml)", "Error");
+        }           
+        //stage.setOpacity(0.95);        
         v1.initOwner(this.ap.getScene().getWindow());            
         v1.setResizable(false);
         ((Stage)this.ap.getScene().getWindow()).close();     
         v1.initStyle(StageStyle.TRANSPARENT);
         v1.centerOnScreen();
         v1.show();  
+    }
+    
+    public void ventanaMensajes(){        
+        try {
+            FXMLLoader loader = new FXMLLoader(V2_Controller.class.getResource("V3.fxml"));
+            AnchorPane ventanaV3 = (AnchorPane) loader.load();
+            Stage ventana = new Stage();
+            ventana.setTitle("Venta Dos");
+            ventana.initOwner(this.ap.getScene().getWindow());
+            Scene scene = new Scene(ventanaV3);
+            scene.setFill(Color.TRANSPARENT);
+            ventana.setScene(scene);
+            V3_Control controller = loader.getController();
+            ventana.initStyle(StageStyle.TRANSPARENT);               
+            ventana.show();
+        } catch (IOException ex) {
+            this.popUp(0, "El proceso no puede cargar la ventana (archivo: V3.fxml)", "Error");
+        }
     }
 
     /**
@@ -489,8 +507,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             imagenPerfil.setImage(new Image(newUser.get400x400ProfileImageURL()));
             imagenPerfil2.setImage(new Image(newUser.get400x400ProfileImageURL()));                 
             System.out.println(newUser.getEmail());
-            correo.setText(newUser.getEmail());
-            
+            correo.setText(newUser.getEmail());            
         } catch (TwitterException | IllegalStateException ex) {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
