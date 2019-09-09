@@ -84,6 +84,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML ListView listaTiempo;
     @FXML ImageView preImage;
     @FXML Text avisolimite;
+    @FXML ImageView equis;
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
@@ -143,13 +144,23 @@ public class V2_Controller extends ControlVentana implements Initializable {
         if (imgFile != null) {
             status.setMedia(imgFile);
             twitter.updateStatus(status);
+            msj.clear();
             notificacionImagen.setVisible(false);
+            this.pgA.setProgress(0);
+            this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+            this.equis.setImage(null);
+            vista.getEngine().reload();
             return 0;
         }
         if(mensaje.verificar() && imgFile == null){
             twitter.updateStatus(status);
             msj.clear();
             notificacionImagen.setVisible(false);            
+            this.pgA.setProgress(0);
+            this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+            this.equis.setImage(null);
+            vista.getEngine().reload();
+            return 0;
         }else{            
             Toolkit.getDefaultToolkit().beep();            
             JOptionPane auxiliar = new JOptionPane();
@@ -159,8 +170,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);   
         }
-        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));     
-        vista.getEngine().reload();
         return 0;        
     }
     
@@ -200,6 +209,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     this.preImage.setImage(null);
                 }
         }
+        this.equis.setImage(new Image("/Imagenes/close.png"));
         if(this.preImage.getImage() == null)
             this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));   
     }
@@ -220,10 +230,20 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 notificacionImagen.setText("Tamaño Archivo No Soportado!!");
                 this.preImage.setImage(null);
             }
+            
+            this.equis.setImage(new Image("/Imagenes/close.png"));
             Image imagen123 = new Image(new FileInputStream(imgFile));
             this.preImage.setImage(imagen123);
             notificacionImagen.setVisible(true);
         }
+    }
+    
+    @FXML
+    public void eliminarImagenSubida(){
+        this.imgFile = null;
+        this.equis.setImage(null);
+        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+        this.notificacionImagen.setText(("Archivo eliminado con exito!"));
     }
     
     // METODO LISTO
@@ -384,8 +404,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         } catch (NullPointerException e){
             this.popUp(0, "No ha ingresado usuario", "Error");
         }
-    }
-    
+    }   
     
     public void noSeguirUsuario(MouseEvent event){
         User u1 = null ;
@@ -423,6 +442,17 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML
     public void mensajeDirecto(MouseEvent event){
         this.ventanaMensajes();
+    }
+    
+    public void darLike(){
+        /*PASOS:
+        1.- PEDIR EL @USUARIO
+        2.- BUSCAR EL USUARIO
+        3.- MOSTRAR UNA LISTA CON LOS POST DEL USUARIO
+        4.- QUE EL USUARIO ELIJA CUAL DAR LIKE
+        */
+        
+        
     }
     
     //vista protegida?
@@ -512,6 +542,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
         this.arrastrarVentana(this.ap);           
-        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));             
+        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
     }  
 }
