@@ -39,8 +39,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -52,9 +50,11 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
-
 import java.util.ArrayList;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
+import javafx.scene.control.ListCell;
 import javafx.scene.paint.Color;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -79,12 +79,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML Text notificacionImagen;
     @FXML ProgressIndicator pgA;
     @FXML ImageView imagenPerfil;
-    @FXML ImageView imagenPerfil2;
-    @FXML WebView vista;
+    @FXML ImageView imagenPerfil2;    
     @FXML ListView listaTiempo;
     @FXML ImageView preImage;
     @FXML Text avisolimite;
     @FXML ImageView equis;
+    @FXML ListView<String> listView = new ListView<String>();
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
@@ -92,11 +92,22 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Twitter sender;
     private List<Status> lineaDeTiempo;   
     private final char arroa = 64;
-    private final ArrayList<String> usuariosSeguidos = new ArrayList<>();     
+    private final ArrayList<String> usuariosSeguidos = new ArrayList<>();    
+    private List<Status> listaTweets;    
+    private ArrayList<String> listaTimeline = new ArrayList<>();
+    private long seleccionTweet;
+    
+    Scanner sc = new Scanner(System.in);    
+    
+    
+    public void seleccionTweet(MouseEvent event){
+        Status auxiliar = (Status) listaTiempo.getSelectionModel().getSelectedItem();
+        seleccionTweet = auxiliar.getId();
+        System.out.println(seleccionTweet);
+    }
     
     
     
-    Scanner sc = new Scanner(System.in);
     
     public void progresoTexto(Event event){   
         System.out.println(msj.getAnchor());
@@ -149,7 +160,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.pgA.setProgress(0);
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
                 this.equis.setImage(null);
-                vista.getEngine().reload();
+                
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("Error, No se puede enviar el twit");
@@ -163,7 +174,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.pgA.setProgress(0);
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
                 this.equis.setImage(null);
-                vista.getEngine().reload();
+                
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("No se puede subir la imagen");
@@ -314,7 +325,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                             mensajeId.remove(opcion);
                             textoMsj.remove(opcion);
                             System.out.println("mensaje eliminado!!!");
-                            vista.getEngine().reload();
+                            
                         }
                     }catch(NumberFormatException | TwitterException e){
                         System.out.println("Opcion Invalida!!!!!!!!");
@@ -368,7 +379,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         if(opcion>=0 && opcion<mensajeId.size()){
                             twitter.retweetStatus(mensajeId.get(opcion));
                             System.out.println("mensaje Retwitteado");
-                            vista.getEngine().reload();
+                            
                         }
                     }catch(NumberFormatException | TwitterException e){
                         System.out.println("Opcion Invalida!!!");
@@ -504,7 +515,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             Scene scene = new Scene(inicioSesion);  
             v1.setScene(scene);
         } catch (IOException ex) {
-            this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml)", "Error");
+            this.popUp(0, "El proceso no puede cargar la ventana (archivo: V1.fxml)", "Error");            
         }           
         //stage.setOpacity(0.95);        
         v1.initOwner(this.ap.getScene().getWindow());            
@@ -550,17 +561,53 @@ public class V2_Controller extends ControlVentana implements Initializable {
         TwitterFactory tf = new TwitterFactory(cb.build());
         twitter = tf.getInstance();              
         
+        
+        /*
         // ****** ESTO GENERA EL WEBVIEW ******
         WebEngine engine = vista.getEngine();
         //engine.setUserAgent("Mozilla/5.0 (iPhone; U; CPU like Mac OS X; en) AppleWebKit/420+ (KHTML, like Gecko) Version/3.0 Mobile/1A543a Safari/419.3");       
         engine.load("https://twitter.com/power_java");        
         vista.setContextMenuEnabled(false);      
         vista.setZoom(0.50);        
-        // ************ HASTA ACA *********
-        msj.setWrapText(true);
+        // ************ HASTA ACA *********/
+        msj.setWrapText(true);         
         try {
-            lineaDeTiempo = twitter.getUserTimeline();            
-            User newUser = twitter.showUser(twitter.getScreenName());            
+               
+            listaTweets = twitter.getHomeTimeline(); 
+            for (int i = 0; i < listaTweets.size(); i++) {
+                String aux = arroa+listaTweets.get(i).getUser().getScreenName() + ": " +listaTweets.get(i).getText(); 
+                System.out.println(aux);
+                this.listaTimeline.add(aux);
+            }
+            
+            ObservableList<String> oLista = FXCollections.observableArrayList(listaTimeline);
+            listaTiempo.setItems(oLista);
+            
+            User newUser = twitter.showUser(twitter.getScreenName());
+            
+            listaTiempo.setCellFactory(param -> new ListCell<String>() {
+            private ImageView imageView = new ImageView(new Image(newUser.getMiniProfileImageURL()));
+            @Override
+            public void updateItem(String name, boolean empty) {
+                super.updateItem(name, empty);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {                   
+                    String [] aux1 = name.split(":");
+                    String usuario = aux1[0];
+                    User aux2;
+                    try {
+                        aux2 = twitter.showUser(usuario);
+                        imageView.setImage(new Image(aux2.getMiniProfileImageURL()));
+                    } catch (TwitterException ex) {
+                        Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
+                    }                    
+                    setText(name);
+                    setGraphic(imageView);
+                }
+            }
+            });                            
             usuario.setText("@"+newUser.getScreenName());
             usuario2.setText(newUser.getName());
             imagenPerfil.setImage(new Image(newUser.get400x400ProfileImageURL()));
