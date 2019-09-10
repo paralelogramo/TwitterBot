@@ -58,7 +58,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.control.ListCell;
-import javafx.scene.media.MediaView;
+import javafx.scene.media.*;
 import javafx.scene.paint.Color;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -90,6 +90,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML ImageView equis;
     @FXML ListView<String> listView = new ListView<String>();
     @FXML MediaView mv;
+    private MediaPlayer mp;
+    private Media med;
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
@@ -236,6 +238,15 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     imgFile = null;
                     notificacionImagen.setText("Tamaño Archivo No Soportado!!");
                     this.preImage.setImage(null);
+                }
+                else{
+                    if (extension.equalsIgnoreCase("mp4")) {
+                        String dir = imgFile.getAbsolutePath();
+                        med = new Media (new File (dir).toURI().toString());
+                        mp = new MediaPlayer(med);
+                        mv.setMediaPlayer(mp);
+                        mp.play();
+                    }
                 }
         }
         if(this.preImage.getImage() == null)
