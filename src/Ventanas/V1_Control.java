@@ -126,28 +126,27 @@ public class V1_Control extends ControlVentana implements Initializable {
     
     @FXML
     private void iniciarSesion(){
-        FXMLLoader loader = new FXMLLoader();
-        URL location = V1_Control.class.getResource("V2.fxml");
-        loader.setLocation(location);
-        Stage stage = new Stage();
-        stage.setTitle(" TwitterBot_ | Panel de Control");
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png"))); 
-        stage.setOpacity(1);         
-        
-        try {            
+        try { 
+            FXMLLoader loader = new FXMLLoader();
+            URL location = V1_Control.class.getResource("V2.fxml");
+            loader.setLocation(location);
+            Stage stage = new Stage();
+            stage.setTitle(" TwitterBot_ | Panel de Control");
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png"))); 
+            stage.setOpacity(1);                          
             AnchorPane panelControl = loader.load();
             Scene scene = new Scene(panelControl); 
             stage.setScene(scene);            
+            //stage.setOpacity(0.95);        
+            stage.initOwner(this.ap.getScene().getWindow());            
+            stage.setResizable(false);
+            ((Stage)this.ap.getScene().getWindow()).close();     
+            stage.initStyle(StageStyle.TRANSPARENT);
+            stage.centerOnScreen();
+            stage.show();   
         } catch (IOException ex) {
             this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml)", "Error");                              
-        }            
-        //stage.setOpacity(0.95);        
-        stage.initOwner(this.ap.getScene().getWindow());            
-        stage.setResizable(false);
-        ((Stage)this.ap.getScene().getWindow()).close();     
-        stage.initStyle(StageStyle.TRANSPARENT);
-        stage.centerOnScreen();
-        stage.show();       
+        }                  
     }
         
     @FXML
