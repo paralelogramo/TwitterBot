@@ -52,6 +52,8 @@ import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
+import twitter4j.IDs;
+import twitter4j.Paging;
 
 import java.util.ArrayList;
 import javafx.event.Event;
@@ -60,7 +62,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import twitter4j.IDs;
+
 /**
  * 
  * FXML Controller class
@@ -480,7 +482,36 @@ public class V2_Controller extends ControlVentana implements Initializable {
         3.- MOSTRAR UNA LISTA CON LOS POST DEL USUARIO
         4.- QUE EL USUARIO ELIJA CUAL DAR LIKE
         */
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Ingresar @usuario");
         
+        try{
+            String buscarUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a buscar","@Usuario");     
+            try {                
+                List tweets = twitter.getUserTimeline(buscarUsuario);
+                for (int i = 0; i < tweets.size(); i++) {
+                    Status status = (Status) tweets.get(i);
+                    System.out.println("ID: "+status.getId());
+                    System.out.println("Texto: "+status.getText());
+                    System.out.println("-----------------");
+                }
+                System.out.print("ID a dar like: ");
+                long id = sc.nextLong();
+                try {
+                    for (int j = 0; j < tweets.size(); j++) {
+                        Status status = (Status) tweets.get(j);
+                        if (id == status.getId()) {
+                            twitter.createFavorite(id);
+                        }
+                    }
+                } catch (TwitterException e) {
+                }
+            } catch (TwitterException e) {
+                this.popUp(0, "Usuario ingresado no existe", "Error");           
+            } 
+        } catch (NullPointerException e) {
+                      
+        } 
         
     }
     
