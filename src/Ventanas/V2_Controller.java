@@ -152,7 +152,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 vista.getEngine().reload();
                 return 0;
             } catch (TwitterException ex) {
-                System.out.println("Error, Imagen no encontrada");
+                System.out.println("Error, No se puede enviar el twit");
             }
         }
         if(mensaje.verificar() && imgFile == null){
@@ -278,12 +278,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
        
         ArrayList<Long> mensajeId = new ArrayList();
         ArrayList<String> textoMsj = new ArrayList();        
+        
+        int opcion=-1;
+        String opcion2;
+        int largoArreglo;
+    
         try {
             ResponseList<Status> Line = twitter.getHomeTimeline();
-            
-            int opcion=-1;
-            String opcion2;
-            int largoArreglo;
+                
             Line.forEach((status) -> {
                 mensajeId.add(status.getId());
                 textoMsj.add(status.getText());
@@ -296,10 +298,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     System.out.println(i+". "+textoMsj.get(i));
                 }
                 
-                do{
-                    
-                    System.out.print("numero del twitt a eliminar: ");
-                    
+                do{        
+                    System.out.print("numero del twitt a eliminar: "); 
                     try{
                         opcion2 = sc.nextLine();
                         if(opcion2.equalsIgnoreCase("")){
@@ -333,19 +333,21 @@ public class V2_Controller extends ControlVentana implements Initializable {
     public void retweetear(MouseEvent event){
         ArrayList<Long> mensajeId = new ArrayList();
         ArrayList<String> textoMsj = new ArrayList();
-        
+        Mensaje mensaje = new Mensaje();
+        int opcion=-1;
+        String opcion2;
+        int largoArreglo;
+    
         try {
             ResponseList<Status> Line = twitter.getHomeTimeline();
-            Mensaje mensaje = new Mensaje();
-            int opcion=-1;
-            String opcion2;
-            int largoArreglo;
-            
+             
             Line.forEach((status) -> {
                 mensajeId.add(status.getId());
                 textoMsj.add(status.getText());
             });
+            
             largoArreglo = mensajeId.size();
+            
             //muestra lista de tweets existentes en la cuenta
             if(largoArreglo>0){
                 for (int i = 0; i < mensajeId.size(); i++) {
@@ -418,24 +420,26 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }*/ 
     
     
-    public void seguirUsuario(MouseEvent event){  
+    public void seguirUsuario(MouseEvent event){         
         try{
-            String seguirUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a seguir","@Ususario").substring(1);                 
+            String seguirUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a seguir","@Usuario");     
             try {
-                twitter.friendsFollowers().createFriendship(seguirUsuario);
+                if (seguirUsuario!=null&&!seguirUsuario.equals("") && !seguirUsuario.equals("@Usuario"))
+                    twitter.friendsFollowers().createFriendship(seguirUsuario.substring(1));                      
+                System.out.println("seguir usuarios: "+seguirUsuario);
             } catch (TwitterException ex) {
-                this.popUp(0, arroa+seguirUsuario+"  no existe", "Error");
-            }                 
-        } catch (NullPointerException e){
-            this.popUp(0, "No ha ingresado usuario", "Error");
-        }
+                this.popUp(0, "Usuario ingresado no existe", "Error");           
+            } 
+        } catch (NullPointerException e) {
+                      
+        } 
     }   
     
     public void noSeguirUsuario(MouseEvent event){
         User u1 = null ;
         long indicador = -1;
         try{
-            IDs ids;       
+            IDs ids;  
             do {    
                 ids = twitter.getFriendsIDs(twitter.getScreenName(), indicador);
                 for (long id : ids.getIDs()) {
@@ -453,13 +457,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
         else{            
             String [] seguidos = usuariosSeguidos.toArray(new String[usuariosSeguidos.size()]); 
             Icon icono = new ImageIcon("/Imagenes/icon.png");       
-            String seleccionado = (String) JOptionPane.showInputDialog(null, "Seleccionar usuario para dejar de seguir", "TwitterBot_ | Dejar de Seguir", JOptionPane.DEFAULT_OPTION, icono, seguidos, seguidos[0]);            
-            try {            
+            try { 
+                String seleccionado = (String) JOptionPane.showInputDialog(null, "Seleccionar usuario para dejar de seguir", "TwitterBot_ | Dejar de Seguir", JOptionPane.DEFAULT_OPTION, icono, seguidos, seguidos[0]);                          
                 twitter.destroyFriendship(seleccionado);
-            } catch (TwitterException ex) {
-                this.popUp(0, "Elemento seleccionado no es valido para la función", "Error");
-            }
-            usuariosSeguidos.remove(seleccionado);
+            } catch (NullPointerException | TwitterException ex) {
+               //this.popUp(0, "Elemento seleccionado no es valido para la función", "Error");
+            }            
         }
         this.usuariosSeguidos.clear();
     }
