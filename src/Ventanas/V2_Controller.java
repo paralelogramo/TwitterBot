@@ -192,6 +192,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
+            this.equis.setImage(new Image("/Imagenes/close.png"));
             extension = obtenerExtension(imgFile.getAbsolutePath());
             notificacionImagen.setVisible(true);
             notificacionImagen.setText(extension.toUpperCase()+" Subido Con Exito!!");
@@ -199,6 +200,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 if (imgFile.length()>1000000) {
                     System.out.println("tamaño no permitido");
                     imgFile = null;
+                    equis = null;
                     notificacionImagen.setText("Tamaño Archivo No Soportado!!");
                     this.preImage.setImage(null);                    
                 }
@@ -220,7 +222,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     this.preImage.setImage(null);
                 }
         }
-        this.equis.setImage(new Image("/Imagenes/close.png"));
         if(this.preImage.getImage() == null)
             this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));   
     }
