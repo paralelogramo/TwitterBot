@@ -14,6 +14,7 @@ este programa. Si no, vea <http://www.gnu.org/licenses/>.
 */
 
 
+import java.io.IOException;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
@@ -33,17 +34,21 @@ import javafx.stage.StageStyle;
 public class TwitterBot extends Application {
     
     @Override
-    public void start(Stage stage) throws Exception {       
-        Parent root = FXMLLoader.load(getClass().getResource("/Ventanas/V1.fxml"));       
-        Scene scene = new Scene(root);        
-        scene.setFill(Color.TRANSPARENT);        
-        stage.setScene(scene);
-        stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png")));         
-        stage.initStyle(StageStyle.TRANSPARENT);
-        //stage.setOpacity(0.83);
-        stage.setResizable(false);
-        stage.centerOnScreen();  
-        stage.show();             
+    public void start(Stage stage){       
+        try {
+            Parent root = FXMLLoader.load(getClass().getResource("/Ventanas/V1.fxml"));
+            Scene scene = new Scene(root);
+            scene.setFill(Color.TRANSPARENT);
+            stage.setScene(scene);
+            stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png")));
+            stage.initStyle(StageStyle.TRANSPARENT);
+            //stage.setOpacity(0.83);
+            stage.setResizable(false);
+            stage.centerOnScreen();             
+            stage.show();
+        } catch (IOException ex) {
+            System.out.println("Error, no se puede iniciar el Bot");
+        }
     }
 
     /**

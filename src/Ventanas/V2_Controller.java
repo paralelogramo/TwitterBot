@@ -94,8 +94,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private final char arroa = 64;
     private final ArrayList<String> usuariosSeguidos = new ArrayList<>();     
     
-    ArrayList<Long> mensajeId = new ArrayList();
-    ArrayList<String> textoMsj = new ArrayList();
+    
     
     Scanner sc = new Scanner(System.in);
     
@@ -137,30 +136,38 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }    
     
     // METODO LISTO
-    public int enviarTwitter(MouseEvent event) throws TwitterException{       
+    public int enviarTwitter(MouseEvent event){       
         Mensaje mensaje = new Mensaje();
         mensaje.setMensaje(msj.getText());              
         StatusUpdate status = new StatusUpdate(mensaje.getMensaje());
         if (imgFile != null) {
-            status.setMedia(imgFile);
-            twitter.updateStatus(status);
-            msj.clear();
-            notificacionImagen.setVisible(false);
-            this.pgA.setProgress(0);
-            this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
-            this.equis.setImage(null);
-            vista.getEngine().reload();
-            return 0;
+            try {
+                status.setMedia(imgFile);
+                twitter.updateStatus(status);
+                msj.clear();
+                notificacionImagen.setVisible(false);
+                this.pgA.setProgress(0);
+                this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+                this.equis.setImage(null);
+                vista.getEngine().reload();
+                return 0;
+            } catch (TwitterException ex) {
+                System.out.println("Error, No se puede enviar el twit");
+            }
         }
         if(mensaje.verificar() && imgFile == null){
-            twitter.updateStatus(status);
-            msj.clear();
-            notificacionImagen.setVisible(false);            
-            this.pgA.setProgress(0);
-            this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
-            this.equis.setImage(null);
-            vista.getEngine().reload();
-            return 0;
+            try {
+                twitter.updateStatus(status);
+                msj.clear();
+                notificacionImagen.setVisible(false);
+                this.pgA.setProgress(0);
+                this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+                this.equis.setImage(null);
+                vista.getEngine().reload();
+                return 0;
+            } catch (TwitterException ex) {
+                System.out.println("No se puede subir la imagen");
+            }
         }else{            
             Toolkit.getDefaultToolkit().beep();            
             JOptionPane auxiliar = new JOptionPane();
@@ -174,7 +181,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     // METODO LISTO
-    public void subirImagen_Twitter(MouseEvent event) throws FileNotFoundException{
+    public void subirImagen_Twitter(MouseEvent event){
         String extension;
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Imagen");
@@ -185,6 +192,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
+            this.equis.setImage(new Image("/Imagenes/close.png"));
             extension = obtenerExtension(imgFile.getAbsolutePath());
             notificacionImagen.setVisible(true);
             notificacionImagen.setText(extension.toUpperCase()+" Subido Con Exito!!");
@@ -192,13 +200,18 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 if (imgFile.length()>1000000) {
                     System.out.println("tamaño no permitido");
                     imgFile = null;
+                    equis = null;
                     notificacionImagen.setText("Tamaño Archivo No Soportado!!");
                     this.preImage.setImage(null);                    
                 }
                 else{
-                    Image imagen123 = new Image(new FileInputStream(imgFile));
-                    this.preImage.setImage(imagen123);
-                    notificacionImagen.setVisible(true);
+                    try {
+                        Image imagen123 = new Image(new FileInputStream(imgFile));
+                        this.preImage.setImage(imagen123);
+                        notificacionImagen.setVisible(true);
+                    } catch (FileNotFoundException ex) {
+                        System.out.println("Error, Imagen no encontrada");
+                    }
                 }
             }
             else
@@ -209,13 +222,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     this.preImage.setImage(null);
                 }
         }
-        this.equis.setImage(new Image("/Imagenes/close.png"));
         if(this.preImage.getImage() == null)
             this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));   
     }
     
     // METODO LISTO
-    public void subirGif_Twitter(MouseEvent event) throws FileNotFoundException{
+    public void subirGif_Twitter(MouseEvent event){
         FileChooser filech = new FileChooser();
         filech.setTitle("Buscar Gif");
         filech.getExtensionFilters().addAll(
@@ -223,18 +235,22 @@ public class V2_Controller extends ControlVentana implements Initializable {
         );
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
-            notificacionImagen.setText("GIF Subido Con Exito!!");
-            if (imgFile.length()>15000000) {
-                System.out.println("tamaño no permitido");
-                imgFile = null;
-                notificacionImagen.setText("Tamaño Archivo No Soportado!!");
-                this.preImage.setImage(null);
+            try {
+                notificacionImagen.setText("GIF Subido Con Exito!!");
+                if (imgFile.length()>15000000) {
+                    System.out.println("tamaño no permitido");
+                    imgFile = null;
+                    notificacionImagen.setText("Tamaño Archivo No Soportado!!");
+                    this.preImage.setImage(null);
+                }
+                
+                this.equis.setImage(new Image("/Imagenes/close.png"));
+                Image imagen123 = new Image(new FileInputStream(imgFile));
+                this.preImage.setImage(imagen123);
+                notificacionImagen.setVisible(true);
+            } catch (FileNotFoundException ex) {
+                System.out.println("Error, Gif no encontrado");
             }
-            
-            this.equis.setImage(new Image("/Imagenes/close.png"));
-            Image imagen123 = new Image(new FileInputStream(imgFile));
-            this.preImage.setImage(imagen123);
-            notificacionImagen.setVisible(true);
         }
     }
     
@@ -259,100 +275,112 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     
     // METODO LISTO
-    public void eliminarTwitter(MouseEvent event) throws TwitterException{
-                
-        ResponseList<Status> Line = twitter.getHomeTimeline();
+    public void eliminarTwitter(MouseEvent event){
+       
+        ArrayList<Long> mensajeId = new ArrayList();
+        ArrayList<String> textoMsj = new ArrayList();        
         
         int opcion=-1;
         String opcion2;
         int largoArreglo;
-        Line.forEach((status) -> {
-            mensajeId.add(status.getId());
-            textoMsj.add(status.getText());
-        });
-        
-        largoArreglo = mensajeId.size();
-        
-        if(largoArreglo>0){
-            for (int i = 0; i < mensajeId.size(); i++) {
-                System.out.println(i+". "+textoMsj.get(i));
-            }
-
-            do{
+    
+        try {
+            ResponseList<Status> Line = twitter.getHomeTimeline();
                 
-                System.out.print("numero del twitt a eliminar: ");
-                
-                try{
-                    opcion2 = sc.nextLine();
-                    if(opcion2.equalsIgnoreCase("")){
-                        opcion =-1;
-                    }
-                    else{
-                        opcion = Integer.parseInt(opcion2);
-                    }
-                    if(opcion>=0 && opcion<mensajeId.size()){
-                        twitter.destroyStatus(mensajeId.get(opcion));
-                        mensajeId.remove(opcion);
-                        textoMsj.remove(opcion);
-                        System.out.println("mensaje eliminado!!!");
-                        vista.getEngine().reload();
-                    }
-                }catch(NumberFormatException | TwitterException e){
-                          System.out.println("Opcion Invalida!!!!!!!!");  
+            Line.forEach((status) -> {
+                mensajeId.add(status.getId());
+                textoMsj.add(status.getText());
+            });
+            
+            largoArreglo = mensajeId.size();
+            
+            if(largoArreglo>0){
+                for (int i = 0; i < mensajeId.size(); i++) {
+                    System.out.println(i+". "+textoMsj.get(i));
                 }
-
-            }while(opcion<0 || opcion>mensajeId.size());
-        
-        }
-        else{
-            System.out.println("no existen tweets publicados!!!");
+                
+                do{        
+                    System.out.print("numero del twitt a eliminar: "); 
+                    try{
+                        opcion2 = sc.nextLine();
+                        if(opcion2.equalsIgnoreCase("")){
+                            opcion =-1;
+                        }
+                        else{
+                            opcion = Integer.parseInt(opcion2);
+                        }
+                        if(opcion>=0 && opcion<mensajeId.size()){
+                            twitter.destroyStatus(mensajeId.get(opcion));
+                            mensajeId.remove(opcion);
+                            textoMsj.remove(opcion);
+                            System.out.println("mensaje eliminado!!!");
+                            vista.getEngine().reload();
+                        }
+                    }catch(NumberFormatException | TwitterException e){
+                        System.out.println("Opcion Invalida!!!!!!!!");
+                    }
+                    
+                }while(opcion<0 || opcion>mensajeId.size());
+                
+            }
+            else{
+                System.out.println("no existen tweets publicados!!!");
+            }
+        } catch (TwitterException ex) {
+            System.out.println("Error, No se puede eliminar el twitt");
         }
     }
     
-    public void retweetear(MouseEvent event) throws TwitterException{
-        
-        ResponseList<Status> Line = twitter.getHomeTimeline();
+    public void retweetear(MouseEvent event){
+        ArrayList<Long> mensajeId = new ArrayList();
+        ArrayList<String> textoMsj = new ArrayList();
         Mensaje mensaje = new Mensaje();
         int opcion=-1;
         String opcion2;
         int largoArreglo;
-        
-        Line.forEach((status) -> {
-            mensajeId.add(status.getId());
-            textoMsj.add(status.getText());
-        });
-        
-        largoArreglo = mensajeId.size();
-
-        //muestra lista de tweets existentes en la cuenta
-        if(largoArreglo>0){
-            for (int i = 0; i < mensajeId.size(); i++) {
-                System.out.println(i+". "+textoMsj.get(i));
-            }
-
-            do{
-                System.out.print("numero del twitt a retweetear: ");
-                try{
-                    opcion2 = sc.nextLine();
-                    if(opcion2.equalsIgnoreCase("")){
-                        opcion =-1;
-                    }
-                    else{
-                        opcion = Integer.parseInt(opcion2);
-                    }
-                    if(opcion>=0 && opcion<mensajeId.size()){
-                        twitter.retweetStatus(mensajeId.get(opcion));
-                        System.out.println("mensaje Retwitteado");
-                        vista.getEngine().reload();
-                    }
-                }catch(NumberFormatException | TwitterException e){
-                    System.out.println("Opcion Invalida!!!");
+    
+        try {
+            ResponseList<Status> Line = twitter.getHomeTimeline();
+             
+            Line.forEach((status) -> {
+                mensajeId.add(status.getId());
+                textoMsj.add(status.getText());
+            });
+            
+            largoArreglo = mensajeId.size();
+            
+            //muestra lista de tweets existentes en la cuenta
+            if(largoArreglo>0){
+                for (int i = 0; i < mensajeId.size(); i++) {
+                    System.out.println(i+". "+textoMsj.get(i));
                 }
                 
-            }while(opcion<0 || opcion>mensajeId.size()); 
-        }
-        else{
-            System.out.println("no existen tweets publicados!!!");
+                do{
+                    System.out.print("numero del twitt a retweetear: ");
+                    try{
+                        opcion2 = sc.nextLine();
+                        if(opcion2.equalsIgnoreCase("")){
+                            opcion =-1;
+                        }
+                        else{
+                            opcion = Integer.parseInt(opcion2);
+                        }
+                        if(opcion>=0 && opcion<mensajeId.size()){
+                            twitter.retweetStatus(mensajeId.get(opcion));
+                            System.out.println("mensaje Retwitteado");
+                            vista.getEngine().reload();
+                        }
+                    }catch(NumberFormatException | TwitterException e){
+                        System.out.println("Opcion Invalida!!!");
+                    }
+                    
+                }while(opcion<0 || opcion>mensajeId.size());
+            }
+            else{
+                System.out.println("no existen tweets publicados!!!");
+            }
+        } catch (TwitterException ex) {
+            System.out.println("Error, no se puede retwittear el mensaje");
         }
     }
     
@@ -393,24 +421,26 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }*/ 
     
     
-    public void seguirUsuario(MouseEvent event){  
+    public void seguirUsuario(MouseEvent event){         
         try{
-            String seguirUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a seguir","@Ususario").substring(1);                 
+            String seguirUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a seguir","@Usuario");     
             try {
-                twitter.friendsFollowers().createFriendship(seguirUsuario);
+                if (seguirUsuario!=null&&!seguirUsuario.equals("") && !seguirUsuario.equals("@Usuario"))
+                    twitter.friendsFollowers().createFriendship(seguirUsuario.substring(1));                      
+                System.out.println("seguir usuarios: "+seguirUsuario);
             } catch (TwitterException ex) {
-                this.popUp(0, arroa+seguirUsuario+"  no existe", "Error");
-            }                 
-        } catch (NullPointerException e){
-            this.popUp(0, "No ha ingresado usuario", "Error");
-        }
+                this.popUp(0, "Usuario ingresado no existe", "Error");           
+            } 
+        } catch (NullPointerException e) {
+                      
+        } 
     }   
     
     public void noSeguirUsuario(MouseEvent event){
         User u1 = null ;
         long indicador = -1;
         try{
-            IDs ids;       
+            IDs ids;  
             do {    
                 ids = twitter.getFriendsIDs(twitter.getScreenName(), indicador);
                 for (long id : ids.getIDs()) {
@@ -428,13 +458,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
         else{            
             String [] seguidos = usuariosSeguidos.toArray(new String[usuariosSeguidos.size()]); 
             Icon icono = new ImageIcon("/Imagenes/icon.png");       
-            String seleccionado = (String) JOptionPane.showInputDialog(null, "Seleccionar usuario para dejar de seguir", "TwitterBot_ | Dejar de Seguir", JOptionPane.DEFAULT_OPTION, icono, seguidos, seguidos[0]);            
-            try {            
+            try { 
+                String seleccionado = (String) JOptionPane.showInputDialog(null, "Seleccionar usuario para dejar de seguir", "TwitterBot_ | Dejar de Seguir", JOptionPane.DEFAULT_OPTION, icono, seguidos, seguidos[0]);                          
                 twitter.destroyFriendship(seleccionado);
-            } catch (TwitterException ex) {
-                this.popUp(0, "Elemento seleccionado no es valido para la función", "Error");
-            }
-            usuariosSeguidos.remove(seleccionado);
+            } catch (NullPointerException | TwitterException ex) {
+               //this.popUp(0, "Elemento seleccionado no es valido para la función", "Error");
+            }            
         }
         this.usuariosSeguidos.clear();
     }
