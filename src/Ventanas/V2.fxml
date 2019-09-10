@@ -15,9 +15,8 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
-<?import javafx.scene.web.WebView?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.221" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
       <AnchorPane prefHeight="602.0" prefWidth="1002.0">
          <children>
@@ -90,10 +89,6 @@
                   <Button layoutX="129.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" opacity="0.0" prefHeight="32.0" prefWidth="32.0" />
                </children>
             </AnchorPane>
-            <WebView fx:id="vista" layoutX="291.0" layoutY="75.0" opacity="0.97" prefHeight="320.0" prefWidth="543.0">
-               <effect>
-                  <DropShadow color="#000000fd" height="130.0" radius="64.5" width="130.0" />
-               </effect></WebView>
             <Button layoutX="879.0" layoutY="430.0" mnemonicParsing="false" onMouseClicked="#mensajeDirecto" prefHeight="22.0" prefWidth="85.0" text="Mensaje" />
             <ListView layoutX="26.0" layoutY="134.0" opacity="0.55" prefHeight="193.0" prefWidth="169.0" style="-fx-background-radius: 15px;" />
             <Text fill="#03e2ffd6" layoutX="826.0" layoutY="594.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LosJavaPowerRanger®" textAlignment="CENTER" wrappingWidth="169.13671875">
@@ -173,6 +168,7 @@
             <Button layoutX="880.0" layoutY="497.0" mnemonicParsing="false" onMouseClicked="#noSeguirUsuario" prefHeight="22.0" prefWidth="85.0" text="No Seguir" />
             <ImageView fx:id="equis" fitHeight="40.0" fitWidth="40.0" layoutX="14.0" layoutY="373.0" onMouseClicked="#eliminarImagenSubida" pickOnBounds="true" preserveRatio="true" />
             <Button layoutX="880.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#darLike" prefHeight="25.0" prefWidth="85.0" text="Like" />
+            <ListView fx:id="listaTiempo" layoutX="268.0" layoutY="81.0" onMouseClicked="#seleccionTweet" prefHeight="320.0" prefWidth="560.0" />
          </children>
       </AnchorPane>
       <Button layoutX="963.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
