@@ -127,6 +127,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     @FXML
     private void iniciarSesion(){
         try { 
+            Socket s = new Socket(dirWeb, puerto);
             FXMLLoader loader = new FXMLLoader();
             URL location = V1_Control.class.getResource("V2.fxml");
             loader.setLocation(location);
@@ -145,7 +146,7 @@ public class V1_Control extends ControlVentana implements Initializable {
             stage.centerOnScreen();
             stage.show();   
         } catch (IOException ex) {
-            this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml)", "Error");                              
+            this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml - Error Conexiòn)", "Error");                              
         }                  
     }
         
