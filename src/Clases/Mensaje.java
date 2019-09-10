@@ -36,9 +36,6 @@ public class Mensaje {
         return texto;
     }
     
-    public void twittear(){       
-    }
-    
     public boolean verificar(){
         int largo = texto.length();//largo del texto        
         if (largo>280){

@@ -58,6 +58,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.control.ListCell;
+import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -88,6 +89,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML Text avisolimite;
     @FXML ImageView equis;
     @FXML ListView<String> listView = new ListView<String>();
+    @FXML MediaView mv;
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
