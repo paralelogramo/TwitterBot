@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.221" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
       <AnchorPane prefHeight="602.0" prefWidth="1002.0">
          <children>
@@ -179,8 +179,6 @@
             <Button layoutX="900.0" layoutY="493.0" mnemonicParsing="false" onMouseClicked="#darLike" opacity="0.0" prefHeight="40.0" prefWidth="42.0" text="Like" />
             <ListView fx:id="listaTiempo" layoutX="268.0" layoutY="81.0" onMouseClicked="#seleccionTweet" prefHeight="320.0" prefWidth="560.0" />
             <MediaView fx:id="mv" fitHeight="203.0" fitWidth="235.0" layoutX="14.0" layoutY="373.0" />
-<<<<<<< HEAD
-=======
             <ImageView fitHeight="35.0" fitWidth="42.0" layoutX="900.0" layoutY="354.0">
                <image>
                   <Image url="@../Imagenes/mensjae.png" />
@@ -213,7 +211,6 @@
                   <DropShadow />
                </effect>
             </ImageView>
->>>>>>> Kevin
          </children>
       </AnchorPane>
       <Button layoutX="963.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
