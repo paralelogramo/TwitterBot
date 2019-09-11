@@ -21,6 +21,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import javafx.scene.control.TextArea;
 import java.net.URL;
 import java.util.List;
@@ -64,6 +65,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import twitter4j.UploadedMedia;
 
 /**
  * 
@@ -103,6 +105,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private List<Status> listaTweets;    
     private ArrayList<String> listaTimeline = new ArrayList<>();
     private long seleccionTweet;
+    private boolean esVideo = false;
     
     Scanner sc = new Scanner(System.in);    
     
@@ -156,21 +159,33 @@ public class V2_Controller extends ControlVentana implements Initializable {
     // METODO LISTO
     public int enviarTwitter(MouseEvent event){       
         Mensaje mensaje = new Mensaje();
-        mensaje.setMensaje(msj.getText());              
+        mensaje.setMensaje(msj.getText());
+        long[] mediaIds = new long[1];
         StatusUpdate status = new StatusUpdate(mensaje.getMensaje());
         if (imgFile != null) {
             try {
-                status.setMedia(imgFile);
+                if (!esVideo) {
+                    status.setMedia(imgFile);
+                }
+                else{
+                    InputStream target = new FileInputStream(imgFile);
+                    UploadedMedia um = twitter.uploadMediaChunked("Video", target);
+                    mediaIds[0] = um.getMediaId();
+                    status.setMediaIds(mediaIds);
+                }
                 twitter.updateStatus(status);
                 msj.clear();
                 notificacionImagen.setVisible(false);
                 this.pgA.setProgress(0);
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
                 this.equis.setImage(null);
-                
+                this.esVideo = false;
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("Error, No se puede enviar el twit");
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("se cayo porque no hay archivo :v");
             }
         }
         if(mensaje.verificar() && imgFile == null){
@@ -245,12 +260,24 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         med = new Media (new File (dir).toURI().toString());
                         mp = new MediaPlayer(med);
                         mv.setMediaPlayer(mp);
-                        mp.play();
+                        this.esVideo = true;                        
                     }
                 }
         }
         if(this.preImage.getImage() == null)
             this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));   
+    }
+    
+    public void pausar_Video (MouseEvent event){
+        this.mp.pause();
+    }
+    
+    public void continuar_Video (MouseEvent event){
+        this.mp.play();
+    }
+    
+    public void detener_Video (MouseEvent event){
+        this.mp.stop();
     }
     
     // METODO LISTO
@@ -604,7 +631,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         .setOAuthAccessTokenSecret("nW7iSxt9oHdyzukWKwQGEfLHIcZQFr8V0rZvqZl28DdFG")                
         .setIncludeEmailEnabled(true);        
         TwitterFactory tf = new TwitterFactory(cb.build());
-        twitter = tf.getInstance();              
+        twitter = tf.getInstance();
         
         
         /*
