@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
       <AnchorPane prefHeight="602.0" prefWidth="1002.0">
          <children>
@@ -31,7 +31,7 @@
                         <InnerShadow choke="0.12" color="#000000ba" height="44.72" radius="19.6375" width="35.83" />
                      </effect>
                   </TextArea>
-                  <Button layoutX="467.0" layoutY="86.0" mnemonicParsing="false" onMouseClicked="#enviarTwitter" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
+                  <Button layoutX="467.0" layoutY="86.0" mnemonicParsing="false" onMouseClicked="#enviarTwitter" opacity="0.0" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
                   <ProgressIndicator fx:id="pgA" accessibleText=" " layoutX="384.0" layoutY="85.0" opacity="0.95" prefHeight="50.0" prefWidth="29.0" progress="0.0" style="-fx-progress-color: darkblue;">
                      <effect>
                         <InnerShadow choke="0.32" radius="13.7075" width="35.83" />
@@ -88,9 +88,17 @@
                   </ImageView>
                   <Button layoutX="90.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirImagen_Twitter" opacity="0.0" prefHeight="37.0" prefWidth="32.0" />
                   <Button layoutX="129.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" opacity="0.0" prefHeight="32.0" prefWidth="32.0" />
+                  <ImageView fitHeight="24.0" fitWidth="74.0" layoutX="467.0" layoutY="86.0">
+                     <image>
+                        <Image url="@../Imagenes/twitter.png" />
+                     </image>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </ImageView>
                </children>
             </AnchorPane>
-            <Button layoutX="879.0" layoutY="430.0" mnemonicParsing="false" onMouseClicked="#mensajeDirecto" prefHeight="22.0" prefWidth="85.0" text="Mensaje" />
+            <Button layoutX="900.0" layoutY="352.0" mnemonicParsing="false" onMouseClicked="#mensajeDirecto" opacity="0.0" prefHeight="35.0" prefWidth="40.0" text="Mensaje" />
             <ListView layoutX="26.0" layoutY="134.0" opacity="0.55" prefHeight="193.0" prefWidth="169.0" style="-fx-background-radius: 15px;" />
             <Text fill="#03e2ffd6" layoutX="826.0" layoutY="594.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LosJavaPowerRanger®" textAlignment="CENTER" wrappingWidth="169.13671875">
                <font>
@@ -117,7 +125,7 @@
                   <DropShadow color="#00364af7" height="94.01" radius="45.5775" spread="0.07" width="90.3" />
                </effect>
             </ImageView>
-            <Text fill="#07c0e0f0" layoutX="14.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Previsualizacion:" wrappingWidth="116.986328125">
+            <Text fill="#f3f5f5f0" layoutX="14.0" layoutY="367.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Previsualizacion:" wrappingWidth="116.986328125">
                <font>
                   <Font name="System Bold Italic" size="14.0" />
                </font>
@@ -132,7 +140,7 @@
                   <Font name="System Bold" size="19.0" />
                </font>
             </Text>
-            <ImageView fitHeight="58.0" fitWidth="56.0" layoutX="894.0" layoutY="280.0" onMouseClicked="#eliminarTwitter">
+            <ImageView fitHeight="50.0" fitWidth="56.0" layoutX="894.0" layoutY="247.0" onMouseClicked="#eliminarTwitter">
                <image>
                   <Image url="@../Imagenes/delete.png" />
                </image>
@@ -140,7 +148,7 @@
                   <DropShadow />
                </effect>
             </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="897.0" layoutY="361.0" onMouseClicked="#retweetear">
+            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="897.0" layoutY="302.0" onMouseClicked="#retweetear">
                <image>
                   <Image url="@../Imagenes/retweet.png" />
                </image>
@@ -165,12 +173,47 @@
                   </DropShadow>
                </effect>
             </ImageView>
-            <Button layoutX="879.0" layoutY="464.0" mnemonicParsing="false" onMouseClicked="#seguirUsuario" prefHeight="22.0" prefWidth="85.0" text="Seguir" />
-            <Button layoutX="880.0" layoutY="497.0" mnemonicParsing="false" onMouseClicked="#noSeguirUsuario" prefHeight="22.0" prefWidth="85.0" text="No Seguir" />
+            <Button layoutX="895.0" layoutY="400.0" mnemonicParsing="false" onMouseClicked="#seguirUsuario" opacity="0.0" prefHeight="32.0" prefWidth="50.0" text="Seguir" />
+            <Button layoutX="895.0" layoutY="444.0" mnemonicParsing="false" onMouseClicked="#noSeguirUsuario" opacity="0.0" prefHeight="35.0" prefWidth="50.0" text="No Seguir" />
             <ImageView fx:id="equis" fitHeight="40.0" fitWidth="40.0" layoutX="14.0" layoutY="373.0" onMouseClicked="#eliminarImagenSubida" pickOnBounds="true" preserveRatio="true" />
-            <Button layoutX="880.0" layoutY="531.0" mnemonicParsing="false" onMouseClicked="#darLike" prefHeight="25.0" prefWidth="85.0" text="Like" />
+            <Button layoutX="900.0" layoutY="493.0" mnemonicParsing="false" onMouseClicked="#darLike" opacity="0.0" prefHeight="40.0" prefWidth="42.0" text="Like" />
             <ListView fx:id="listaTiempo" layoutX="268.0" layoutY="81.0" onMouseClicked="#seleccionTweet" prefHeight="320.0" prefWidth="560.0" />
             <MediaView fx:id="mv" fitHeight="203.0" fitWidth="235.0" layoutX="14.0" layoutY="373.0" />
+<<<<<<< HEAD
+=======
+            <ImageView fitHeight="35.0" fitWidth="42.0" layoutX="900.0" layoutY="354.0">
+               <image>
+                  <Image url="@../Imagenes/mensjae.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="43.0" fitWidth="50.0" layoutX="895.0" layoutY="397.0">
+               <image>
+                  <Image url="@../Imagenes/follow.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="43.0" fitWidth="50.0" layoutX="895.0" layoutY="444.0">
+               <image>
+                  <Image url="@../Imagenes/unfollow.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+            <ImageView fitHeight="40.0" fitWidth="40.0" layoutX="901.0" layoutY="491.0">
+               <image>
+                  <Image url="@../Imagenes/like.png" />
+               </image>
+               <effect>
+                  <DropShadow />
+               </effect>
+            </ImageView>
+>>>>>>> Kevin
          </children>
       </AnchorPane>
       <Button layoutX="963.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />

@@ -213,10 +213,10 @@ public class V2_Controller extends ControlVentana implements Initializable {
             this.equis.setImage(new Image("/Imagenes/close.png"));
             extension = obtenerExtension(imgFile.getAbsolutePath());
             notificacionImagen.setVisible(true);
-            notificacionImagen.setText(extension.toUpperCase()+" Subido Con Exito!!");
+            notificacionImagen.setText(extension.toUpperCase()+" Cargado Con Exito!!");
             if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")) {
                 if (imgFile.length()>1000000) {
-                    System.out.println("tamaño no permitido");
+                    System.out.println("Tamaño no permitido");
                     imgFile = null;
                     equis = null;
                     notificacionImagen.setText("Tamaño Archivo No Soportado!!");
@@ -263,9 +263,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
         imgFile = filech.showOpenDialog(stage);
         if (imgFile != null) {
             try {
-                notificacionImagen.setText("GIF Subido Con Exito!!");
+                notificacionImagen.setText("GIF Cargado Con Exito!!");
                 if (imgFile.length()>15000000) {
-                    System.out.println("tamaño no permitido");
+                    System.out.println("Tamaño no permitido");
                     imgFile = null;
                     notificacionImagen.setText("Tamaño Archivo No Soportado!!");
                     this.preImage.setImage(null);
@@ -327,7 +327,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 }
                 
                 do{        
-                    System.out.print("numero del twitt a eliminar: "); 
+                    System.out.print("Numero del twitt a eliminar: "); 
                     try{
                         opcion2 = sc.nextLine();
                         if(opcion2.equalsIgnoreCase("")){
@@ -340,7 +340,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                             twitter.destroyStatus(mensajeId.get(opcion));
                             mensajeId.remove(opcion);
                             textoMsj.remove(opcion);
-                            System.out.println("mensaje eliminado!!!");
+                            System.out.println("Mensaje eliminado!!!");
                             
                         }
                     }catch(NumberFormatException | TwitterException e){
@@ -351,7 +351,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 
             }
             else{
-                System.out.println("no existen tweets publicados!!!");
+                System.out.println("No existen tweets publicados!!!");
             }
         } catch (TwitterException ex) {
             System.out.println("Error, No se puede eliminar el twitt");
@@ -383,7 +383,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 }
                 
                 do{
-                    System.out.print("numero del twitt a retweetear: ");
+                    System.out.print("Numero del twitt a retweetear: ");
                     try{
                         opcion2 = sc.nextLine();
                         if(opcion2.equalsIgnoreCase("")){
@@ -394,7 +394,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         }
                         if(opcion>=0 && opcion<mensajeId.size()){
                             twitter.retweetStatus(mensajeId.get(opcion));
-                            System.out.println("mensaje Retwitteado");
+                            System.out.println("Mensaje Retwitteado");
                             
                         }
                     }catch(NumberFormatException | TwitterException e){
@@ -404,7 +404,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 }while(opcion<0 || opcion>mensajeId.size());
             }
             else{
-                System.out.println("no existen tweets publicados!!!");
+                System.out.println("No existen tweets publicados!!!");
             }
         } catch (TwitterException ex) {
             System.out.println("Error, no se puede retwittear el mensaje");
@@ -454,7 +454,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             try {
                 if (seguirUsuario!=null&&!seguirUsuario.equals("") && !seguirUsuario.equals("@Usuario"))
                     twitter.friendsFollowers().createFriendship(seguirUsuario.substring(1));                      
-                System.out.println("seguir usuarios: "+seguirUsuario);
+                System.out.println("Seguir usuarios: "+seguirUsuario);
             } catch (TwitterException ex) {
                 this.popUp(0, "Usuario ingresado no existe", "Error");           
             } 
