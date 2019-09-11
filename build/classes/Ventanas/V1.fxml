@@ -13,7 +13,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-border-radius: 50px; -fx-background-radius: 50px; -fx-background-image: url('/Imagenes/background1.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V1_Control">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-border-radius: 50px; -fx-background-radius: 50px; -fx-background-image: url('/Imagenes/background1.png');" xmlns="http://javafx.com/javafx/8.0.221" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V1_Control">
    <children>
       <ProgressIndicator fx:id="cargando" layoutX="348.0" layoutY="55.0" prefHeight="162.0" prefWidth="304.0" />
       <Button layoutX="967.0" layoutY="16.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
@@ -33,7 +33,6 @@
                <effect>
                   <InnerShadow />
                </effect></PasswordField>
-            <Button layoutX="123.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#inicioSesion" text="Ingresar" />
             <Line endX="101.0" endY="-1.0" layoutX="172.0" layoutY="211.0" startX="-141.0" startY="-1.0" stroke="WHITE" />
             <Line endX="101.0" endY="-1.0" layoutX="172.0" layoutY="256.0" startX="-141.0" startY="-1.0" stroke="WHITE" />
             <Text accessibleRole="HYPERLINK" fill="#ffffffd6" layoutX="67.0" layoutY="332.0" onMouseClicked="#recuperarUsuario" strokeType="OUTSIDE" strokeWidth="0.0" text="¿Has olvidado tu contraseña?" textAlignment="CENTER" wrappingWidth="169.02734375">
@@ -46,6 +45,12 @@
                   <Image url="@../Imagenes/icon.png" />
                </image>
             </ImageView>
+            <ImageView fitHeight="35.0" fitWidth="120.0" layoutX="86.0" layoutY="268.0">
+               <image>
+                  <Image url="@../Imagenes/iniciar%20seccion.png" />
+               </image>
+            </ImageView>
+            <Button layoutX="86.0" layoutY="271.0" mnemonicParsing="false" onMouseClicked="#inicioSesion" opacity="0.0" prefHeight="31.0" prefWidth="120.0" text="Ingresar" />
          </children>
          <effect>
             <DropShadow color="#000000d9" height="12.1" radius="9.2575" width="26.93" />

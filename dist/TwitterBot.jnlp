@@ -8,11 +8,7 @@
   </information>
   <resources>
     <j2se version="1.6+" href="http://java.sun.com/products/autodl/j2se"/>
-<<<<<<< HEAD
-    <jar href="TwitterBot.jar" size="3020927" download="eager" />
-=======
-    <jar href="TwitterBot.jar" size="3019740" download="eager" />
->>>>>>> Vicente
+    <jar href="TwitterBot.jar" size="3238716" download="eager" />
     <jar href="lib\mysql-connector-java-8.0.17.jar" size="2321813" download="eager" />
     <jar href="lib\twitter4j-core-4.0.7.jar" size="318006" download="eager" />
   </resources>
