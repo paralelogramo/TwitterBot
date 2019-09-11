@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
       <AnchorPane prefHeight="602.0" prefWidth="1002.0">
          <children>
@@ -96,6 +96,7 @@
                   <Button layoutX="467.0" layoutY="86.0" mnemonicParsing="false" onMouseClicked="#enviarTwitter" onMouseReleased="#actualizarLista" opacity="0.0" prefHeight="25.0" prefWidth="74.0" text="Enviar" />
                   <Button layoutX="90.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirImagen_Twitter" opacity="0.0" prefHeight="37.0" prefWidth="32.0" />
                   <Button layoutX="129.0" layoutY="82.0" mnemonicParsing="false" onMouseClicked="#subirGif_Twitter" opacity="0.0" prefHeight="32.0" prefWidth="32.0" />
+                  <ImageView fitHeight="25.0" fitWidth="24.0" layoutX="-78.0" layoutY="-14.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
             <ListView layoutX="26.0" layoutY="134.0" opacity="0.55" prefHeight="193.0" prefWidth="169.0" style="-fx-background-radius: 15px;" />
@@ -213,6 +214,24 @@
             <MediaView fx:id="mv" fitHeight="203.0" fitWidth="235.0" layoutX="14.0" layoutY="373.0" />
             <Button layoutX="902.0" layoutY="251.0" mnemonicParsing="false" onMouseClicked="#eliminarTwitter" opacity="0.0" prefHeight="43.0" prefWidth="37.0" text="Eliminar" />
             <Button layoutX="900.0" layoutY="307.0" mnemonicParsing="false" onMouseClicked="#retweetear" opacity="0.0" prefHeight="40.0" prefWidth="42.0" text="Retweet" />
+<<<<<<< HEAD
+=======
+            <ImageView fx:id="parar" fitHeight="22.0" fitWidth="22.0" layoutX="260.0" layoutY="552.0" onMouseClicked="#detener_Video" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../Imagenes/Parar.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="pausa" fitHeight="22.0" fitWidth="22.0" layoutX="260.0" layoutY="526.0" onMouseClicked="#pausar_Video" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../Imagenes/Pause.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="continuar" fitHeight="22.0" fitWidth="22.0" layoutX="260.0" layoutY="499.0" onMouseClicked="#continuar_Video" pickOnBounds="true" preserveRatio="true" visible="false">
+               <image>
+                  <Image url="@../Imagenes/Play.png" />
+               </image>
+            </ImageView>
+>>>>>>> Vicente
          </children>
       </AnchorPane>
       <Button layoutX="963.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />

@@ -52,6 +52,7 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.IDs;
+
 import java.util.ArrayList;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -63,6 +64,7 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
+import twitter4j.Friendship;
 import twitter4j.UploadedMedia;
 
 /**
@@ -88,18 +90,26 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML ImageView preImage;
     @FXML Text avisolimite;
     @FXML ImageView equis;
+    @FXML ImageView continuar;
+    @FXML ImageView pausa;
+
+    public ArrayList<String> getUsuariosSeguidos() {
+        return usuariosSeguidos;
+    }
+    @FXML ImageView parar;
     @FXML ListView<String> listView = new ListView<String>();
     @FXML MediaView mv;
+    Image imagen123;
     private MediaPlayer mp;
     private Media med;
     private Image profilePhotoImage;
     private File imgFile;
     private Stage stage = this.stage;
-    protected static Twitter twitter;
+    public static Twitter twitter;
     private Twitter sender;
     private List<Status> lineaDeTiempo;   
     private final char arroa = 64;
-    private final ArrayList<String> usuariosSeguidos = new ArrayList<>();    
+    private final ArrayList<String> usuariosSeguidos = new ArrayList<>();
     private List<Status> listaTweets;    
     private ArrayList<String> listaTimeline = new ArrayList<>();
     private ArrayList<Integer> likeados = new ArrayList<>();
@@ -119,9 +129,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
             
         }
     }
-    
-    
-    
     
     public void progresoTexto(Event event){   
         System.out.println(msj.getAnchor());
@@ -169,10 +176,13 @@ public class V2_Controller extends ControlVentana implements Initializable {
         if (imgFile != null) {
             try {
                 if (!esVideo) {
+                    this.mp = null;
+                    this.mv.setMediaPlayer(null);
                     status.setMedia(imgFile);
                 }
                 else{
-                    InputStream target = new FileInputStream(imgFile);
+                    this.imagen123 = null;
+                    InputStream target = new FileInputStream(this.imgFile);
                     UploadedMedia um = twitter.uploadMediaChunked("Video", target);
                     mediaIds[0] = um.getMediaId();
                     status.setMediaIds(mediaIds);
@@ -183,7 +193,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.pgA.setProgress(0);
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
                 this.equis.setImage(null);
-                this.esVideo = false;               
+                this.esVideo = false;
+                this.imgFile = null;
+                this.mv.setMediaPlayer(null);
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("Error, No se puede enviar el twit");
@@ -253,15 +265,22 @@ public class V2_Controller extends ControlVentana implements Initializable {
             if (extension.equalsIgnoreCase("jpg") || extension.equalsIgnoreCase("png")) {
                 if (imgFile.length()>1000000) {
                     System.out.println("Tamaño no permitido");
-                    imgFile = null;
+                    this.imgFile = null;                    
                     equis = null;
                     notificacionImagen.setText("Tamaño Archivo No Soportado!!");
                     this.preImage.setImage(null);                    
                 }
                 else{
                     try {
-                        Image imagen123 = new Image(new FileInputStream(imgFile));
-                        this.preImage.setImage(imagen123);
+                        this.parar.setVisible(false);
+                        this.pausa.setVisible(false);
+                        this.continuar.setVisible(false);
+                        this.mv.setMediaPlayer(null);                        
+                        imagen123 = new Image(new FileInputStream(imgFile));
+                        this.preImage.setImage(imagen123);                        
+                        this.preImage.toFront();
+                        this.equis.toFront();
+                        this.mv.toBack();                        
                         notificacionImagen.setVisible(true);
                     } catch (FileNotFoundException ex) {
                         System.out.println("Error, Imagen no encontrada");
@@ -276,12 +295,20 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     this.preImage.setImage(null);
                 }
                 else{
-                    if (extension.equalsIgnoreCase("mp4")) {
-                        String dir = imgFile.getAbsolutePath();
+                    if (extension.equalsIgnoreCase("mp4")) {                        
+                        String dir = this.imgFile.getAbsolutePath();
                         med = new Media (new File (dir).toURI().toString());
                         mp = new MediaPlayer(med);
                         mv.setMediaPlayer(mp);
-                        this.esVideo = true;                        
+                        this.parar.setVisible(true);
+                        this.pausa.setVisible(true);
+                        this.continuar.setVisible(true);
+                        this.preImage.setImage(null);
+                        this.imagen123 = null;
+                        this.esVideo = true;
+                        this.preImage.toBack();
+                        this.mv.toFront();
+                        this.equis.toFront();
                     }
                 }
         }
@@ -334,6 +361,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
         this.imgFile = null;
         this.equis.setImage(null);
         this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+        this.mv.setMediaPlayer(null);
+        this.mv.toBack();
         this.notificacionImagen.setText(("Archivo eliminado con exito!"));
     }
     

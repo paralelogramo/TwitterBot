@@ -2,8 +2,8 @@
 
 <?import javafx.geometry.Point3D?>
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.ImageView?>
@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.TextFlow?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" opacity="0.95" prefHeight="406.0" prefWidth="608.0" scaleX="0.9" scaleY="0.9" style="-fx-background-radius: 30px; -fx-background-size: 300px 100px;; -fx-border-radius: 30px; -fx-background-color: lightskyblue;" xmlns="http://javafx.com/javafx/8.0.221" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V3_Control">
+<AnchorPane id="AnchorPane" fx:id="ap" opacity="0.95" prefHeight="406.0" prefWidth="608.0" scaleX="0.9" scaleY="0.9" style="-fx-background-radius: 30px; -fx-background-size: 300px 100px;; -fx-border-radius: 30px; -fx-background-color: lightskyblue;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V3_Control">
    <effect>
       <DropShadow color="#000000c1" height="69.19" radius="30.9425" spread="0.3" width="56.58">
          <input>
@@ -22,7 +22,7 @@
       </DropShadow>
    </effect>
    <children>
-      <TextArea fx:id="mensajeDirecto" layoutX="219.0" layoutY="327.0" prefHeight="66.0" prefWidth="334.0" style="-fx-focus-color: transparent;" />
+      <TextArea fx:id="mensajeDirecto" layoutX="193.0" layoutY="327.0" prefHeight="66.0" prefWidth="334.0" style="-fx-focus-color: transparent;" />
       <Button layoutX="542.0" layoutY="360.0" mnemonicParsing="false" onMouseClicked="#enviarMensaje" text="Enviar" />
       <TextFlow layoutX="176.0" layoutY="42.0" prefHeight="274.0" prefWidth="387.0" style="-fx-background-color: Azure;" />
       <GridPane layoutX="23.0" layoutY="42.0" prefHeight="260.0" prefWidth="82.0">
@@ -40,8 +40,7 @@
          <rotationAxis>
             <Point3D />
          </rotationAxis></Button>
-      <TextField fx:id="buscar" layoutX="23.0" layoutY="315.0" prefHeight="25.0" prefWidth="113.0" promptText="Buscar" />
       <ImageView fitHeight="54.0" fitWidth="60.0" layoutX="152.0" layoutY="330.0" pickOnBounds="true" preserveRatio="true" />
-      <Button layoutX="140.0" layoutY="315.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="24.0" />
+      <ComboBox fx:id="buscar" layoutX="23.0" layoutY="283.0" prefHeight="23.0" prefWidth="139.0" />
    </children>
 </AnchorPane>
