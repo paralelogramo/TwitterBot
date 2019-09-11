@@ -18,14 +18,21 @@ package Ventanas;
 
 import Clases.ControlVentana;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import twitter4j.Friendship;
+import twitter4j.IDs;
 import twitter4j.TwitterException;
 import twitter4j.User;
 
@@ -37,12 +44,16 @@ import twitter4j.User;
 public class V3_Control extends ControlVentana implements Initializable {
     
     @FXML AnchorPane ap;
-    @FXML TextField buscar;
+    @FXML ComboBox buscar;
     @FXML TextArea mensajeDirecto;
+    private final char arroa = 64;
+    private ArrayList<Long> usuarios = new ArrayList<>();
+    private ObservableList<String> items = FXCollections.observableArrayList();
     
-    public void enviarMensaje(MouseEvent event){         
-        String aUsuario = buscar.getText();
-        User user;
+    public void enviarMensaje(MouseEvent event) throws TwitterException{        
+        String aUsuario = buscar.getValue().toString();
+        User user;        
+        
         try {
             user = V2_Controller.twitter.showUser(aUsuario);
             long userId = user.getId();
@@ -50,7 +61,7 @@ public class V3_Control extends ControlVentana implements Initializable {
             V2_Controller.twitter.directMessages().sendDirectMessage(userId, mensajeDirecto.getText());    
         } catch (TwitterException ex) {
             this.popUp(0, aUsuario+" no existe", "Error");
-        }             
+        }
     }
     
     public void cerrarMensaje(){
@@ -65,7 +76,18 @@ public class V3_Control extends ControlVentana implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        // TODO
-    }    
+        try {
+            buscar.setItems(items);
+            IDs ids = V2_Controller.twitter.getFriendsIDs(V2_Controller.twitter.getScreenName(), -1);
+            for (long id : ids.getIDs()) {
+                User u = V2_Controller.twitter.showUser(id);
+                items.add(u.getScreenName());
+            }
+        } catch (TwitterException ex) {
+            Logger.getLogger(V3_Control.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IllegalStateException ex) {
+            Logger.getLogger(V3_Control.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     
 }
