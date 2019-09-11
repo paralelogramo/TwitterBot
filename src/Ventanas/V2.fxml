@@ -139,7 +139,7 @@
                   <Font name="System Bold" size="19.0" />
                </font>
             </Text>
-            <ImageView fitHeight="50.0" fitWidth="56.0" layoutX="894.0" layoutY="247.0" onMouseClicked="#eliminarTwitter">
+            <ImageView fitHeight="50.0" fitWidth="56.0" layoutX="894.0" layoutY="247.0">
                <image>
                   <Image url="@../Imagenes/delete.png" />
                </image>
@@ -147,7 +147,7 @@
                   <DropShadow />
                </effect>
             </ImageView>
-            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="897.0" layoutY="302.0" onMouseClicked="#retweetear">
+            <ImageView fitHeight="50.0" fitWidth="50.0" layoutX="897.0" layoutY="302.0">
                <image>
                   <Image url="@../Imagenes/retweet.png" />
                </image>
@@ -211,6 +211,8 @@
             <Button layoutX="900.0" layoutY="493.0" mnemonicParsing="false" onMouseClicked="#darLike" opacity="0.0" prefHeight="40.0" prefWidth="42.0" text="Like" />
             <ListView fx:id="listaTiempo" layoutX="268.0" layoutY="81.0" onMouseClicked="#seleccionTweet" prefHeight="320.0" prefWidth="560.0" />
             <MediaView fx:id="mv" fitHeight="203.0" fitWidth="235.0" layoutX="14.0" layoutY="373.0" />
+            <Button layoutX="902.0" layoutY="251.0" mnemonicParsing="false" onMouseClicked="#eliminarTwitter" opacity="0.0" prefHeight="43.0" prefWidth="37.0" text="Eliminar" />
+            <Button layoutX="900.0" layoutY="307.0" mnemonicParsing="false" onMouseClicked="#retweetear" opacity="0.0" prefHeight="40.0" prefWidth="42.0" text="Retweet" />
          </children>
       </AnchorPane>
       <Button layoutX="963.0" layoutY="13.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
