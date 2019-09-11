@@ -402,7 +402,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.seleccionTweet = 0;
             } else {
                 this.seleccionTweet = 0;
-                this.popUp(0, "No se puede eliminar tweet de tereros", "Error");                
+                this.popUp(0, "No se puede eliminar tweet de tereros o tweets ya eliminados ", "Error");                
             }
             
             /*
@@ -504,6 +504,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             }*/
         } catch (TwitterException ex) {
             System.out.println("Error, no se puede retwittear el mensaje");
+            this.popUp(0, "No se puede retweetear tweet inexistente o retweeteado nteriormente", "Error");
         }
     }
     
@@ -671,7 +672,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             }
             listaTweets = twitter.getHomeTimeline(); */
         } catch (TwitterException e) {
-            this.popUp(0, "Tweet ingresado no valido", "Error");           
+            this.popUp(0, "Tweet ingresado no valido(no se puede dar like a un tweet eliminado)", "Error");           
         } 
        
         /*
