@@ -173,6 +173,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
         mensaje.setMensaje(msj.getText());
         long[] mediaIds = new long[1];
         StatusUpdate status = new StatusUpdate(mensaje.getMensaje());
+        
+        //verificar que mensaje no se repita
+        /*for (int i = 0; i < listaTweets.size(); i++) {
+            if(msj.getText().equalsIgnoreCase(listaTweets.get(i).getText())){
+                this.popUp(0, "Mensaje repetido, ingrese otro", Error);
+            }
+        }*/
+        
         if (imgFile != null) {
             try {
                 if (!esVideo) {
@@ -196,6 +204,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.esVideo = false;
                 this.imgFile = null;
                 this.mv.setMediaPlayer(null);
+                this.popUp(1, "Twitt publicado con exito", "Twittear");
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("Error, No se puede enviar el twit");
@@ -211,7 +220,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 notificacionImagen.setVisible(false);
                 this.pgA.setProgress(0);
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
-                this.equis.setImage(null);                
+                this.equis.setImage(null); 
+                this.popUp(1, "Twitt publicado con exito", "Twittear");
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("No se puede subir la imagen");
@@ -311,6 +321,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         this.equis.toFront();
                     }
                 }
+            
         }
         if(this.preImage.getImage() == null)
             this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));   
@@ -400,6 +411,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 twitter.destroyStatus(this.seleccionTweet);
                 mensajeId.remove(this.seleccionTweet);
                 this.seleccionTweet = 0;
+                this.popUp(1, "Twitter eliminado con exito", "Eliminar Twitt");
             } else {
                 this.seleccionTweet = 0;
                 this.popUp(0, "No se puede eliminar tweet de tereros o tweets ya eliminados ", "Error");                
@@ -467,6 +479,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             } else {
                 twitter.retweetStatus(this.seleccionTweet);       
                 this.seleccionTweet = 0;
+                this.popUp(1, "Mensaje Retwiteado con Exito", "Retwittear");
             }
             /*
             largoArreglo = mensajeId.size();
@@ -551,7 +564,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
             try {
                 if (seguirUsuario!=null&&!seguirUsuario.equals("") && !seguirUsuario.equals("@Usuario"))
                     twitter.friendsFollowers().createFriendship(seguirUsuario.substring(1));                      
-                System.out.println("Seguir usuarios: "+seguirUsuario);
+                    System.out.println("Seguir usuarios: "+seguirUsuario);
+                    this.popUp(1,"Usuario "+seguirUsuario+" seguido con exito", "Seguir Usuario");
             } catch (TwitterException ex) {
                 this.popUp(0, "Usuario ingresado no existe", "Error");           
             } 
@@ -585,6 +599,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             try { 
                 String seleccionado = (String) JOptionPane.showInputDialog(null, "Seleccionar usuario para dejar de seguir", "TwitterBot_ | Dejar de Seguir", JOptionPane.DEFAULT_OPTION, icono, seguidos, seguidos[0]);                          
                 twitter.destroyFriendship(seleccionado);
+                this.popUp(1, "Ha dejado de seguir al usuario "+seleccionado+" con exito", "Dejar de Seguir");
             } catch (NullPointerException | TwitterException ex) {
                //this.popUp(0, "Elemento seleccionado no es valido para la función", "Error");
             }            
