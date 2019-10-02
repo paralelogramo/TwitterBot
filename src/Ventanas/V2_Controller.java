@@ -203,6 +203,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.imgFile = null;
                 this.mv.setMediaPlayer(null);
                 this.popUp(1, "Twitt publicado con exito", "Twittear");
+                this.actualizarLista();
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("Error, No se puede enviar el twit");
@@ -220,6 +221,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
                 this.equis.setImage(null); 
                 this.popUp(1, "Twitt publicado con exito", "Twittear");
+                this.actualizarLista();
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("No se puede subir la imagen");
@@ -566,14 +568,15 @@ public class V2_Controller extends ControlVentana implements Initializable {
             try {
                 if (seguirUsuario!=null&&!seguirUsuario.equals("") && !seguirUsuario.equals("@Usuario"))
                     twitter.friendsFollowers().createFriendship(seguirUsuario.substring(1));                      
-                    System.out.println("Seguir usuarios: "+seguirUsuario);
-                    this.popUp(1,"Usuario "+seguirUsuario+" seguido con exito", "Seguir Usuario");
+                System.out.println("Seguir usuarios: "+seguirUsuario);
+                this.popUp(1,"Usuario "+seguirUsuario+" seguido con exito", "Seguir Usuario");
             } catch (TwitterException ex) {
                 this.popUp(0, "Usuario ingresado no existe", "Error");           
             } 
         } catch (NullPointerException e) {
                       
         } 
+        this.actualizarLista();
     }   
     
     public void noSeguirUsuario(MouseEvent event){
