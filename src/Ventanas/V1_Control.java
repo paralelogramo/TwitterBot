@@ -76,7 +76,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     }    
     
     @FXML
-    public void inicioSesion(MouseEvent evento){         
+    public void inicioSesion(MouseEvent evento) throws IOException{         
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
         clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");        
         String consulta = "SELECT * FROM Usuario WHERE Usuarios='"+usuario.getText()+"' && clave='"+clave.getText()+"'";         
@@ -125,9 +125,9 @@ public class V1_Control extends ControlVentana implements Initializable {
     }
     
     @FXML
-    private void iniciarSesion(){
-        try { 
-            Socket s = new Socket(dirWeb, puerto);
+    private void iniciarSesion() throws IOException{
+       //try { 
+            
             FXMLLoader loader = new FXMLLoader();
             URL location = V1_Control.class.getResource("V2.fxml");
             loader.setLocation(location);
@@ -145,9 +145,10 @@ public class V1_Control extends ControlVentana implements Initializable {
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.centerOnScreen();
             stage.show();   
-        } catch (IOException ex) {
-            this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml - Error Conexiòn)", "Error");                              
-        }                  
+        //} catch (IOException ex) {
+          //   System.out.println(ex.getMessage());
+         //  this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml - Error Conexiòn)", "Error");                              
+        // }                  
     }
         
     @FXML
@@ -165,14 +166,12 @@ public class V1_Control extends ControlVentana implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {          
         try {                      
-            this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);            
-            this.popUp(1, "Conectado a servidor de datos con exito", "Conexión");         
+            this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);                           
         } catch (SQLException ex) {
             this.popUp(0, "Error en conexión con servidor de datos", "Conexión");       
         }
         try{
-            Socket s = new Socket(dirWeb, puerto);
-            this.popUp(1, "Conectado a Twitter.com con exito", "Conexión ");                      
+            Socket s = new Socket(dirWeb, puerto);                               
         } catch (HeadlessException | IOException | SecurityException ex) {
             this.popUp(0, "Error en conexión a Twitter.com", "Conexión");               
         }
