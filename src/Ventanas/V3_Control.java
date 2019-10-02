@@ -19,6 +19,7 @@ package Ventanas;
 import Clases.ControlVentana;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,12 +27,17 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextFlow;
 import javafx.stage.Stage;
-import twitter4j.Friendship;
+import org.controlsfx.control.textfield.TextFields;
+import twitter4j.DirectMessageList;
 import twitter4j.IDs;
 import twitter4j.TwitterException;
 import twitter4j.User;
@@ -44,23 +50,36 @@ import twitter4j.User;
 public class V3_Control extends ControlVentana implements Initializable {
     
     @FXML AnchorPane ap;
-    @FXML ComboBox buscar;
     @FXML TextArea mensajeDirecto;
+    @FXML TextField usuario;
+    @FXML TextFlow chat;
+    @FXML ImageView perfil;
     private final char arroa = 64;
     private ArrayList<Long> usuarios = new ArrayList<>();
     private ObservableList<String> items = FXCollections.observableArrayList();
+    private List mensajes;
     
     public void enviarMensaje(MouseEvent event) throws TwitterException{        
-        String aUsuario = buscar.getValue().toString();
-        User user;        
+        String aUsuario = usuario.getText().toString();
+        User user;
+        
         
         try {
             user = V2_Controller.twitter.showUser(aUsuario);
             long userId = user.getId();
-            System.out.println(userId);
-            V2_Controller.twitter.directMessages().sendDirectMessage(userId, mensajeDirecto.getText());    
+            V2_Controller.twitter.directMessages().sendDirectMessage(userId, mensajeDirecto.getText());
+            this.usuario.setText("");
+            this.mensajeDirecto.setText("");
+            this.perfil.setImage(null);
+            this.popUp(1,"Mensaje Enviado", "Logrado");
+            
         } catch (TwitterException ex) {
-            this.popUp(0, aUsuario+" no existe", "Error");
+            if (this.mensajeDirecto.getText()==null) {
+                this.popUp(0, "Texto Vacio", "Error");
+            }
+            else{
+                this.popUp(0, "Deben ser BFF y hacer F4F uwu", "Error");
+            }
         }
     }
     
@@ -77,12 +96,12 @@ public class V3_Control extends ControlVentana implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
-            buscar.setItems(items);
             IDs ids = V2_Controller.twitter.getFriendsIDs(V2_Controller.twitter.getScreenName(), -1);
             for (long id : ids.getIDs()) {
                 User u = V2_Controller.twitter.showUser(id);
                 items.add(u.getScreenName());
             }
+            TextFields.bindAutoCompletion(usuario, items);
         } catch (TwitterException ex) {
             Logger.getLogger(V3_Control.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalStateException ex) {
@@ -90,4 +109,19 @@ public class V3_Control extends ControlVentana implements Initializable {
         }
     }
     
+    public void verUsuario() throws TwitterException{
+        try {
+            User u = V2_Controller.twitter.showUser(this.usuario.getText());
+            Image foto = new Image(u.get400x400ProfileImageURL());
+            this.perfil.setImage(foto);
+            
+            /*this.chat.getChildren().clear();
+            DirectMessageList mensajes = V2_Controller.twitter.getDirectMessages(50);
+            for (int i = 0; i < 10; i++) {
+                this.chat.getChildren().add(new Text(mensajes.get(i).getText()+"\n"));
+            }*/
+        } catch (Exception e) {
+            this.perfil.setImage(null);
+        }
+    }
 }
