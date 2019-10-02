@@ -96,6 +96,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     public ArrayList<String> getUsuariosSeguidos() {
         return usuariosSeguidos;
     }
+    
     @FXML ImageView parar;
     @FXML ListView<String> listView = new ListView<String>();
     @FXML MediaView mv;
@@ -387,7 +388,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
             return filename.substring(index+1);
         }
     }
-    
     
     // METODO LISTO
     public void eliminarTwitter(MouseEvent event){
@@ -701,10 +701,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
         lista.setItems(oLista);*/
     }
     
-    //vista protegida?
-    public void costumeImageView(){
-        
-    }  
     
     @FXML
     public void cerrarSesion(MouseEvent event){
@@ -766,7 +762,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
         .setIncludeEmailEnabled(true);        
         TwitterFactory tf = new TwitterFactory(cb.build());
         twitter = tf.getInstance();
-        
         
         /*
         // ****** ESTO GENERA EL WEBVIEW ******
