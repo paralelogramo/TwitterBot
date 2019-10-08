@@ -16,7 +16,7 @@ package Ventanas;
 
 import Clases.ControlVentana;
 import Clases.Mensaje;
-import java.awt.Toolkit;
+import Clases.Tweet;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,8 +27,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
@@ -54,6 +52,8 @@ import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.IDs;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -62,9 +62,7 @@ import javafx.scene.media.*;
 import javafx.scene.paint.Color;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JDialog;
 import javax.swing.JOptionPane;
-import twitter4j.Friendship;
 import twitter4j.UploadedMedia;
 
 /**
@@ -96,6 +94,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     public ArrayList<String> getUsuariosSeguidos() {
         return usuariosSeguidos;
     }
+    
     @FXML ImageView parar;
     @FXML ListView<String> listView = new ListView<String>();
     @FXML MediaView mv;
@@ -111,7 +110,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private final char arroa = 64;
     private final ArrayList<String> usuariosSeguidos = new ArrayList<>();
     private List<Status> listaTweets;    
-    private ArrayList<String> listaTimeline = new ArrayList<>();
+    private ArrayList<Tweet> listaTimeline = new ArrayList<>();
     private ArrayList<Integer> likeados = new ArrayList<>();
     private long seleccionTweet = 0;
     private boolean esVideo = false;
@@ -121,10 +120,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     public void seleccionTweet(MouseEvent event){
         try{
-            String auxiliar = (String) lista.getSelectionModel().getSelectedItem();
-            System.out.println(auxiliar);        
-            seleccionTweet = Long.parseLong(auxiliar.split(" ")[0]);
-            System.out.println(seleccionTweet);
+            Tweet auxiliar =  (Tweet) lista.getSelectionModel().getSelectedItem();
+            System.out.println(auxiliar.getId());        
+            seleccionTweet = auxiliar.getId();           
         }catch(NullPointerException e){
             
         }
@@ -173,6 +171,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
         mensaje.setMensaje(msj.getText());
         long[] mediaIds = new long[1];
         StatusUpdate status = new StatusUpdate(mensaje.getMensaje());
+        
+        //verificar que mensaje no se repita
+        /*for (int i = 0; i < listaTweets.size(); i++) {
+            if(msj.getText().equalsIgnoreCase(listaTweets.get(i).getText())){
+                this.popUp(0, "Mensaje repetido, ingrese otro", Error);
+            }
+        }*/
+        
         if (imgFile != null) {
             try {
                 if (!esVideo) {
@@ -196,6 +202,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.esVideo = false;
                 this.imgFile = null;
                 this.mv.setMediaPlayer(null);
+                this.popUp(1, "Twitt publicado con exito", "Twittear");
+                this.actualizarLista();
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("Error, No se puede enviar el twit");
@@ -211,7 +219,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 notificacionImagen.setVisible(false);
                 this.pgA.setProgress(0);
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
-                this.equis.setImage(null);                
+                this.equis.setImage(null); 
+                this.popUp(1, "Twitt publicado con exito", "Twittear");
+                this.actualizarLista();
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("No se puede subir la imagen");
@@ -227,22 +237,25 @@ public class V2_Controller extends ControlVentana implements Initializable {
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);  */ 
         }
+        this.actualizarLista();
         return 0;        
     }
     
-    public void actualizarLista(Event event){
-        try {
+    
+    public void actualizarLista(){
+        try { 
+            this.listaTimeline.clear();
             listaTweets = twitter.getHomeTimeline();
             for (int i = 0; i < listaTweets.size(); i++) {
-                String aux = listaTweets.get(i).getId()+" "+arroa+listaTweets.get(i).getUser().getScreenName() + " " +listaTweets.get(i).getText();
+                //String aux = listaTweets.get(i).getId()+" "+arroa+listaTweets.get(i).getUser().getScreenName() + " " +listaTweets.get(i).getText(); 
                 
-                this.listaTimeline.add(aux);
-            }
-            ObservableList<String> oLista = FXCollections.observableArrayList(listaTimeline);
+                this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));
+            }            
+            ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);
             lista.setItems(oLista);
             lista.refresh();
         } catch (TwitterException ex) {
-            
+            Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     
@@ -311,6 +324,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         this.equis.toFront();
                     }
                 }
+            
         }
         if(this.preImage.getImage() == null)
             this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));   
@@ -377,7 +391,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
         }
     }
     
-    
     // METODO LISTO
     public void eliminarTwitter(MouseEvent event){
        
@@ -400,6 +413,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 twitter.destroyStatus(this.seleccionTweet);
                 mensajeId.remove(this.seleccionTweet);
                 this.seleccionTweet = 0;
+                this.popUp(1, "Twitter eliminado con exito", "Eliminar Twitt");
             } else {
                 this.seleccionTweet = 0;
                 this.popUp(0, "No se puede eliminar tweet de tereros o tweets ya eliminados ", "Error");                
@@ -444,6 +458,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             this.popUp(1, "No se puede eliminar el tweet", "Info");
             System.out.println("Error, No se puede eliminar el tweet");
         }
+        this.actualizarLista();
     }
     
     public void retweetear(MouseEvent event){
@@ -467,6 +482,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             } else {
                 twitter.retweetStatus(this.seleccionTweet);       
                 this.seleccionTweet = 0;
+                this.popUp(1, "Mensaje Retwiteado con Exito", "Retwittear");
             }
             /*
             largoArreglo = mensajeId.size();
@@ -506,6 +522,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             System.out.println("Error, no se puede retwittear el mensaje");
             this.popUp(0, "No se puede retweetear tweet inexistente o retweeteado nteriormente", "Error");
         }
+        this.actualizarLista();
     }
     
     /* Obsoleto eliminarTwitter
@@ -552,12 +569,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 if (seguirUsuario!=null&&!seguirUsuario.equals("") && !seguirUsuario.equals("@Usuario"))
                     twitter.friendsFollowers().createFriendship(seguirUsuario.substring(1));                      
                 System.out.println("Seguir usuarios: "+seguirUsuario);
+                this.popUp(1,"Usuario "+seguirUsuario+" seguido con exito", "Seguir Usuario");
             } catch (TwitterException ex) {
                 this.popUp(0, "Usuario ingresado no existe", "Error");           
             } 
         } catch (NullPointerException e) {
                       
         } 
+        this.actualizarLista();
     }   
     
     public void noSeguirUsuario(MouseEvent event){
@@ -585,6 +604,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             try { 
                 String seleccionado = (String) JOptionPane.showInputDialog(null, "Seleccionar usuario para dejar de seguir", "TwitterBot_ | Dejar de Seguir", JOptionPane.DEFAULT_OPTION, icono, seguidos, seguidos[0]);                          
                 twitter.destroyFriendship(seleccionado);
+                this.popUp(1, "Ha dejado de seguir al usuario "+seleccionado+" con exito", "Dejar de Seguir");
             } catch (NullPointerException | TwitterException ex) {
                //this.popUp(0, "Elemento seleccionado no es valido para la función", "Error");
             }            
@@ -684,12 +704,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
             
         ObservableList<String> oLista = FXCollections.observableArrayList(listaTimeline);
         lista.setItems(oLista);*/
+        this.actualizarLista();
     }
     
-    //vista protegida?
-    public void costumeImageView(){
-        
-    }  
     
     @FXML
     public void cerrarSesion(MouseEvent event){
@@ -734,6 +751,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
             this.popUp(0, "El proceso no puede cargar la ventana (archivo: V3.fxml)", "Error");
         }
     }
+    
+    public char paraSaber(boolean sino){
+        if (sino == false)
+            return 9932;
+        return 9989;
+    }
 
     /**
      * Initializes the controller class.
@@ -752,7 +775,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
         TwitterFactory tf = new TwitterFactory(cb.build());
         twitter = tf.getInstance();
         
-        
         /*
         // ****** ESTO GENERA EL WEBVIEW ******
         WebEngine engine = vista.getEngine();
@@ -766,39 +788,33 @@ public class V2_Controller extends ControlVentana implements Initializable {
                
             listaTweets = twitter.getHomeTimeline(); 
             for (int i = 0; i < listaTweets.size(); i++) {
-                String aux = listaTweets.get(i).getId()+" "+arroa+listaTweets.get(i).getUser().getScreenName() + " " +listaTweets.get(i).getText(); 
+                //String aux = listaTweets.get(i).getId()+" "+arroa+listaTweets.get(i).getUser().getScreenName() + " " +listaTweets.get(i).getText(); 
                 
-                this.listaTimeline.add(aux);
+                this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));
             }
             
-            ObservableList<String> oLista = FXCollections.observableArrayList(listaTimeline);
+            ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);
             lista.setItems(oLista);
             
             User newUser = twitter.showUser(twitter.getScreenName());
             
-            lista.setCellFactory(param -> new ListCell<String>() {
-            private ImageView imageView = new ImageView(new Image(newUser.getMiniProfileImageURL()));
+            lista.setCellFactory(param -> new ListCell<Tweet>() {
+            private ImageView imageView = new ImageView(new Image (newUser.getMiniProfileImageURL()));
             @Override
-            public void updateItem(String name, boolean empty) {
+            public void updateItem(Tweet name, boolean empty) {
                 super.updateItem(name, empty);
                 if (empty) {
                     setText(null);
                     setGraphic(null);
-                } else {                   
-                    String [] aux1 = name.split(" ");                    
-                    String usuario = aux1[1];                    
-                    User aux2;
-                    try {
-                        aux2 = twitter.showUser(usuario);
-                        imageView.setImage(new Image(aux2.getMiniProfileImageURL()));
-                    } catch (TwitterException ex) {
-                        
-                    }                    
-                    setText(name);
-                    setGraphic(imageView);
+                } else {                      
+                    imageView.setImage(name.getImagenPerfil());    
+                    setGraphic(imageView);                      
+                    String indicadores = "       LoRetweetie: "+paraSaber(name.getTweet().isRetweetedByMe())+"     DiLike: "+paraSaber(name.getTweet().isFavorited());
+                    setText(" @"+name.getUsuario()+" :  "+name.getTexto() + "\n"+indicadores);                                
                 }
             }
-            });                            
+            });                
+            
             usuario.setText("@"+newUser.getScreenName());
             usuario2.setText(newUser.getName());
             imagenPerfil.setImage(new Image(newUser.get400x400ProfileImageURL()));
@@ -809,6 +825,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
             this.popUp(0, "El proceso no puede establecer conexión con twitter", "Error");
         }
         this.arrastrarVentana(this.ap);           
-        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+        this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));        
     }  
 }
