@@ -257,6 +257,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         } catch (TwitterException ex) {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
     
     // METODO LISTO

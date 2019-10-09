@@ -19,7 +19,6 @@ package Ventanas;
 import Clases.ControlVentana;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,16 +26,20 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
-import javafx.scene.text.TextFlow;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
+import twitter4j.DirectMessage;
 import twitter4j.DirectMessageList;
 import twitter4j.IDs;
 import twitter4j.TwitterException;
@@ -52,14 +55,20 @@ public class V3_Control extends ControlVentana implements Initializable {
     @FXML AnchorPane ap;
     @FXML TextArea mensajeDirecto;
     @FXML TextField usuario;
-    @FXML TextFlow chat;
+    @FXML ListView chat;
     @FXML ImageView perfil;
+    @FXML Button check;
+    @FXML Button enviar;
+    @FXML Button eliminar;
+    private long idMensaje;
+    private long idPropio;
     private final char arroa = 64;
     private ArrayList<Long> usuarios = new ArrayList<>();
     private ObservableList<String> items = FXCollections.observableArrayList();
-    private List mensajes;
+    private ObservableList<Text> mensajes = FXCollections.observableArrayList();
+    private ArrayList<String> textoMensajes = new ArrayList<>();
     
-    public void enviarMensaje(MouseEvent event) throws TwitterException{        
+    public void enviarMensaje() throws TwitterException{        
         String aUsuario = usuario.getText().toString();
         User user;
         
@@ -68,10 +77,14 @@ public class V3_Control extends ControlVentana implements Initializable {
             user = V2_Controller.twitter.showUser(aUsuario);
             long userId = user.getId();
             V2_Controller.twitter.directMessages().sendDirectMessage(userId, mensajeDirecto.getText());
-            this.usuario.setText("");
-            this.mensajeDirecto.setText("");
-            this.perfil.setImage(null);
             this.popUp(1,"Mensaje Enviado", "Logrado");
+            
+            Text t = new Text(this.mensajeDirecto.getText());
+            t.setFont(Font.font("Helvetica", 15));
+            t.setTextAlignment(TextAlignment.RIGHT);
+            t.setWrappingWidth(337.0);
+            this.chat.getItems().add(t);
+            this.mensajeDirecto.setText("");
             
         } catch (TwitterException ex) {
             if (this.mensajeDirecto.getText()==null) {
@@ -87,6 +100,59 @@ public class V3_Control extends ControlVentana implements Initializable {
         ((Stage) ap.getScene().getWindow()).close();
     }
     
+    public void verUsuario() throws TwitterException{
+        try {
+            User u = V2_Controller.twitter.showUser(this.usuario.getText());
+            Image foto = new Image(u.get400x400ProfileImageURL());
+            this.perfil.setImage(foto);            
+            Text t;
+            //><
+            this.chat.getItems().clear();
+            DirectMessageList m = V2_Controller.twitter.getDirectMessages(50);
+            
+            this.textoMensajes.clear();
+            for (int i = 0; i < m.size(); i++) {
+                textoMensajes.add(m.get(i).getText());
+            }
+            
+            for (int i = m.size()-1; i >= 0; i--) {
+                if (m.get(i).getRecipientId()==u.getId() && m.get(i).getSenderId()==this.idPropio) {                    
+                    t = new Text(m.get(i).getText());
+                    t.setFont(Font.font("Helvetica", 15));
+                    t.setTextAlignment(TextAlignment.RIGHT);
+                    t.setWrappingWidth(337.0);
+                    this.chat.getItems().add(t);
+                }
+                else{
+                    if (m.get(i).getSenderId()==u.getId() && m.get(i).getRecipientId()==this.idPropio) {
+                        t = new Text(m.get(i).getText());
+                        t.setFont(Font.font("Helvetica", 15));
+                        t.setTextAlignment(TextAlignment.LEFT);
+                        t.setWrappingWidth(337.0);
+                        this.chat.getItems().add(t);
+                    }
+                }
+            }
+            this.check.setDisable(true);
+            this.enviar.setDisable(false);
+        } catch (TwitterException e) {
+            this.perfil.setImage(null);
+            System.out.println("kewea");
+        }
+    }
+    
+    public void rescatarIDMensaje(){
+        //COOMING SOON
+    }
+    
+    public void borrarMensajeDirecto(){
+        //COOMING SOON
+    }
+    
+    public void volverCheck(){
+        this.check.setDisable(false);
+        this.enviar.setDisable(true);
+    }
     
     /**
      * Initializes the controller class.
@@ -96,32 +162,18 @@ public class V3_Control extends ControlVentana implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
+            idPropio = V2_Controller.twitter.getId();
             IDs ids = V2_Controller.twitter.getFriendsIDs(V2_Controller.twitter.getScreenName(), -1);
             for (long id : ids.getIDs()) {
                 User u = V2_Controller.twitter.showUser(id);
                 items.add(u.getScreenName());
             }
             TextFields.bindAutoCompletion(usuario, items);
+            
         } catch (TwitterException ex) {
             Logger.getLogger(V3_Control.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IllegalStateException ex) {
             Logger.getLogger(V3_Control.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-    
-    public void verUsuario() throws TwitterException{
-        try {
-            User u = V2_Controller.twitter.showUser(this.usuario.getText());
-            Image foto = new Image(u.get400x400ProfileImageURL());
-            this.perfil.setImage(foto);
-            
-            /*this.chat.getChildren().clear();
-            DirectMessageList mensajes = V2_Controller.twitter.getDirectMessages(50);
-            for (int i = 0; i < 10; i++) {
-                this.chat.getChildren().add(new Text(mensajes.get(i).getText()+"\n"));
-            }*/
-        } catch (Exception e) {
-            this.perfil.setImage(null);
         }
     }
 }
