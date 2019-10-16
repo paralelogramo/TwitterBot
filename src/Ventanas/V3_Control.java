@@ -27,19 +27,18 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Stage;
 import org.controlsfx.control.textfield.TextFields;
-import twitter4j.DirectMessage;
 import twitter4j.DirectMessageList;
 import twitter4j.IDs;
 import twitter4j.TwitterException;
@@ -57,6 +56,11 @@ public class V3_Control extends ControlVentana implements Initializable {
     @FXML TextField usuario;
     @FXML ListView chat;
     @FXML ImageView perfil;
+    @FXML ImageView perfilMini;
+    @FXML ImageView perfilBot;
+    @FXML Text nombreFerfil;
+    @FXML Text nombreUsuario;
+    @FXML ListView seguidos;
     @FXML Button check;
     @FXML Button enviar;
     @FXML Button eliminar;
@@ -104,7 +108,10 @@ public class V3_Control extends ControlVentana implements Initializable {
         try {
             User u = V2_Controller.twitter.showUser(this.usuario.getText());
             Image foto = new Image(u.get400x400ProfileImageURL());
-            this.perfil.setImage(foto);            
+            this.perfil.setImage(foto);    
+            this.perfilMini.setImage(new Image(u.get400x400ProfileImageURL()));
+            this.nombreFerfil.setText("@"+u.getScreenName());
+            this.nombreUsuario.setText(u.getName());
             Text t;
             //><
             this.chat.getItems().clear();
@@ -163,6 +170,8 @@ public class V3_Control extends ControlVentana implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         try {
             idPropio = V2_Controller.twitter.getId();
+            User auxUser = V2_Controller.twitter.showUser(idPropio);
+            this.perfilBot = new ImageView(new Image (auxUser.get400x400ProfileImageURL()));
             IDs ids = V2_Controller.twitter.getFriendsIDs(V2_Controller.twitter.getScreenName(), -1);
             for (long id : ids.getIDs()) {
                 User u = V2_Controller.twitter.showUser(id);
@@ -170,9 +179,26 @@ public class V3_Control extends ControlVentana implements Initializable {
             }
             TextFields.bindAutoCompletion(usuario, items);
             
-        } catch (TwitterException ex) {
-            Logger.getLogger(V3_Control.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalStateException ex) {
+            this.seguidos.setItems(items);
+            this.seguidos.setCellFactory(param -> new ListCell<String>() {
+            //private ImageView imageView = new ImageView(new Image (V2_Controller.twitter.showUser(idPropio).getMiniProfileImageURL()));
+            @Override
+            public void updateItem(String name, boolean empty) {
+                super.updateItem(name, empty);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {       
+                    setGraphic(null);
+                    //imageView.setImage(V2_Controller.twitter.showUser(name).get400x400ProfileImageURL());    
+                    //setGraphic(imageView);                      
+                    //String indicadores = "       LoRetweetie: "+paraSaber(name.getTweet().isRetweetedByMe())+"     DiLike: "+paraSaber(name.getTweet().isFavorited());
+                    setText(" @"+name+"\n"+" ");                                
+                }
+            }
+            });    
+            
+        } catch (TwitterException | IllegalStateException ex) {
             Logger.getLogger(V3_Control.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
