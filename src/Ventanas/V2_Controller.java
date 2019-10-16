@@ -50,7 +50,8 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.IDs;
-
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -114,9 +115,13 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private ArrayList<Integer> likeados = new ArrayList<>();
     private long seleccionTweet = 0;
     private boolean esVideo = false;
+    private final String seguir = "^#seguir @[a-zA-Z0-9_]{1,15}$|^#seguir @[a-zA-Z0-9_]{1,15} | #seguir @[a-zA-Z0-9_]{1,15} | #seguir @[a-zA-Z0-9_]{1,15}$";
+    private final String gustar = "^#gustar .|^#gustar$|. #gustar .|. #gustar$";
+    private final String gustarID = "^#gustar [0-9]{1,20}$|^#gustar [0-9]{1,20} | #gustar [0-9]{1,20} | #gustar [0-9]{1,20}$";
+    private final String difundirID = "^#difundir [0-9]{1,20}$|^#difundir [0-9]{1,20} | #difundir [0-9]{1,20} | #difundir [0-9]{1,20}$";
+    private final String difundir = "^#difundir |^#difundir$| #difundir | #difundir$";
     
     Scanner sc = new Scanner(System.in);    
-    
     
     public void seleccionTweet(MouseEvent event){
         try{
@@ -168,8 +173,16 @@ public class V2_Controller extends ControlVentana implements Initializable {
     // METODO LISTO
     public int enviarTwitter(MouseEvent event){       
         Mensaje mensaje = new Mensaje();
+        Mensaje original = new Mensaje();
         mensaje.setMensaje(msj.getText());
+        original.setMensaje(msj.getText());
+        String mensajeLowerCase = mensaje.getMensaje().toLowerCase();
+        //ArrayList<String> hashtagsActivos = this.analisisHashtags(msj.getText().toLowerCase());
         long[] mediaIds = new long[1];
+        //String mensajeLimpio = this.limpiarMensaje(mensaje.getMensaje());
+        String mensajeLimpio = this.analisisHashtagSeguir(mensajeLowerCase, mensaje.getMensaje());
+        //System.out.println("Mensaje: "+mensajeLimpio);
+        mensaje.setMensaje(mensajeLimpio);
         StatusUpdate status = new StatusUpdate(mensaje.getMensaje());
         
         //verificar que mensaje no se repita
@@ -204,6 +217,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.mv.setMediaPlayer(null);
                 this.popUp(1, "Twitt publicado con exito", "Twittear");
                 this.actualizarLista();
+                //this.ejecutarComandos(hashtagsActivos);
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("Error, No se puede enviar el twit");
@@ -211,6 +225,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.popUp(0, "se cayo porque no hay archivo :v", "Error");
                 System.out.println("se cayo porque no hay archivo :v");
             }
+            msj.clear();
         }
         if(mensaje.verificar() && imgFile == null){
             try {
@@ -222,12 +237,13 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.equis.setImage(null); 
                 this.popUp(1, "Twitt publicado con exito", "Twittear");
                 this.actualizarLista();
+                //this.ejecutarComandos(hashtagsActivos);
                 return 0;
             } catch (TwitterException ex) {
-                System.out.println("No se puede subir la imagen");
-                this.popUp(0, "No se puede subir la imagen", "Error");
+                this.popUp(0, "No se puede enviar un tweet duplicado", "Error");
             }
-        }else{  
+        }else{
+            this.popUp(0, "Debe incluir un mensaje o un archivo", "Error");
             /*
             Toolkit.getDefaultToolkit().beep();            
             JOptionPane auxiliar = new JOptionPane();
@@ -237,6 +253,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             dialog.setAlwaysOnTop(true);
             dialog.setVisible(true);  */ 
         }
+        this.msj.clear();
         this.actualizarLista();
         return 0;        
     }
@@ -568,7 +585,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             String seguirUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a seguir","@Usuario");     
             try {
                 if (seguirUsuario!=null&&!seguirUsuario.equals("") && !seguirUsuario.equals("@Usuario"))
-                    twitter.friendsFollowers().createFriendship(seguirUsuario.substring(1));                      
+                    twitter.friendsFollowers().createFriendship(seguirUsuario.substring(1));
                 System.out.println("Seguir usuarios: "+seguirUsuario);
                 this.popUp(1,"Usuario "+seguirUsuario+" seguido con exito", "Seguir Usuario");
             } catch (TwitterException ex) {
@@ -758,7 +775,239 @@ public class V2_Controller extends ControlVentana implements Initializable {
             return 9932;
         return 9989;
     }
-
+    
+    public String analisisHashtagSeguir(String mensajeLowerCase, String mensajeOriginal){
+        Pattern pattern = Pattern.compile(seguir, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(mensajeLowerCase);
+        String[] palabrasLowerCase = mensajeLowerCase.split(" ");
+        String [] palabrasOriginal = mensajeOriginal.split(" ");
+        String mensajeLimpio = "";
+        if (matcher.find()) {
+            try {
+                for (int i = 0; i < palabrasLowerCase.length; i++) {
+                    if ("#seguir".equals(palabrasLowerCase[i])) {
+                        twitter.friendsFollowers().createFriendship(palabrasLowerCase[i+1].substring(1));
+                        i+=1;
+                    }
+                    else{
+                        mensajeLimpio = mensajeLimpio.concat(" ");
+                        mensajeLimpio = mensajeLimpio.concat(palabrasOriginal[i]);
+                    }
+                }
+            } catch (TwitterException e) {
+            }
+        }
+        else{
+            return mensajeOriginal;
+        }
+        return mensajeLimpio;
+    }
+    
+    public ArrayList analisisHashtags(String mensaje){
+        ArrayList<String> hashtagsActivos = new ArrayList<>();
+        String[] palabras = mensaje.split(" ");
+        
+        Pattern pattern = Pattern.compile(seguir, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(mensaje);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equalsIgnoreCase("#seguir")) {
+                    String nuevo = "#seguir";
+                    nuevo = nuevo.concat(palabras[i+1]);
+                    hashtagsActivos.add(nuevo);
+                }
+            }
+        }
+        
+        pattern = Pattern.compile(gustar, Pattern.MULTILINE);
+        matcher = pattern.matcher(mensaje);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equalsIgnoreCase("#gustar")) {
+                    hashtagsActivos.add("#gustar");
+                }
+            }
+        }
+        
+        pattern = Pattern.compile(gustarID, Pattern.MULTILINE);
+        matcher = pattern.matcher(mensaje);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equalsIgnoreCase("#gustar")) {
+                    String nuevo = "#gustar";
+                    nuevo = nuevo.concat(palabras[i+1]);
+                    hashtagsActivos.add(nuevo);
+                }
+            }
+        }
+        
+        pattern = Pattern.compile(difundir, Pattern.MULTILINE);
+        matcher = pattern.matcher(mensaje);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equalsIgnoreCase("#difundir")) {
+                    hashtagsActivos.add("#difundir");
+                }
+            }
+        }
+        
+        pattern = Pattern.compile(difundirID, Pattern.MULTILINE);
+        matcher = pattern.matcher(mensaje);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equalsIgnoreCase("#difundir")) {
+                    String nuevo = "#difundir";
+                    nuevo = nuevo.concat(palabras[i+1]);
+                    hashtagsActivos.add(nuevo);
+                }
+            }
+        }
+        return hashtagsActivos;
+    }
+    
+    public String limpiarMensaje(String mensaje){
+        String mensajeLimpio = "";
+        String[] palabras = mensaje.split(" ");
+        
+        Pattern pattern = Pattern.compile(seguir, Pattern.MULTILINE);
+        Matcher matcher = pattern.matcher(mensaje);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equals("#seguir")) {
+                    i+=1;
+                }
+                else{
+                    mensajeLimpio = mensajeLimpio.concat(" ");
+                    mensajeLimpio = mensajeLimpio.concat(palabras[i]);
+                }
+            }
+        }
+        
+        pattern = Pattern.compile(gustar, Pattern.MULTILINE);
+        matcher = pattern.matcher(mensajeLimpio);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equals("#gustar")) {
+                }
+                else{
+                    mensajeLimpio = mensajeLimpio.concat(" ");
+                    mensajeLimpio = mensajeLimpio.concat(palabras[i]);
+                }
+            }
+        }
+        
+        pattern = Pattern.compile(gustarID, Pattern.MULTILINE);
+        matcher = pattern.matcher(mensajeLimpio);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equals("#gustar")) {
+                    i+=1;
+                }
+                else{
+                    mensajeLimpio = mensajeLimpio.concat(" ");
+                    mensajeLimpio = mensajeLimpio.concat(palabras[i]);
+                }
+            }
+        }
+        
+        pattern = Pattern.compile(difundir, Pattern.MULTILINE);
+        matcher = pattern.matcher(mensajeLimpio);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equals("#difundir")) {
+                }
+                else{
+                    mensajeLimpio = mensajeLimpio.concat(" ");
+                    mensajeLimpio = mensajeLimpio.concat(palabras[i]);
+                }
+            }
+        }
+        
+        pattern = Pattern.compile(difundirID, Pattern.MULTILINE);
+        matcher = pattern.matcher(mensajeLimpio);
+        
+        if (matcher.find()) {
+            for (int i = 0; i < palabras.length; i++) {
+                if (palabras[i].equals("#difundir")) {
+                    i+=1;
+                }
+                else{
+                    mensajeLimpio = mensajeLimpio.concat(" ");
+                    mensajeLimpio = mensajeLimpio.concat(palabras[i]);
+                }
+            }
+        }
+        
+        else{
+            return mensaje;
+        }
+        return mensajeLimpio;
+    }
+    
+    public void ejecutarComandos(ArrayList<String> comandos){
+        Status ultimo = null;
+        try {
+            ResponseList status = twitter.getUserTimeline();
+            ultimo = (Status) status.get(0);
+        } catch (TwitterException e) {
+        }
+        
+        for (int i = 0; i < comandos.size(); i++) {
+            String c = comandos.get(i);
+            String[] comando = c.split(" ");
+            if (comando.length == 1) {
+                switch(comando[0]){
+                    case "#gustar":
+                        try {
+                            twitter.createFavorite(ultimo.getId());
+                        } catch (TwitterException e) {
+                        }
+                        break;
+                    case "#difundir":
+                        try {
+                            twitter.retweetStatus(ultimo.getId());
+                        } catch (TwitterException e) {
+                        }
+                        break;
+                }
+            }
+            else{
+                switch(comando[0]){
+                    case "#seguir":
+                        try {
+                            twitter.friendsFollowers().createFriendship(comando[1]);
+                        } catch (TwitterException e) {
+                            this.popUp(0, "El usuario no Existe", "Error");
+                        }
+                        break;
+                    case "#gustar":
+                        try {
+                            twitter.createFavorite(Long.parseLong(comando[1]));
+                        } catch (TwitterException ex) {
+                            this.popUp(0,"Tweet Inexistente","Error");
+                        }
+                        break;
+                    case "#difundir":
+                        try {
+                            twitter.retweetStatus(Long.parseLong(comando[1]));
+                        } catch (NumberFormatException | TwitterException e) {
+                            this.popUp(0,"Tweet Inexistente","Error");
+                        }
+                        break;
+                }
+            }
+        }
+    }
+    
     /**
      * Initializes the controller class.
      * @param url
