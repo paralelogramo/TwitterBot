@@ -6,6 +6,7 @@
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.GaussianBlur?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.effect.MotionBlur?>
 <?import javafx.scene.image.ImageView?>
@@ -22,36 +23,22 @@
       </DropShadow>
    </effect>
    <children>
-      <TextArea fx:id="mensajeDirecto" layoutX="192.0" layoutY="311.0" prefHeight="13.0" prefWidth="313.0" style="-fx-focus-color: transparent; -fx-border-radius: 15px; -fx-background-radius: 15px;" />
-      <Button fx:id="enviar" layoutX="510.0" layoutY="315.0" mnemonicParsing="false" onMouseClicked="#enviarMensaje" prefHeight="30.0" prefWidth="51.0" style="-fx-background-radius: 15px;" text="Enviar" />
+      <TextArea fx:id="mensajeDirecto" layoutX="231.0" layoutY="329.0" prefHeight="38.0" prefWidth="317.0" style="-fx-focus-color: transparent; -fx-border-radius: 15px; -fx-background-radius: 15px;" />
+      <Button fx:id="enviar" layoutX="550.0" layoutY="332.0" mnemonicParsing="false" onMouseClicked="#enviarMensaje" prefHeight="30.0" prefWidth="51.0" style="-fx-background-radius: 15px;" text="Enviar" />
       <Button layoutX="569.0" layoutY="14.0" mnemonicParsing="false" onMouseClicked="#cerrarMensaje" prefHeight="25.0" prefWidth="26.0" text="X" textOverrun="CLIP">
          <rotationAxis>
             <Point3D />
          </rotationAxis></Button>
-      <ImageView fitHeight="45.0" fitWidth="49.0" layoutX="137.0" layoutY="323.0" pickOnBounds="true" preserveRatio="true" />
-      <ImageView fx:id="perfil" fitHeight="109.0" fitWidth="117.0" layoutX="36.0" layoutY="75.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fx:id="perfilBot" fitHeight="43.0" fitWidth="46.0" layoutX="179.0" layoutY="330.0" pickOnBounds="true" preserveRatio="true" />
+      <ImageView fx:id="perfil" fitHeight="100.0" fitWidth="107.0" layoutX="43.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true">
          <effect>
             <DropShadow color="#000000f6" height="83.27" radius="39.65" width="77.33" />
          </effect></ImageView>
-      <Button fx:id="check" layoutX="147.0" layoutY="288.0" mnemonicParsing="false" onAction="#verUsuario" prefHeight="23.0" prefWidth="29.0" text="✔" />
-      <ListView fx:id="chat" layoutX="185.0" layoutY="58.0" onMouseClicked="#rescatarIDMensaje" prefHeight="246.0" prefWidth="364.0" />
-      <Button fx:id="eliminar" layoutX="292.0" layoutY="370.0" mnemonicParsing="false" onAction="#borrarMensajeDirecto" prefHeight="25.0" prefWidth="116.0" text="Eliminar Mensaje" />
-      <TextField fx:id="usuario" layoutX="18.0" layoutY="288.0" onKeyReleased="#volverCheck" prefHeight="25.0" prefWidth="119.0" promptText="\@Usuario" />
-      <AnchorPane layoutX="183.0" layoutY="50.0" prefHeight="38.0" prefWidth="391.0">
-         <children>
-            <ImageView fx:id="perfil1" fitHeight="37.0" fitWidth="37.0" layoutX="2.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
-               <effect>
-                  <DropShadow color="#000000f6" height="83.27" radius="39.65" width="77.33" />
-               </effect>
-            </ImageView>
-            <Text fill="#000000e9" layoutX="54.0" layoutY="25.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Hola" wrappingWidth="156.5811767578125">
-               <font>
-                  <Font size="18.0" />
-               </font>
-            </Text>
-         </children>
-      </AnchorPane>
-      <AnchorPane layoutX="168.0" layoutY="43.0" prefHeight="50.0" prefWidth="393.0" style="-fx-background-color: LightSkyBlue; -fx-background-radius: 23px;">
+      <Button fx:id="check" layoutX="145.0" layoutY="315.0" mnemonicParsing="false" onAction="#verUsuario" prefHeight="22.0" prefWidth="29.0" text="✔" />
+      <ListView fx:id="chat" accessibleRole="IMAGE_VIEW" layoutX="185.0" layoutY="81.0" onMouseClicked="#rescatarIDMensaje" prefHeight="242.0" prefWidth="364.0" />
+      <Button fx:id="eliminar" layoutX="38.0" layoutY="360.0" mnemonicParsing="false" onAction="#borrarMensajeDirecto" prefHeight="25.0" prefWidth="116.0" text="Eliminar Mensaje" />
+      <TextField fx:id="usuario" layoutX="20.0" layoutY="315.0" onKeyReleased="#volverCheck" prefHeight="25.0" prefWidth="119.0" promptText="\\@Usuario" />
+      <AnchorPane layoutX="168.0" layoutY="43.0" prefHeight="41.0" prefWidth="393.0" style="-fx-background-color: LightSkyBlue; -fx-background-radius: 23px;">
          <effect>
             <MotionBlur angle="47.14" radius="4.5">
                <input>
@@ -60,15 +47,37 @@
             </MotionBlur>
          </effect>
       </AnchorPane>
-      <Text fill="#1979e0c4" layoutX="217.0" layoutY="22.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mensajes Directos" wrappingWidth="155.47005462646484">
+      <AnchorPane layoutX="175.0" layoutY="44.0" prefHeight="41.0" prefWidth="391.0">
+         <children>
+            <ImageView fx:id="perfilMini" fitHeight="37.0" fitWidth="46.0" layoutX="16.0" layoutY="1.0" pickOnBounds="true" preserveRatio="true">
+               <effect>
+                  <DropShadow color="#000000f6" height="83.27" radius="39.65" width="77.33" />
+               </effect>
+            </ImageView>
+            <Text fx:id="nombreUsuario" fill="#1b1b1bd6" layoutX="65.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="TweeterBot_" wrappingWidth="152.13674926757812">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <effect>
+                  <GaussianBlur radius="0.2">
+                     <input>
+                        <DropShadow blurType="ONE_PASS_BOX" color="#ffffffa8" height="0.0" radius="3.9475" width="17.79" />
+                     </input>
+                  </GaussianBlur>
+               </effect>
+            </Text>
+         </children>
+      </AnchorPane>
+      <Text fill="#1979e0c4" layoutX="231.0" layoutY="21.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Mensajes Directos" wrappingWidth="155.47005462646484">
          <font>
             <Font name="System Bold Italic" size="18.0" />
          </font>
       </Text>
-      <Text layoutX="37.0" layoutY="213.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@" wrappingWidth="81.00000157185605">
+      <Text fx:id="nombreFerfil" layoutX="29.0" layoutY="163.0" strokeType="OUTSIDE" strokeWidth="0.0" text="\@Usuario" textAlignment="CENTER" wrappingWidth="136.9230728217044">
          <font>
-            <Font size="18.0" />
+            <Font size="15.0" />
          </font>
       </Text>
+      <ListView fx:id="seguidos" layoutX="19.0" layoutY="169.0" prefHeight="141.0" prefWidth="157.0" />
    </children>
 </AnchorPane>
