@@ -17,9 +17,12 @@ package Ventanas;
 import Clases.ControlVentana;
 import Clases.Mensaje;
 import Clases.Tweet;
+import Clases.Trie;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import javafx.scene.control.TextArea;
@@ -50,8 +53,6 @@ import twitter4j.TwitterFactory;
 import twitter4j.User;
 import twitter4j.conf.ConfigurationBuilder;
 import twitter4j.IDs;
-import java.util.regex.Pattern;
-import java.util.regex.Matcher;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -115,11 +116,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private ArrayList<Integer> likeados = new ArrayList<>();
     private long seleccionTweet = 0;
     private boolean esVideo = false;
-    private final String seguir = "^#seguir @[a-zA-Z0-9_]{1,15}$|^#seguir @[a-zA-Z0-9_]{1,15} | #seguir @[a-zA-Z0-9_]{1,15} | #seguir @[a-zA-Z0-9_]{1,15}$";
-    private final String gustar = "^#gustar .|^#gustar$|. #gustar .|. #gustar$";
-    private final String gustarID = "^#gustar [0-9]{1,20}$|^#gustar [0-9]{1,20} | #gustar [0-9]{1,20} | #gustar [0-9]{1,20}$";
-    private final String difundirID = "^#difundir [0-9]{1,20}$|^#difundir [0-9]{1,20} | #difundir [0-9]{1,20} | #difundir [0-9]{1,20}$";
-    private final String difundir = "^#difundir |^#difundir$| #difundir | #difundir$";
+    private Trie trieNSFW = new Trie();
+    private Trie trieSW = new Trie();
     
     Scanner sc = new Scanner(System.in);    
     
@@ -173,6 +171,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     // METODO LISTO
     public int enviarTwitter(MouseEvent event){       
         String[] msg = null;
+        StatusUpdate status = null;
         Mensaje mensaje = new Mensaje();
         Mensaje original = new Mensaje();
         mensaje.setMensaje(msj.getText());
@@ -194,8 +193,21 @@ public class V2_Controller extends ControlVentana implements Initializable {
             }
         }
         
-        mensaje.setMensaje(mensaje_limpio);
-        StatusUpdate status = new StatusUpdate(mensaje.getMensaje());
+        
+        double porcentaje = noSW(mensaje_limpio);
+        if (porcentaje>=0.75) {
+            this.popUp(1, "¡ES SPAM! ¡TWEETER NO ENVIADO!", "ERROR");
+            msj.clear();
+            notificacionImagen.setVisible(false);
+            this.pgA.setProgress(0);
+            this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+            this.equis.setImage(null);
+            return 0;
+        }
+        else{
+            mensaje.setMensaje(mensaje_limpio);
+            status = new StatusUpdate(mensaje.getMensaje());
+        }        
         
         //verificar que mensaje no se repita
         /*for (int i = 0; i < listaTweets.size(); i++) {
@@ -246,7 +258,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 notificacionImagen.setVisible(false);
                 this.pgA.setProgress(0);
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
-                this.equis.setImage(null); 
+                this.equis.setImage(null);
                 this.popUp(1, "Twitt publicado con exito", "Twittear");
                 this.actualizarLista();
                 //this.ejecutarComandos(hashtagsActivos);
@@ -884,6 +896,28 @@ public class V2_Controller extends ControlVentana implements Initializable {
         return resultado;
     }
     
+    public double noSW(String mensaje){
+        String[] palabras = mensaje.split(" ");
+        double total = 0;
+        for (int i = 0; i < palabras.length; i++) {
+            if (palabras[i].length()>2) {
+                total+=1;
+            }
+        }
+        double conteo = 0;
+        for (int j = 0; j < palabras.length; j++) {
+            if (trieSW.search(palabras[j])) {
+                System.out.println("Si esta:"+palabras[j]);
+                conteo+=1;
+            }
+            else{
+                System.out.println("No esta:"+palabras[j]);
+            }
+        }
+        System.out.println(conteo/total);
+        return conteo/total;
+    }
+    
     /**
      * Initializes the controller class.
      * @param url
@@ -900,6 +934,30 @@ public class V2_Controller extends ControlVentana implements Initializable {
         .setIncludeEmailEnabled(true);        
         TwitterFactory tf = new TwitterFactory(cb.build());
         twitter = tf.getInstance();
+        
+        File archivo = null;
+        FileReader fr = null;
+        BufferedReader br = null;
+        ArrayList<String> keys = new ArrayList<>();
+        
+        Scanner input = null;
+        try {
+            input = new Scanner(new File("nsfw.txt"));
+        } catch (FileNotFoundException e) {
+        }
+        while (input.hasNextLine()){
+            String linea = input.nextLine();
+            trieNSFW.insert(linea);
+        }
+        
+        try {
+            input = new Scanner(new File("stopwords.txt"));
+        } catch (FileNotFoundException e) {
+        }
+        while (input.hasNextLine()) {
+            String linea = input.nextLine();
+            trieSW.insert(linea);
+        }
         
         /*
         // ****** ESTO GENERA EL WEBVIEW ******
@@ -939,7 +997,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     setText(" @"+name.getUsuario()+" :  "+name.getTexto() + "\n"+indicadores);                                
                 }
             }
-            });                
+            });
             
             usuario.setText("@"+newUser.getScreenName());
             usuario2.setText(newUser.getName());
