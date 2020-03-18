@@ -96,3 +96,5 @@ toyota
 volkswagen
 volvo
 acabas
+galaxy
+note
