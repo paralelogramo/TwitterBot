@@ -118,6 +118,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private boolean esVideo = false;
     private Trie trieNSFW = new Trie();
     private Trie trieSW = new Trie();
+    private boolean hayComandos = false;
     
     Scanner sc = new Scanner(System.in);    
     
@@ -181,8 +182,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
         long[] mediaIds = new long[1];
         String mensaje_limpio = "";
         try {
-            System.out.println("msg: "+msg);
-            System.out.println("msj: "+msj.getText());
             msg = comandos(msj.getText());
         } catch (TwitterException e) {
         }
@@ -193,9 +192,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
             }
         }
         
-        
         double porcentaje = noSW(mensaje_limpio);
-        if (porcentaje>=0.75) {
+        if (porcentaje>=0.70) {
             this.popUp(1, "¡ES SPAM! ¡TWEETER NO ENVIADO!", "ERROR");
             msj.clear();
             notificacionImagen.setVisible(false);
@@ -230,7 +228,21 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     mediaIds[0] = um.getMediaId();
                     status.setMediaIds(mediaIds);
                 }
-                twitter.updateStatus(status);
+                if (this.hayComandos && mensaje_limpio.length()==0) {
+                    this.popUp(1, "Hashtags Exitosos", "Hashtags");
+                    this.hayComandos = false;
+                }
+                else{
+                    if (this.hayComandos && mensaje_limpio.length()!=0) {
+                        this.popUp(1, "Hashtags Exitosos", "Hashtags");
+                        twitter.updateStatus(status);
+                        this.hayComandos = false;
+                    }
+                    else{
+                        twitter.updateStatus(status);
+                        this.hayComandos = false;
+                    }
+                }
                 msj.clear();
                 notificacionImagen.setVisible(false);
                 this.pgA.setProgress(0);
@@ -241,7 +253,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.mv.setMediaPlayer(null);
                 this.popUp(1, "Twitt publicado con exito", "Twittear");
                 this.actualizarLista();
-                //this.ejecutarComandos(hashtagsActivos);
                 return 0;
             } catch (TwitterException ex) {
                 System.out.println("Error, No se puede enviar el twit");
@@ -253,7 +264,11 @@ public class V2_Controller extends ControlVentana implements Initializable {
         }
         if(mensaje.verificar() && imgFile == null){
             try {
+                if (this.hayComandos) {
+                    this.popUp(1, "Hashtags Exitosos", "Hashtags");
+                }
                 twitter.updateStatus(status);
+                this.hayComandos = false;
                 msj.clear();
                 notificacionImagen.setVisible(false);
                 this.pgA.setProgress(0);
@@ -264,10 +279,15 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 //this.ejecutarComandos(hashtagsActivos);
                 return 0;
             } catch (TwitterException ex) {
-                this.popUp(0, "No se puede enviar un tweet duplicado", "Error");
+                this.popUp(0, "Debe incluir un mensaje o un archivo", "Error");
             }
         }else{
-            this.popUp(0, "Debe incluir un mensaje o un archivo", "Error");
+            if (this.hayComandos) {
+                this.popUp(1, "Hashtags Exitosos", "Hashtags");
+            }
+            else{
+                this.popUp(0, "Debe incluir un mensaje o un archivo", "Error");
+            }
             /*
             Toolkit.getDefaultToolkit().beep();            
             JOptionPane auxiliar = new JOptionPane();
@@ -814,6 +834,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         for (int i = 0; i < mensaje_desmenuzado.length; i++) {
             switch (mensaje_desmenuzado[i]) {
                 case "#seguir":
+                    this.hayComandos = true;
                     try { 
                         String user ="";
                         try {
@@ -835,6 +856,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     break;
 
                 case "#difundir":
+                    this.hayComandos = true;
                     try {
                         mensaje_desmenuzado[i] = "";
                         String ID = "";
@@ -858,6 +880,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     }
                     break;
                 case "#gustar":
+                    this.hayComandos = true;
                     try {
                         mensaje_desmenuzado[i] = "";
                         String ID = "";
@@ -907,11 +930,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         double conteo = 0;
         for (int j = 0; j < palabras.length; j++) {
             if (trieSW.search(palabras[j])) {
-                System.out.println("Si esta:"+palabras[j]);
                 conteo+=1;
-            }
-            else{
-                System.out.println("No esta:"+palabras[j]);
             }
         }
         System.out.println(conteo/total);
