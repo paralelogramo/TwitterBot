@@ -58,8 +58,11 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.scene.control.ListCell;
+import javafx.scene.effect.MotionBlur;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.media.*;
 import javafx.scene.paint.Color;
+import javafx.stage.Modality;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
@@ -616,6 +619,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML
     public void mensajeDirecto(MouseEvent event){
         this.ventanaMensajes();
+        
+        this.ap.setEffect(new SepiaTone());        
     }
     
     public long ventanaLike(MouseEvent event){
@@ -746,6 +751,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             scene.setFill(Color.TRANSPARENT);
             ventana.setScene(scene);
             V3_Control controller = loader.getController();
+            ventana.initModality(Modality.WINDOW_MODAL);
             ventana.initStyle(StageStyle.TRANSPARENT);               
             ventana.show();
         } catch (IOException ex) {

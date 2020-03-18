@@ -31,6 +31,7 @@ import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.effect.SepiaTone;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
@@ -100,8 +101,10 @@ public class V3_Control extends ControlVentana implements Initializable {
         }
     }
     
-    public void cerrarMensaje(){
-        ((Stage) ap.getScene().getWindow()).close();
+    public void cerrarMensaje(){        
+        this.ap.setEffect(null);
+        this.ap.setDisable(false);
+        ((Stage) ap.getScene().getWindow()).close();               
     }
     
     public void verUsuario() throws TwitterException{
