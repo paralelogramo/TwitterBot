@@ -857,6 +857,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
                             mensaje_desmenuzado[i+1] = "";
                             i+=1;
                         }
+                        else{
+                            this.hayComandos = false;
+                        }
                     } catch (Exception e) {
                     }
                     break;
@@ -869,19 +872,23 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         try {
                             ID = mensaje_desmenuzado[i + 1];
                         } catch (Exception e) {
-                        }                        
-                        if (esNumero(ID)) {
-                            try {
-                                twitter.retweetStatus(Long.parseLong(ID));
-                            } catch (NumberFormatException | TwitterException e) {
-                                this.popUp(0, "Tweet ya Retweeteado", "Error");
-                            }                            
-                            mensaje_desmenuzado[i+1] = "";
-                            i+=1;
-                        } else {
-                            twitter.retweetStatus(ultimo.getId());
                         }
-                    } catch (NumberFormatException | TwitterException e) {
+                        System.out.println("ID: "+ID);
+                        try {
+                            if (esNumero(ID)) {
+                                try {
+                                    twitter.retweetStatus(Long.parseLong(ID));
+                                } catch (NumberFormatException | TwitterException e) {
+                                    this.popUp(0, "Tweet ya Retweeteado", "Error");
+                                }                            
+                                mensaje_desmenuzado[i+1] = "";
+                                i+=1;
+                            } else {
+                                twitter.retweetStatus(ultimo.getId());
+                            }
+                        } catch (TwitterException e) {
+                        }
+                    } catch (NumberFormatException e) {
                         twitter.retweetStatus(ultimo.getId());
                     }
                     break;
@@ -894,23 +901,26 @@ public class V2_Controller extends ControlVentana implements Initializable {
                             ID = mensaje_desmenuzado[i + 1];
                         } catch (Exception e) {
                         }
-                        if (esNumero(ID)) {
-                            try {
-                                twitter.createFavorite(Long.parseLong(ID));
-                            } catch (Exception e) {
-                                this.popUp(0, "Tweet ya Likeado", "Error");
+                        try {
+                            if (esNumero(ID)) {
+                                try {
+                                    twitter.createFavorite(Long.parseLong(ID));
+                                } catch (NumberFormatException | TwitterException e) {
+                                    this.popUp(0, "Tweet ya Likeado", "Error");
+                                }
+                                mensaje_desmenuzado[i+1] = "";
+                                i+=1;
+                            } else {
+                                twitter.createFavorite(ultimo.getId());
                             }
-                            mensaje_desmenuzado[i+1] = "";
-                            i+=1;
-                        } else {
-                            twitter.createFavorite(ultimo.getId());
-                        }
-                    } catch (NumberFormatException | TwitterException e) {
+                        } catch (TwitterException e) {
+                        }   
+                    } catch (NumberFormatException e) {
                         twitter.createFavorite(ultimo.getId());
                     }
                     break;
             }
-        }
+        }        
         return mensaje_desmenuzado;
     }
     
