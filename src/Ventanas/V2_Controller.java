@@ -620,7 +620,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     public void mensajeDirecto(MouseEvent event){
         this.ventanaMensajes();
         
-        this.ap.setEffect(new SepiaTone());        
+        //this.ap.setEffect(new SepiaTone());        
     }
     
     public long ventanaLike(MouseEvent event){
