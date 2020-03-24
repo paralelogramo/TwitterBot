@@ -164,12 +164,13 @@ public class V1_Control extends ControlVentana implements Initializable {
     }
     
     @Override
-    public void initialize(URL url, ResourceBundle rb) {          
+    public void initialize(URL url, ResourceBundle rb) {    
+        /*
         try {                      
             this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);                           
         } catch (SQLException ex) {
             this.popUp(0, "Error en conexión con servidor de datos", "Conexión");       
-        }
+        }*/
         try{
             Socket s = new Socket(dirWeb, puerto);                               
         } catch (HeadlessException | IOException | SecurityException ex) {
