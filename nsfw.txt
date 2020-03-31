@@ -116,3 +116,6 @@ culyto
 klito
 kulito
 kulyto
+tonto
+tontito
+***Falta ctm y sus derivados

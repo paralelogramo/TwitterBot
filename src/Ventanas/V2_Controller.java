@@ -69,6 +69,13 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import twitter4j.UploadedMedia;
+import java.awt.datatransfer.StringSelection;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * 
@@ -89,7 +96,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML Text notificacionImagen;
     @FXML ProgressIndicator pgA;
     @FXML ImageView imagenPerfil;
-    @FXML ImageView imagenPerfil2;    
+    @FXML ImageView imagenPerfil2;
     @FXML ListView lista;
     @FXML ImageView preImage;
     @FXML Text avisolimite;
@@ -115,7 +122,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private List<Status> lineaDeTiempo;   
     private final char arroa = 64;
     private final ArrayList<String> usuariosSeguidos = new ArrayList<>();
-    private List<Status> listaTweets;    
+    private List<Status> listaTweets;
+    private List<Status> ownTweets;
     private ArrayList<Tweet> listaTimeline = new ArrayList<>();
     private ArrayList<Integer> likeados = new ArrayList<>();
     private long seleccionTweet = 0;
@@ -124,18 +132,24 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Trie trieSW = new Trie();
     private boolean hayComandos = false;
     private String usuarioSeleccionado;
-    Scanner sc = new Scanner(System.in);    
+    private ArrayList<long[]> retweetsID = new ArrayList<>();
+    private ArrayList<long[]> retweetsID_Actual = new ArrayList<>();
+    private ArrayList<long[]> likesID = new ArrayList<>();
+    private ArrayList<long[]> likesID_Actual = new ArrayList<>();
+    
+    Scanner sc = new Scanner(System.in);
     
 
     public void seleccionTweet(MouseEvent event){
         try{
             Tweet auxiliar =  (Tweet) lista.getSelectionModel().getSelectedItem();
-            System.out.println(auxiliar.getId());  
-            System.out.println(auxiliar.getUsuario());
+            String idString = String.valueOf(auxiliar.getId());
+            StringSelection stringSelect = new StringSelection(idString);
+            Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+            cb.setContents(stringSelect, null);
+            seleccionTweet = auxiliar.getId();           
             usuarioSeleccionado = auxiliar.getUsuario();
-            seleccionTweet = auxiliar.getId();  
         }catch(NullPointerException e){
-            
         }
     }
     
@@ -207,8 +221,18 @@ public class V2_Controller extends ControlVentana implements Initializable {
         }
         
         double porcentaje = noSW(mensaje_limpio);
+        double porcentaje2 = noNSFW(mensaje_limpio);
         if (porcentaje>=0.70) {
             this.popUp(1, "¡ES SPAM! ¡TWEETER NO ENVIADO!", "ERROR");
+            msj.clear();
+            notificacionImagen.setVisible(false);
+            this.pgA.setProgress(0);
+            this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+            this.equis.setImage(null);
+            return 0;
+        }
+        if (porcentaje2>=0.70) {
+            this.popUp(1, "¡ORDINARIO! ¡TWEETER NO ENVIADO!", "ERROR");
             msj.clear();
             notificacionImagen.setVisible(false);
             this.pgA.setProgress(0);
@@ -321,8 +345,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             for (int i = 0; i < listaTweets.size(); i++) {    
                 this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));
             }            
-            
-            ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);
+            ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);            
             lista.setItems(oLista);
             lista.refresh();
             
@@ -507,6 +530,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
         try {
             ResponseList<Status> Line = twitter.getUserTimeline();
+            
             Line.forEach((status) -> {
                 mensajeId.add(status.getId());
                 textoMsj.add(status.getText());
@@ -885,10 +909,70 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 conteo+=1;
             }
         }
-        System.out.println(conteo/total);
         return conteo/total;
     }
     
+    public double noNSFW(String mensaje){
+        String[] palabras = mensaje.split(" ");
+        double total = 0;
+        for (int i = 0; i < palabras.length; i++) {
+            if (palabras[i].length()>2) {
+                total+=1;
+            }
+        }
+        double conteo = 0;
+        for (int j = 0; j < palabras.length; j++) {
+            if (trieNSFW.search(palabras[j])) {
+                conteo+=1;
+            }
+        }
+        return conteo/total;
+    }
+    
+    public void refrescar() throws TwitterException{  
+        this.actualizarLista();
+        ResponseList<Status> statuspropios = twitter.getUserTimeline();                
+        for (int i = 0; i < statuspropios.size(); i++) {         
+            long[] aux = twitter.getRetweeterIds(statuspropios.get(i).getId(), 3, -1).getIDs(); 
+            long[] aux2 = new long[aux.length+1];
+            for (int j = 0; j < aux.length; j++) {
+                aux2[j] = aux[j];
+            }            
+            aux2[aux.length] = statuspropios.get(i).getId();            
+            this.retweetsID_Actual.add(aux2);            
+        }
+        if (this.retweetsID.isEmpty()) {
+            for (int i = 0; i < this.retweetsID_Actual.size(); i++) {
+                for (int j = 0; j < this.retweetsID_Actual.get(i).length-1; j++) {
+                    twitter.directMessages().sendDirectMessage(this.retweetsID_Actual.get(i)[j], "Gracias por tu retweet en tweet https://twitter.com/" + twitter.getScreenName() + "/status/" + this.retweetsID_Actual.get(i)[this.retweetsID_Actual.get(i).length-1]);
+                }                
+            }    
+            this.retweetsID = this.retweetsID_Actual;
+        }/*else{
+            for (int i = 0; i < this.retweetsID.size(); i++) {
+                for (int j = 0; j < this.retweetsID.get(i).length; j++) {
+                    for (int l = 0; l < retweetsID_Actual.size(); l++) {           
+                        for (int k = 0; k < retweetsID_Actual.get(l).length; k++) {
+                            if (this.retweetsID.get(i)[this.retweetsID.get(i).length-1]!=this.retweetsID_Actual.get(l)[this.retweetsID_Actual.get(l).length-1]) {
+                                k = retweetsID_Actual.get(l).length;
+                            }else{
+                                if (this.retweetsID.get(i)[j]==this.retweetsID_Actual.get(l)[k]) {
+                                    
+                                }
+                            }                                
+                        }    
+                    }
+                }        
+            }
+        }
+        long[] aux = twitter.getFollowersIDs(twitter.getId()).getIDs(); 
+        for (int i = 0; i < aux.length; i++) {
+            twitter.directMessages().sendDirectMessage(aux[i], "Gracias por ser seguidor de mi cuenta");
+        }   
+        */       
+    }
+    
+            
     /**
      * Initializes the controller class.
      * @param url
@@ -944,7 +1028,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             listaTweets = twitter.getHomeTimeline(); 
             for (int i = 0; i < listaTweets.size(); i++) {
                 
-                this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));
+                this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));                
             }
             
             ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);
