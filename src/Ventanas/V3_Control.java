@@ -17,8 +17,12 @@
 package Ventanas;
 
 import Clases.ControlVentana;
+import Clases.Tweet;
+import Clases.UserDM;
+import static Ventanas.V2_Controller.twitter;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -55,16 +59,18 @@ public class V3_Control extends ControlVentana implements Initializable {
     @FXML AnchorPane ap;
     @FXML TextArea mensajeDirecto;
     @FXML TextField usuario;
+    @FXML TextField posibleUser;
     @FXML ListView chat;
-    @FXML ImageView perfil;
+    @FXML ListView todosLosUsers;
     @FXML ImageView perfilMini;
     @FXML ImageView perfilBot;
     @FXML Text nombreFerfil;
     @FXML Text nombreUsuario;
     @FXML ListView seguidos;
     @FXML Button check;
+    @FXML Button check2;
     @FXML Button enviar;
-    @FXML Button eliminar;
+    @FXML Button refresh;
     private long idMensaje;
     private long idPropio;
     private final char arroa = 64;
@@ -72,11 +78,11 @@ public class V3_Control extends ControlVentana implements Initializable {
     private ObservableList<String> items = FXCollections.observableArrayList();
     private ObservableList<Text> mensajes = FXCollections.observableArrayList();
     private ArrayList<String> textoMensajes = new ArrayList<>();
+    private ArrayList<UserDM> userDM = new ArrayList<>();
     
     public void enviarMensaje() throws TwitterException{        
         String aUsuario = usuario.getText().toString();
         User user;
-        
         
         try {
             user = V2_Controller.twitter.showUser(aUsuario);
@@ -92,12 +98,7 @@ public class V3_Control extends ControlVentana implements Initializable {
             this.mensajeDirecto.setText("");
             
         } catch (TwitterException ex) {
-            if (this.mensajeDirecto.getText()==null) {
-                this.popUp(0, "Texto Vacio", "Error");
-            }
-            else{
-                this.popUp(0, "Deben ser BFF y hacer F4F uwu", "Error");
-            }
+            this.popUp(0, "Usuario no seleccinado", "Error");
         }
     }
     
@@ -108,10 +109,12 @@ public class V3_Control extends ControlVentana implements Initializable {
     }
     
     public void verUsuario() throws TwitterException{
+        if(this.mensajeDirecto.getText().length()==0){
+            this.enviar.setDisable(true);
+        }
         try {
             User u = V2_Controller.twitter.showUser(this.usuario.getText());
             Image foto = new Image(u.get400x400ProfileImageURL());
-            this.perfil.setImage(foto);    
             this.perfilMini.setImage(new Image(u.get400x400ProfileImageURL()));
             this.nombreFerfil.setText("@"+u.getScreenName());
             this.nombreUsuario.setText(u.getName());
@@ -146,22 +149,62 @@ public class V3_Control extends ControlVentana implements Initializable {
             this.check.setDisable(true);
             this.enviar.setDisable(false);
         } catch (TwitterException e) {
-            this.perfil.setImage(null);
             System.out.println("kewea");
         }
     }
-    
-    public void rescatarIDMensaje(){
-        //COOMING SOON
-    }
-    
-    public void borrarMensajeDirecto(){
-        //COOMING SOON
-    }
-    
+
     public void volverCheck(){
+        if (this.usuario.getText().length()==0){
+            this.check.setDisable(true);
+        }
+        else{
+            this.check.setDisable(false);
+        }
+    }
+    
+    public void verificarTexto(){
+        if (this.mensajeDirecto.getText().length()==0){
+            this.enviar.setDisable(true);
+        }
+        else{
+            this.enviar.setDisable(false);
+        }
+    }
+    
+    public void verificarTexto2(){
+        if (this.posibleUser.getText().length()==0){
+            this.check2.setDisable(true);
+        }
+        else{
+            this.check2.setDisable(false);
+        }
+    }
+    
+    public void ponerUsuario(){
+        String auxiliar = seguidos.getSelectionModel().getSelectedItem().toString();
+        this.usuario.setText(auxiliar);
         this.check.setDisable(false);
-        this.enviar.setDisable(true);
+    }
+    
+    public void ponerUsuario2(){
+        UserDM udm = (UserDM) todosLosUsers.getSelectionModel().getSelectedItem();
+        System.out.println(udm.getUsuario());
+        this.usuario.setText(udm.getUsuario());
+        this.check.setDisable(false);
+    }
+    
+    public void verListadoDeUsuarios(){
+        try {
+            this.userDM.clear();
+            List<User> aux = twitter.searchUsers(this.posibleUser.getText(), 1);
+            for (int i = 0; i < aux.size(); i++) {
+                this.userDM.add(new UserDM(new Image (aux.get(i).getMiniProfileImageURL()), aux.get(i).getScreenName()));
+            }
+            ObservableList<UserDM> oLista = FXCollections.observableArrayList(userDM);
+            todosLosUsers.setItems(oLista);
+            todosLosUsers.refresh();
+        } catch (TwitterException e) {
+        }
     }
     
     /**
@@ -171,6 +214,10 @@ public class V3_Control extends ControlVentana implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        this.enviar.setDisable(true);
+        this.check.setDisable(true);
+        this.usuario.setEditable(false);
+        this.check2.setDisable(true);
         try {
             idPropio = V2_Controller.twitter.getId();
             User auxUser = V2_Controller.twitter.showUser(idPropio);
@@ -203,6 +250,27 @@ public class V3_Control extends ControlVentana implements Initializable {
             
         } catch (TwitterException | IllegalStateException ex) {
             Logger.getLogger(V3_Control.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        try {
+            User newUser = twitter.showUser(twitter.getScreenName());
+            
+            todosLosUsers.setCellFactory(param -> new ListCell<UserDM>(){
+            private ImageView iv = new ImageView(new Image (newUser.getMiniProfileImageURL()));
+            @Override
+            public void updateItem(UserDM name, boolean empty){
+                super.updateItem(name, empty);
+                if (empty) {                    
+                    setText(null);
+                    setGraphic(null);
+                } else {                    
+                    iv.setImage(name.getImagendeperfil());    
+                    setGraphic(iv);
+                    setText(" "+name.getUsuario());
+                }
+            }
+            });
+        } catch (Exception e) {
+            System.out.println("Cago aca xd");
         }
     }
 }

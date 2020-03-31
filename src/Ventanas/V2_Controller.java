@@ -88,7 +88,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML Text notificacionImagen;
     @FXML ProgressIndicator pgA;
     @FXML ImageView imagenPerfil;
-    @FXML ImageView imagenPerfil2;    
+    @FXML ImageView imagenPerfil2;
     @FXML ListView lista;
     @FXML ImageView preImage;
     @FXML Text avisolimite;
@@ -114,7 +114,8 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private List<Status> lineaDeTiempo;   
     private final char arroa = 64;
     private final ArrayList<String> usuariosSeguidos = new ArrayList<>();
-    private List<Status> listaTweets;    
+    private List<Status> listaTweets;
+    private List<Status> ownTweets;
     private ArrayList<Tweet> listaTimeline = new ArrayList<>();
     private ArrayList<Integer> likeados = new ArrayList<>();
     private long seleccionTweet = 0;
@@ -953,6 +954,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
         return conteo/total;
     }
     
+    public void refrescar(){        
+        try {
+            this.lineaDeTiempo = twitter.getUserTimeline();
+            
+        } catch (TwitterException ex) {
+            Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
     /**
      * Initializes the controller class.
      * @param url
@@ -1009,7 +1018,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             for (int i = 0; i < listaTweets.size(); i++) {
                 //String aux = listaTweets.get(i).getId()+" "+arroa+listaTweets.get(i).getUser().getScreenName() + " " +listaTweets.get(i).getText(); 
                 
-                this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));
+                this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));                
             }
             
             ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);
