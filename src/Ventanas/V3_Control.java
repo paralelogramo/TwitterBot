@@ -17,13 +17,17 @@
 package Ventanas;
 
 import Clases.ControlVentana;
+import Clases.Trie;
 import Clases.Tweet;
 import Clases.UserDM;
 import static Ventanas.V2_Controller.twitter;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -48,6 +52,7 @@ import twitter4j.DirectMessageList;
 import twitter4j.IDs;
 import twitter4j.TwitterException;
 import twitter4j.User;
+
 
 /**
  * FXML Controller class
@@ -79,10 +84,25 @@ public class V3_Control extends ControlVentana implements Initializable {
     private ObservableList<Text> mensajes = FXCollections.observableArrayList();
     private ArrayList<String> textoMensajes = new ArrayList<>();
     private ArrayList<UserDM> userDM = new ArrayList<>();
+    private Trie trieNSFW = new Trie();
+    private Trie trieSW = new Trie();
     
-    public void enviarMensaje() throws TwitterException{        
+    public int enviarMensaje() throws TwitterException{        
         String aUsuario = usuario.getText().toString();
         User user;
+        Text t = new Text(this.mensajeDirecto.getText());
+        double porcentaje = noSW(t.getText());
+        double porcentaje2 = noNSFW(t.getText());
+        if (porcentaje>=0.70) {
+            this.popUp(1, "¡ES SPAM! ¡MENSAJE NO ENVIADO!", "ERROR");
+            this.mensajeDirecto.clear();
+            return 0;
+        }
+        if (porcentaje2>=0.70) {
+            this.popUp(1, "¡ORDINARIO! ¡MENSAJE NO ENVIADO!", "ERROR");
+            this.mensajeDirecto.clear();
+            return 0;
+        }
         
         try {
             user = V2_Controller.twitter.showUser(aUsuario);
@@ -90,7 +110,6 @@ public class V3_Control extends ControlVentana implements Initializable {
             V2_Controller.twitter.directMessages().sendDirectMessage(userId, mensajeDirecto.getText());
             this.popUp(1,"Mensaje Enviado", "Logrado");
             
-            Text t = new Text(this.mensajeDirecto.getText());
             t.setFont(Font.font("Helvetica", 15));
             t.setTextAlignment(TextAlignment.RIGHT);
             t.setWrappingWidth(337.0);
@@ -100,6 +119,7 @@ public class V3_Control extends ControlVentana implements Initializable {
         } catch (TwitterException ex) {
             this.popUp(0, "Usuario no seleccinado", "Error");
         }
+        return 1;
     }
     
     public void cerrarMensaje(){        
@@ -149,7 +169,6 @@ public class V3_Control extends ControlVentana implements Initializable {
             this.check.setDisable(true);
             this.enviar.setDisable(false);
         } catch (TwitterException e) {
-            System.out.println("kewea");
         }
     }
 
@@ -188,7 +207,6 @@ public class V3_Control extends ControlVentana implements Initializable {
     
     public void ponerUsuario2(){
         UserDM udm = (UserDM) todosLosUsers.getSelectionModel().getSelectedItem();
-        System.out.println(udm.getUsuario());
         this.usuario.setText(udm.getUsuario());
         this.check.setDisable(false);
     }
@@ -205,6 +223,40 @@ public class V3_Control extends ControlVentana implements Initializable {
             todosLosUsers.refresh();
         } catch (TwitterException e) {
         }
+    }
+    
+    public double noSW(String mensaje){
+        String[] palabras = mensaje.split(" ");
+        double total = 0;
+        for (int i = 0; i < palabras.length; i++) {
+            if (palabras[i].length()>2) {
+                total+=1;
+            }
+        }
+        double conteo = 0;
+        for (int j = 0; j < palabras.length; j++) {
+            if (trieSW.search(palabras[j])) {
+                conteo+=1;
+            }
+        }        
+        return conteo/total;
+    }
+    
+    public double noNSFW(String mensaje){
+        String[] palabras = mensaje.split(" ");
+        double total = 0;
+        for (int i = 0; i < palabras.length; i++) {
+            if (palabras[i].length()>2) {
+                total+=1;
+            }
+        }
+        double conteo = 0;
+        for (int j = 0; j < palabras.length; j++) {
+            if (trieNSFW.search(palabras[j])) {
+                conteo+=1;
+            }
+        }        
+        return conteo/total;
     }
     
     /**
@@ -270,7 +322,24 @@ public class V3_Control extends ControlVentana implements Initializable {
             }
             });
         } catch (Exception e) {
-            System.out.println("Cago aca xd");
+        }
+        Scanner input = null;
+        try {
+            input = new Scanner(new File("nsfw.txt"));
+        } catch (FileNotFoundException e) {
+        }
+        while (input.hasNextLine()){
+            String linea = input.nextLine();
+            trieNSFW.insert(linea);
+        }
+        
+        try {
+            input = new Scanner(new File("stopwords.txt"));
+        } catch (FileNotFoundException e) {
+        }
+        while (input.hasNextLine()) {
+            String linea = input.nextLine();
+            trieSW.insert(linea);
         }
     }
 }

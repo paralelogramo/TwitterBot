@@ -116,3 +116,5 @@ culyto
 klito
 kulito
 kulyto
+tonto
+tontito

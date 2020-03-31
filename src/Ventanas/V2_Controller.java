@@ -69,6 +69,9 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import twitter4j.UploadedMedia;
+import java.awt.datatransfer.StringSelection;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 
 /**
  * 
@@ -129,10 +132,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
     public void seleccionTweet(MouseEvent event){
         try{
             Tweet auxiliar =  (Tweet) lista.getSelectionModel().getSelectedItem();
-            System.out.println(auxiliar.getId());        
+            String idString = String.valueOf(auxiliar.getId());
+            StringSelection stringSelect = new StringSelection(idString);
+            Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+            cb.setContents(stringSelect, null);
             seleccionTweet = auxiliar.getId();           
         }catch(NullPointerException e){
-            
         }
     }
     
@@ -197,8 +202,18 @@ public class V2_Controller extends ControlVentana implements Initializable {
         }
         
         double porcentaje = noSW(mensaje_limpio);
+        double porcentaje2 = noNSFW(mensaje_limpio);
         if (porcentaje>=0.70) {
             this.popUp(1, "¡ES SPAM! ¡TWEETER NO ENVIADO!", "ERROR");
+            msj.clear();
+            notificacionImagen.setVisible(false);
+            this.pgA.setProgress(0);
+            this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
+            this.equis.setImage(null);
+            return 0;
+        }
+        if (porcentaje2>=0.70) {
+            this.popUp(1, "¡ORDINARIO! ¡TWEETER NO ENVIADO!", "ERROR");
             msj.clear();
             notificacionImagen.setVisible(false);
             this.pgA.setProgress(0);
@@ -950,7 +965,23 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 conteo+=1;
             }
         }
-        System.out.println(conteo/total);
+        return conteo/total;
+    }
+    
+    public double noNSFW(String mensaje){
+        String[] palabras = mensaje.split(" ");
+        double total = 0;
+        for (int i = 0; i < palabras.length; i++) {
+            if (palabras[i].length()>2) {
+                total+=1;
+            }
+        }
+        double conteo = 0;
+        for (int j = 0; j < palabras.length; j++) {
+            if (trieNSFW.search(palabras[j])) {
+                conteo+=1;
+            }
+        }
         return conteo/total;
     }
     
