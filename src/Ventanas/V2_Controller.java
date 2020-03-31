@@ -73,9 +73,10 @@ import twitter4j.UploadedMedia;
 /**
  * 
  * FXML Controller class
- * Clase xxx: - Clase que representa blablablabla.
+ * Clase V2_Controller: - Clase Correspondiente al panel de control del bot, aqui
+ * es en donde se tiene acceso a todas las tareas que se pueden realizar con el bot.
  * @author Fernando Pino,  Carmen Ortega,
- *          Vicente Rojas, Kevin Douglas.
+ *          Vicente Rojas.
  * @version 1.0
  */
 public class V2_Controller extends ControlVentana implements Initializable {
@@ -122,19 +123,27 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Trie trieNSFW = new Trie();
     private Trie trieSW = new Trie();
     private boolean hayComandos = false;
-    
+    private String usuarioSeleccionado;
     Scanner sc = new Scanner(System.in);    
     
+
     public void seleccionTweet(MouseEvent event){
         try{
             Tweet auxiliar =  (Tweet) lista.getSelectionModel().getSelectedItem();
-            System.out.println(auxiliar.getId());        
-            seleccionTweet = auxiliar.getId();           
+            System.out.println(auxiliar.getId());  
+            System.out.println(auxiliar.getUsuario());
+            usuarioSeleccionado = auxiliar.getUsuario();
+            seleccionTweet = auxiliar.getId();  
         }catch(NullPointerException e){
             
         }
     }
     
+    /**
+     * ProgresoTexto: - Método que perminte saber la cantidad de carácteres ingresados
+     * en el cuadro de texto antes de realizar el twitt.
+     * @param event 
+     */
     public void progresoTexto(Event event){   
         System.out.println(msj.getAnchor());
         pgA.setProgress(msj.getText().length()/280.0);  
@@ -142,7 +151,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
             Text text = (Text) pgA.lookup(" .percentage");
             if(text!=null){
                text.setText(Integer.toString(280-msj.getText().length()));               
-               // pgA.setPrefWidth(text.getLayoutBounds().getWidth());
             }
         });                      
         if(msj.getText().length()>=250){
@@ -156,14 +164,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
             pgA.setProgress(0.999999);
             avisolimite.setVisible(false);
         }
-        if(msj.getText().length()>=270){
-            //pgA.setProgress((msj.getText().length()/280.0)-1.0);            
+        if(msj.getText().length()>=270){                
             pgA.setStyle("-fx-progress-color: crimson;");
             if(msj.getText().length()>280){
                 avisolimite.setVisible(true);
                 pgA.setProgress(0.999999);
-            }
-            //if(pgA.getProgress()>0.99)            
+            }                    
             
         }
     }
@@ -173,6 +179,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }    
     
     // METODO LISTO
+    /**
+     * EnviarTwitter: - Método que permite publicar un twitt, ya sea texto plano o
+     * un arvhivo.
+     * @param event
+     * @return 
+     */
     public int enviarTwitter(MouseEvent event){       
         String[] msg = null;
         StatusUpdate status = null;
@@ -181,7 +193,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
         mensaje.setMensaje(msj.getText());
         original.setMensaje(msj.getText());
         String mensajeLowerCase = mensaje.getMensaje().toLowerCase();
-        //ArrayList<String> hashtagsActivos = this.analisisHashtags(msj.getText().toLowerCase());
         long[] mediaIds = new long[1];
         String mensaje_limpio = "";
         try {
@@ -209,13 +220,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
             mensaje.setMensaje(mensaje_limpio);
             status = new StatusUpdate(mensaje.getMensaje());
         }        
-        
-        //verificar que mensaje no se repita
-        /*for (int i = 0; i < listaTweets.size(); i++) {
-            if(msj.getText().equalsIgnoreCase(listaTweets.get(i).getText())){
-                this.popUp(0, "Mensaje repetido, ingrese otro", Error);
-            }
-        }*/
         
         if (imgFile != null) {
             try {
@@ -247,6 +251,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     }
                 }
                 msj.clear();
+                this.hayComandos=false;
                 notificacionImagen.setVisible(false);
                 this.pgA.setProgress(0);
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
@@ -264,6 +269,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 System.out.println("se cayo porque no hay archivo :v");
             }
             msj.clear();
+            this.hayComandos=false;
         }
         if(mensaje.verificar() && imgFile == null){
             try {
@@ -282,42 +288,44 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 //this.ejecutarComandos(hashtagsActivos);
                 return 0;
             } catch (TwitterException ex) {
-                this.popUp(0, "Debe incluir un mensaje o un archivo", "Error");
+               this.popUp(0, "Error Tweet vacio o repetido", "Error");
+               System.out.println("entra al try catch linea 290");
+                
+                
             }
         }else{
             if (this.hayComandos) {
                 this.popUp(1, "Hashtags Exitosos", "Hashtags");
             }
             else{
-                this.popUp(0, "Debe incluir un mensaje o un archivo", "Error");
+                
+                 this.popUp(0, "Debe incluir un mensaje o un archivo", "Error");
+                 System.out.println("error linea 318");
             }
-            /*
-            Toolkit.getDefaultToolkit().beep();            
-            JOptionPane auxiliar = new JOptionPane();
-            auxiliar.setMessage("");
-            auxiliar.setMessageType(0);
-            JDialog dialog = auxiliar.createDialog("TwitterBot_ | Error");
-            dialog.setAlwaysOnTop(true);
-            dialog.setVisible(true);  */ 
         }
         this.msj.clear();
         this.actualizarLista();
+        this.hayComandos=false;
+        
         return 0;        
     }
     
-    
+    /**
+     * actualizarLista: - Método que permite actuliazar el webView del bot
+     */
     public void actualizarLista(){
         try { 
             this.listaTimeline.clear();
             listaTweets = twitter.getHomeTimeline();
-            for (int i = 0; i < listaTweets.size(); i++) {
-                //String aux = listaTweets.get(i).getId()+" "+arroa+listaTweets.get(i).getUser().getScreenName() + " " +listaTweets.get(i).getText(); 
-                
+           
+            for (int i = 0; i < listaTweets.size(); i++) {    
                 this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));
             }            
+            
             ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);
             lista.setItems(oLista);
             lista.refresh();
+            
         } catch (TwitterException ex) {
             Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -325,6 +333,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     // METODO LISTO
+    
+    /**
+     * subirImagen_Twitter: - Método que permite twittear imagenes, verificando su
+     * formato y tamaño antes de ser subida.
+     * @param event 
+     */
     public void subirImagen_Twitter(MouseEvent event){
         String extension;
         FileChooser filech = new FileChooser();
@@ -395,14 +409,27 @@ public class V2_Controller extends ControlVentana implements Initializable {
             this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));   
     }
     
+    /**
+     * pausar_video: - Permite la pausa un video en la vista previa.
+     * @param event 
+     */
     public void pausar_Video (MouseEvent event){
         this.mp.pause();
     }
     
+    /**
+     * continuar_video: - Permite la continuacion/reproduccion un video en la 
+     * vista previa.
+     * @param event 
+     */
     public void continuar_Video (MouseEvent event){
         this.mp.play();
     }
     
+    /**
+     * detener_video: - Permite en la vista previa.
+     * @param event 
+     */
     public void detener_Video (MouseEvent event){
         this.mp.stop();
     }
@@ -446,6 +473,13 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     // METODO LISTO
+    
+    /**
+     * obtenerExtension: - Método que permite obtner la extension del archivo 
+     * que se desea subir.
+     * @param filename
+     * @return 
+     */
     private static String obtenerExtension(String filename){
         int index = filename.lastIndexOf('.');
         if (index == -1) {
@@ -457,6 +491,11 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     // METODO LISTO
+    
+    /**
+     *eliminarTwitter: Método que permite eliminar un twitt publicado.
+     * @param event 
+     */
     public void eliminarTwitter(MouseEvent event){
        
         ArrayList<Long> mensajeId = new ArrayList();
@@ -468,7 +507,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
         try {
             ResponseList<Status> Line = twitter.getUserTimeline();
-                
             Line.forEach((status) -> {
                 mensajeId.add(status.getId());
                 textoMsj.add(status.getText());
@@ -484,41 +522,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.popUp(0, "No se puede eliminar tweet de tereros o tweets ya eliminados ", "Error");                
             }
             
-            /*
-            largoArreglo = mensajeId.size();
-            
-            if(largoArreglo>0){
-                for (int i = 0; i < mensajeId.size(); i++) {
-                    System.out.println(i+". "+textoMsj.get(i));
-                }
-                
-                do{        
-                    System.out.print("Numero del twitt a eliminar: "); 
-                    try{
-                        opcion2 = sc.nextLine();
-                        if(opcion2.equalsIgnoreCase("")){
-                            opcion =-1;
-                        }
-                        else{
-                            opcion = Integer.parseInt(opcion2);
-                        }
-                        if(opcion>=0 && opcion<mensajeId.size()){
-                            twitter.destroyStatus(mensajeId.get(opcion));
-                            mensajeId.remove(opcion);
-                            textoMsj.remove(opcion);
-                            System.out.println("Mensaje eliminado!!!");
-                            
-                        }
-                    }catch(NumberFormatException | TwitterException e){
-                        System.out.println("Opcion Invalida!!!!!!!!");
-                    }
-                    
-                }while(opcion<0 || opcion>mensajeId.size());
-                
-            }
-            else{
-                System.out.println("No existen tweets publicados!!!");
-            }*/
         } catch (TwitterException ex) {
             this.popUp(1, "No se puede eliminar el tweet", "Info");
             System.out.println("Error, No se puede eliminar el tweet");
@@ -526,6 +529,11 @@ public class V2_Controller extends ControlVentana implements Initializable {
         this.actualizarLista();
     }
     
+    /**
+     * retweetear: Método que permite retweetear un twitt especifico, ya sea de
+     * otro usuario o del mismo bot
+     * @param event 
+     */
     public void retweetear(MouseEvent event){
         ArrayList<Long> mensajeId = new ArrayList();
         ArrayList<String> textoMsj = new ArrayList();
@@ -549,40 +557,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.seleccionTweet = 0;
                 this.popUp(1, "Mensaje Retwiteado con Exito", "Retwittear");
             }
-            /*
-            largoArreglo = mensajeId.size();
             
-            //muestra lista de tweets existentes en la cuenta
-            if(largoArreglo>0){
-                for (int i = 0; i < mensajeId.size(); i++) {
-                    System.out.println(i+". "+textoMsj.get(i));
-                }
-                
-                do{
-                    System.out.print("Numero del twitt a retweetear: ");
-                    try{
-                        opcion2 = sc.nextLine();
-                        if(opcion2.equalsIgnoreCase("")){
-                            opcion =-1;
-                        }
-                        else{
-                            opcion = Integer.parseInt(opcion2);
-                        }
-                        if(opcion>=0 && opcion<mensajeId.size()){
-                            twitter.retweetStatus(mensajeId.get(opcion));
-                            System.out.println("Mensaje Retwitteado");
-                            
-                        }
-                    }catch(NumberFormatException | TwitterException e){
-                        System.out.println("Opcion Invalida!!!");
-                    }
-                    
-                }while(opcion<0 || opcion>mensajeId.size());
-                
-            }
-            else{
-                System.out.println("No existen tweets publicados!!!");
-            }*/
         } catch (TwitterException ex) {
             System.out.println("Error, no se puede retwittear el mensaje");
             this.popUp(0, "No se puede retweetear tweet inexistente o retweeteado nteriormente", "Error");
@@ -590,43 +565,11 @@ public class V2_Controller extends ControlVentana implements Initializable {
         this.actualizarLista();
     }
     
-    /* Obsoleto eliminarTwitter
-    public void eliminarTwitter(MouseEvent event) throws TwitterException{
-        
-        System.out.println("Entro");
-        ResponseList<Status> Line = twitter.getHomeTimeline();
-        Line.forEach((status) -> {
-            mensajeId.add(status.getId());
-            textoMsj.add(status.getText());
-            //System.out.println("ID: " + status.getId() + " - " + status.getText());
-        });
-        System.out.println("talla ids: "+mensajeId.size());
-        System.out.println("talla textos " + textoMsj.size());
-         for (int i = 0; i<mensajeId.size(); i++) {
-            System.out.println(i+"."+textoMsj.get(i));
-        }
-         
-        System.out.print("numero del twitt a eliminar: ");
-        Scanner sc = new Scanner(System.in);
-        int opcion = sc.nextInt();
-        
-        twitter.destroyStatus(mensajeId.get(opcion));
-        mensajeId.remove(opcion);
-        textoMsj.remove(opcion);
-        System.out.println("mesaje eliminado");
-        vista.getEngine().reload();
-         long id = sc.nextLong();
-        
-        for (Status status : Line) {
-            if (id==status.getId()) {
-                twitter.destroyStatus(id);
-                System.out.println("Twitt "+id+" eliminado");
-                vista.getEngine().reload();
-            }
-        }       
-    }*/ 
-    
-    
+    /**
+     * seguirUsuario: Método que permite seguir a un usuario especifico en 
+     * twitter
+     * @param event 
+     */
     public void seguirUsuario(MouseEvent event){         
         try{
             String seguirUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a seguir","@Usuario");     
@@ -643,6 +586,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
         } 
         this.actualizarLista();
     }   
+    
+    /**
+     * noSeguriUsuario: Método que permite dejar de seguir un usuario 
+     * especifico en twitter
+     * @param event 
+     */
     
     public void noSeguirUsuario(MouseEvent event){
         User u1 = null ;
@@ -679,25 +628,20 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
     @FXML
     public void mensajeDirecto(MouseEvent event){
-        this.ventanaMensajes();
-        
-        //this.ap.setEffect(new SepiaTone());        
+        this.ventanaMensajes();             
     }
     
     public long ventanaLike(MouseEvent event){
-        long id=0;
-        
-        
+        long id=0;  
         return id;
     }
     
+    
+    /**
+     * darLike: Método que permite dar like a cualquier twitt seleccionado, ya sea del mismo
+     * bot o de otro usuario.
+     */
     public void darLike(){
-        /*PASOS:
-        1.- PEDIR EL @USUARIO
-        2.- BUSCAR EL USUARIO
-        3.- MOSTRAR UNA LISTA CON LOS POST DEL USUARIO
-        4.- QUE EL USUARIO ELIJA CUAL DAR LIKE
-        */
         
         try{
             
@@ -719,58 +663,11 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 this.seleccionTweet = 0;
             }
             
-        /*
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Ingresar @usuario");
         
-        
-        String buscarUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a buscar","@Usuario");     
-        try {                
-            listaTweets = twitter.getUserTimeline(buscarUsuario);
-            this.listaTimeline.clear();
-            for (int i = 0; i < listaTweets.size(); i++) {
-                String aux = listaTweets.get(i).getId()+" "+arroa+listaTweets.get(i).getUser().getScreenName() + " " +listaTweets.get(i).getText(); 
-                System.out.println(aux);
-                this.listaTimeline.add(aux);
-            }
-            ObservableList<String> oLista = FXCollections.observableArrayList(listaTimeline);
-            lista.setItems(oLista);   
-            this.seleccionTweet = 0;
-            if(seleccionTweet!=0) 
-                twitter.createFavorite(seleccionTweet);
-
-            /*
-            for (int i = 0; i < tweets.size(); i++) {
-                Status status = (Status) tweets.get(i);
-                System.out.println("ID: "+status.getId());
-                System.out.println("Texto: "+status.getText());
-                System.out.println("-----------------");
-            }
-            System.out.print("ID a dar like: ");
-            long id = sc.nextLong();
-            try {
-                for (int j = 0; j < tweets.size(); j++) {
-                    Status status = (Status) tweets.get(j);
-                    if (id == status.getId()) {
-                        twitter.createFavorite(id);
-                    }
-                }
-            } catch (TwitterException e) {
-            }
-            listaTweets = twitter.getHomeTimeline(); */
         } catch (TwitterException e) {
             this.popUp(0, "Tweet ingresado no valido(no se puede dar like a un tweet eliminado)", "Error");           
         } 
        
-        /*
-        for (int i = 0; i < listaTweets.size(); i++) {
-            String aux = listaTweets.get(i).getUser().getId()+" "+arroa+listaTweets.get(i).getUser().getScreenName() + ":" +listaTweets.get(i).getText(); 
-            System.out.println(aux);
-            this.listaTimeline.add(aux);
-        }
-            
-        ObservableList<String> oLista = FXCollections.observableArrayList(listaTimeline);
-        lista.setItems(oLista);*/
         this.actualizarLista();
     }
     
@@ -792,7 +689,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         } catch (IOException ex) {
             this.popUp(0, "El proceso no puede cargar la ventana (archivo: V1.fxml)", "Error");            
         }           
-        //stage.setOpacity(0.95);        
+        
         v1.initOwner(this.ap.getScene().getWindow());            
         v1.setResizable(false);
         ((Stage)this.ap.getScene().getWindow()).close();     
@@ -826,8 +723,21 @@ public class V2_Controller extends ControlVentana implements Initializable {
         return 9989;
     }
     
+    /**
+     * Comandos: Método que permite el uso de comandos en el bot, los que 
+     * corresponden a #seguir, #difundir, #gustar.
+     * @param mensaje: corresponde al texto ingresado en el cuadro de texto
+     * @return
+     * @throws TwitterException 
+     */
     public String[] comandos(String mensaje) throws TwitterException {
         Status ultimo = null;
+        
+        Tweet auxiliar =  (Tweet) lista.getSelectionModel().getSelectedItem();
+        User rUser; //usuario al que se envia autoTag
+        long userId; // id usuario
+        
+        
         try {
             ResponseList status = twitter.getUserTimeline();
             ultimo = (Status) status.get(0);
@@ -850,6 +760,13 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         if (user.charAt(0) == '@') {
                             try {
                                 twitter.friendsFollowers().createFriendship(user);
+                                //tags seguir usuario.
+                                
+                                rUser = twitter.showUser(user);
+                                userId = rUser.getId();
+                                twitter.directMessages().sendDirectMessage(userId, "Hola, somos los Power Ranger-1!!! Hemos comenzado a seguirte!!!");
+                                
+                                
                             } catch (TwitterException e) {
                                 this.popUp(0, "El usuario no Existe/Ya seguido", "Error");
                             }
@@ -877,7 +794,10 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         try {
                             if (esNumero(ID)) {
                                 try {
+                                   
                                     twitter.retweetStatus(Long.parseLong(ID));
+                                     twitter.directMessages().sendDirectMessage(usuarioSeleccionado,"Le hemos dado retweet al tweet ID "+ID);
+                                     
                                 } catch (NumberFormatException | TwitterException e) {
                                     this.popUp(0, "Tweet ya Retweeteado", "Error");
                                 }                            
@@ -885,6 +805,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                                 i+=1;
                             } else {
                                 twitter.retweetStatus(ultimo.getId());
+                                
                             }
                         } catch (TwitterException e) {
                         }
@@ -905,6 +826,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                             if (esNumero(ID)) {
                                 try {
                                     twitter.createFavorite(Long.parseLong(ID));
+                                    twitter.directMessages().sendDirectMessage(usuarioSeleccionado,"Le hemos dado ME GUSTA al tweet ID "+ID);
                                 } catch (NumberFormatException | TwitterException e) {
                                     this.popUp(0, "Tweet ya Likeado", "Error");
                                 }
@@ -924,6 +846,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
         return mensaje_desmenuzado;
     }
     
+    
+    /**
+     * Verifica si en la cadena de texto existe un ID ingresado, retornado true 
+     * en caso de corresponder a un ID o false en el caso contrario.
+     * @param cadena
+     * @return 
+     */
+    
     public boolean esNumero(String cadena) {
         boolean resultado;
         try {
@@ -935,6 +865,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
         return resultado;
     }
     
+    /**
+     * Método que verifica si el texto ingresado es spam o no, retornado 0 en 
+     * caso de que sea spam y un 1 en el caso contario
+     * @param mensaje
+     * @return 0 o 1
+     */
     public double noSW(String mensaje){
         String[] palabras = mensaje.split(" ");
         double total = 0;
@@ -1007,7 +943,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
                
             listaTweets = twitter.getHomeTimeline(); 
             for (int i = 0; i < listaTweets.size(); i++) {
-                //String aux = listaTweets.get(i).getId()+" "+arroa+listaTweets.get(i).getUser().getScreenName() + " " +listaTweets.get(i).getText(); 
                 
                 this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));
             }

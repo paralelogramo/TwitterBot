@@ -46,7 +46,7 @@ import javafx.stage.StageStyle;
  * FXML Controller class
  * Clase xxx: - Clase que representa blablablabla.
  * @author Fernando Pino,  Carmen Ortega,
- *          Vicente Rojas, Kevin Douglas.
+ *          Vicente Rojas.
  * @version 1.0
  */
 public class V1_Control extends ControlVentana implements Initializable {
@@ -68,8 +68,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     private final Pattern patronUsuario = Pattern.compile("^[a-zA-Z0-9]{4,10}$", Pattern.MULTILINE);
     private final Pattern patronCorreo = Pattern.compile("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$", Pattern.MULTILINE);
     
-    private final ArrayList<Usuario> usuarios = new ArrayList<>();    
-    //Shape forma = new RoundRectangle2D.Double(0, 0, ap.getBoundsInLocal().getWidth(), ap.getBoundsInLocal().getHeight(), 30, 30); 
+    private final ArrayList<Usuario> usuarios = new ArrayList<>();
     
     public void minimizarVentana(MouseEvent event){    
         ((Stage) ap.getScene().getWindow()).setIconified(true);        
@@ -80,9 +79,7 @@ public class V1_Control extends ControlVentana implements Initializable {
         usuario.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");
         clave.setStyle("-fx-text-fill: rgba(255,255,255,1); -fx-background-color: rgba(0,0,0,0.6);");        
         String consulta = "SELECT * FROM Usuario WHERE Usuarios='"+usuario.getText()+"' && clave='"+clave.getText()+"'";         
-        //ResultSet resultado = coneccionDB.createStatement().executeQuery(consulta);
-        //String aux = resultado.getString(consulta);
-        //System.out.println(aux);
+        
         if(this.esCompatible(usuario.getText(), clave.getText()))           
             if(this.ingresar(usuario.getText(), clave.getText(), new Usuario (usuario.getText(), clave.getText(),"")))
                 iniciarSesion();  
@@ -98,8 +95,7 @@ public class V1_Control extends ControlVentana implements Initializable {
     
     @FXML 
     public void clickEnter(KeyEvent event){
-        if(event.getKeyCode()==KeyEvent.VK_ENTER){
-            //cargando.setVisible(true);                   
+        if(event.getKeyCode()==KeyEvent.VK_ENTER){                                    
         }
     }
     
@@ -126,7 +122,6 @@ public class V1_Control extends ControlVentana implements Initializable {
     
     @FXML
     private void iniciarSesion() throws IOException{
-       //try { 
             
             FXMLLoader loader = new FXMLLoader();
             URL location = V1_Control.class.getResource("V2.fxml");
@@ -144,11 +139,7 @@ public class V1_Control extends ControlVentana implements Initializable {
             ((Stage)this.ap.getScene().getWindow()).close();     
             stage.initStyle(StageStyle.TRANSPARENT);
             stage.centerOnScreen();
-            stage.show();   
-        //} catch (IOException ex) {
-          //   System.out.println(ex.getMessage());
-         //  this.popUp(0, "El proceso no puede cargar la ventana (archivo: V2.fxml - Error Conexiòn)", "Error");                              
-        // }                  
+            stage.show();                         
     }
         
     @FXML
@@ -165,18 +156,12 @@ public class V1_Control extends ControlVentana implements Initializable {
     
     @Override
     public void initialize(URL url, ResourceBundle rb) {    
-        /*
-        try {                      
-            this.coneccionDB = DriverManager.getConnection(servidorDB, usuarioDB, claveDB);                           
-        } catch (SQLException ex) {
-            this.popUp(0, "Error en conexión con servidor de datos", "Conexión");       
-        }*/
+      
         try{
             Socket s = new Socket(dirWeb, puerto);                               
         } catch (HeadlessException | IOException | SecurityException ex) {
             this.popUp(0, "Error en conexión a Twitter.com", "Conexión");               
         }
-        usuarios.add(new Usuario("user","admin",""));        
-        //this.arrastrarVentana(this.ap);            
+        usuarios.add(new Usuario("user","admin",""));                   
     }    
 }

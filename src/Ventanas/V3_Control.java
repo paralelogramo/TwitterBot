@@ -48,7 +48,8 @@ import twitter4j.User;
 /**
  * FXML Controller class
  *
- * @author F. Pino
+ * @author Fernando Pino, Carmen Ortega
+ *         Vicente Rojas.
  */
 public class V3_Control extends ControlVentana implements Initializable {
     
@@ -169,6 +170,7 @@ public class V3_Control extends ControlVentana implements Initializable {
      * @param url
      * @param rb
      */
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         try {
@@ -184,7 +186,6 @@ public class V3_Control extends ControlVentana implements Initializable {
             
             this.seguidos.setItems(items);
             this.seguidos.setCellFactory(param -> new ListCell<String>() {
-            //private ImageView imageView = new ImageView(new Image (V2_Controller.twitter.showUser(idPropio).getMiniProfileImageURL()));
             @Override
             public void updateItem(String name, boolean empty) {
                 super.updateItem(name, empty);
@@ -193,9 +194,6 @@ public class V3_Control extends ControlVentana implements Initializable {
                     setGraphic(null);
                 } else {       
                     setGraphic(null);
-                    //imageView.setImage(V2_Controller.twitter.showUser(name).get400x400ProfileImageURL());    
-                    //setGraphic(imageView);                      
-                    //String indicadores = "       LoRetweetie: "+paraSaber(name.getTweet().isRetweetedByMe())+"     DiLike: "+paraSaber(name.getTweet().isFavorited());
                     setText(" @"+name+"\n"+" ");                                
                 }
             }
