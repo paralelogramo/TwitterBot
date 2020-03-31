@@ -130,6 +130,10 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Trie trieNSFW = new Trie();
     private Trie trieSW = new Trie();
     private boolean hayComandos = false;
+    private ArrayList<long[]> retweetsID = new ArrayList<>();
+    private ArrayList<long[]> retweetsID_Actual = new ArrayList<>();
+    private ArrayList<long[]> likesID = new ArrayList<>();
+    private ArrayList<long[]> likesID_Actual = new ArrayList<>();
     
     Scanner sc = new Scanner(System.in);
     
@@ -989,10 +993,47 @@ public class V2_Controller extends ControlVentana implements Initializable {
         return conteo/total;
     }
     
-    public void refrescar(){        
-//        ResponseList<Status> statuspropios = twitter.getUserTimeline();
-//        long[] ids = twitter.getRetweeterIds(ID del status, -1).getIDs();
-        
+    public void refrescar() throws TwitterException{  
+        this.actualizarLista();
+        ResponseList<Status> statuspropios = twitter.getUserTimeline();                
+        for (int i = 0; i < statuspropios.size(); i++) {         
+            long[] aux = twitter.getRetweeterIds(statuspropios.get(i).getId(), 3, -1).getIDs(); 
+            long[] aux2 = new long[aux.length+1];
+            for (int j = 0; j < aux.length; j++) {
+                aux2[j] = aux[j];
+            }            
+            aux2[aux.length] = statuspropios.get(i).getId();            
+            this.retweetsID_Actual.add(aux2);            
+        }
+        if (this.retweetsID.isEmpty()) {
+            for (int i = 0; i < this.retweetsID_Actual.size(); i++) {
+                for (int j = 0; j < this.retweetsID_Actual.get(i).length-1; j++) {
+                    twitter.directMessages().sendDirectMessage(this.retweetsID_Actual.get(i)[j], "Gracias por tu retweet en tweet https://twitter.com/" + twitter.getScreenName() + "/status/" + this.retweetsID_Actual.get(i)[this.retweetsID_Actual.get(i).length-1]);
+                }                
+            }    
+            this.retweetsID = this.retweetsID_Actual;
+        }/*else{
+            for (int i = 0; i < this.retweetsID.size(); i++) {
+                for (int j = 0; j < this.retweetsID.get(i).length; j++) {
+                    for (int l = 0; l < retweetsID_Actual.size(); l++) {           
+                        for (int k = 0; k < retweetsID_Actual.get(l).length; k++) {
+                            if (this.retweetsID.get(i)[this.retweetsID.get(i).length-1]!=this.retweetsID_Actual.get(l)[this.retweetsID_Actual.get(l).length-1]) {
+                                k = retweetsID_Actual.get(l).length;
+                            }else{
+                                if (this.retweetsID.get(i)[j]==this.retweetsID_Actual.get(l)[k]) {
+                                    
+                                }
+                            }                                
+                        }    
+                    }
+                }        
+            }
+        }
+        long[] aux = twitter.getFollowersIDs(twitter.getId()).getIDs(); 
+        for (int i = 0; i < aux.length; i++) {
+            twitter.directMessages().sendDirectMessage(aux[i], "Gracias por ser seguidor de mi cuenta");
+        }   
+        */       
     }
     
             

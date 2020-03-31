@@ -17,7 +17,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
       <AnchorPane prefHeight="602.0" prefWidth="1002.0">
          <children>
@@ -229,7 +229,7 @@
                   <Image url="@../Imagenes/Play.png" />
                </image>
             </ImageView>
-            <Button layoutX="921.0" layoutY="540.0" mnemonicParsing="false" onAction="#refrescar" style="-fx-background-color: transparent; -fx-border-color: blue; -fx-border-radius: 15px;" text="Refresh" />
+            <Button layoutX="921.0" layoutY="540.0" mnemonicParsing="false" onMouseClicked="#refrescar" style="-fx-background-color: white; -fx-border-color: lightblue; -fx-border-radius: 15px;" text="Refresh" />
          </children>
       </AnchorPane>
       <Button layoutX="987.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />
