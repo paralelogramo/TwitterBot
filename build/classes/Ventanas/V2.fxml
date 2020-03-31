@@ -229,6 +229,7 @@
                   <Image url="@../Imagenes/Play.png" />
                </image>
             </ImageView>
+            <Button layoutX="921.0" layoutY="540.0" mnemonicParsing="false" onAction="#refrescar" style="-fx-background-color: transparent; -fx-border-color: blue; -fx-border-radius: 15px;" text="Refresh" />
          </children>
       </AnchorPane>
       <Button layoutX="987.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />

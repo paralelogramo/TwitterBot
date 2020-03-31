@@ -72,6 +72,10 @@ import twitter4j.UploadedMedia;
 import java.awt.datatransfer.StringSelection;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
+import java.io.FileWriter;
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * 
@@ -127,7 +131,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Trie trieSW = new Trie();
     private boolean hayComandos = false;
     
-    Scanner sc = new Scanner(System.in);    
+    Scanner sc = new Scanner(System.in);
     
     public void seleccionTweet(MouseEvent event){
         try{
@@ -331,7 +335,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 
                 this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));
             }            
-            ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);
+            ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);            
             lista.setItems(oLista);
             lista.refresh();
         } catch (TwitterException ex) {
@@ -484,7 +488,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     
         try {
             ResponseList<Status> Line = twitter.getUserTimeline();
-                
+            
             Line.forEach((status) -> {
                 mensajeId.add(status.getId());
                 textoMsj.add(status.getText());
@@ -986,13 +990,12 @@ public class V2_Controller extends ControlVentana implements Initializable {
     }
     
     public void refrescar(){        
-        try {
-            this.lineaDeTiempo = twitter.getUserTimeline();
-            
-        } catch (TwitterException ex) {
-            Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        ResponseList<Status> statuspropios = twitter.getUserTimeline();
+//        long[] ids = twitter.getRetweeterIds(ID del status, -1).getIDs();
+        
     }
+    
+            
     /**
      * Initializes the controller class.
      * @param url
