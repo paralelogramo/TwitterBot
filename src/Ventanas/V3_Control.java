@@ -28,6 +28,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 import java.util.Scanner;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.collections.FXCollections;
@@ -60,7 +63,7 @@ import twitter4j.User;
  * @author Fernando Pino, Carmen Ortega
  *         Vicente Rojas.
  */
-public class V3_Control extends ControlVentana implements Initializable {
+public class V3_Control extends ControlVentana implements Initializable, Runnable {
     
     @FXML AnchorPane ap;
     @FXML TextArea mensajeDirecto;
@@ -87,6 +90,7 @@ public class V3_Control extends ControlVentana implements Initializable {
     private ArrayList<UserDM> userDM = new ArrayList<>();
     private Trie trieNSFW = new Trie();
     private Trie trieSW = new Trie();
+    private String seleccionUsuario;
     
     public int enviarMensaje() throws TwitterException{        
         String aUsuario = usuario.getText().toString();
@@ -129,11 +133,62 @@ public class V3_Control extends ControlVentana implements Initializable {
         ((Stage) ap.getScene().getWindow()).close();               
     }
     
+    public void actualizarMensajes(){  
+        ScheduledExecutorService scheduler
+                = Executors.newSingleThreadScheduledExecutor();
+        Runnable task = new V3_Control();
+        scheduler.scheduleAtFixedRate(task, 1, 1, TimeUnit.MINUTES);      
+    }
+    
+    @Override
+    public void run() {
+        System.out.println("ok");
+        try {            
+            User u = V2_Controller.twitter.showUser(this.seleccionUsuario);
+            Image foto = new Image(u.get400x400ProfileImageURL());
+            this.perfilMini.setImage(new Image(u.get400x400ProfileImageURL()));
+            this.nombreFerfil.setText("@"+u.getScreenName());
+            this.nombreUsuario.setText(u.getName());
+            Text t;            
+            this.chat.getItems().clear();
+            DirectMessageList m = V2_Controller.twitter.getDirectMessages(50);
+            
+            this.textoMensajes.clear();
+            for (int i = 0; i < m.size(); i++) {
+                this.textoMensajes.add(m.get(i).getText());
+            }
+            
+            for (int i = m.size()-1; i >= 0; i--) {
+                if (m.get(i).getRecipientId()==u.getId() && m.get(i).getSenderId()==this.idPropio) {                    
+                    t = new Text(m.get(i).getText());
+                    t.setFont(Font.font("Helvetica", 15));
+                    t.setTextAlignment(TextAlignment.RIGHT);
+                    t.setWrappingWidth(337.0);
+                    this.chat.getItems().add(t);
+                }
+                else{
+                    if (m.get(i).getSenderId()==u.getId() && m.get(i).getRecipientId()==this.idPropio) {
+                        t = new Text(m.get(i).getText());
+                        t.setFont(Font.font("Helvetica", 15));
+                        t.setTextAlignment(TextAlignment.LEFT);
+                        t.setWrappingWidth(337.0);
+                        this.chat.getItems().add(t);
+                    }
+                }
+            }
+            this.check.setDisable(true);
+            this.enviar.setDisable(false);            
+        } catch (TwitterException e) {
+            System.out.println(e.getMessage());
+        }
+    }
+    
     public void verUsuario() throws TwitterException{
         if(this.mensajeDirecto.getText().length()==0){
             this.enviar.setDisable(true);
         }
         try {
+            seleccionUsuario = this.usuario.getText();
             User u = V2_Controller.twitter.showUser(this.usuario.getText());
             Image foto = new Image(u.get400x400ProfileImageURL());
             this.perfilMini.setImage(new Image(u.get400x400ProfileImageURL()));
@@ -169,6 +224,7 @@ public class V3_Control extends ControlVentana implements Initializable {
             }
             this.check.setDisable(true);
             this.enviar.setDisable(false);
+            this.actualizarMensajes();
         } catch (TwitterException e) {
         }
     }
