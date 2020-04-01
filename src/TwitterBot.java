@@ -26,9 +26,9 @@ import javafx.stage.StageStyle;
 
 /**
  *
- * Clase xxx: - Clase que representa blablablabla.
+ * Clase xxx: - Clase que permite el inicio del bot.
  * @author Fernando Pino,  Carmen Ortega,
- *          Vicente Rojas, Kevin Douglas.
+ *          Vicente Rojas.
  * @version 1.0
  */
 public class TwitterBot extends Application {
@@ -42,7 +42,6 @@ public class TwitterBot extends Application {
             stage.setScene(scene);
             stage.getIcons().add(new Image(getClass().getResourceAsStream("/Imagenes/icon.png")));
             stage.initStyle(StageStyle.TRANSPARENT);
-            //stage.setOpacity(0.83);
             stage.setResizable(false);
             stage.centerOnScreen();             
             stage.show();

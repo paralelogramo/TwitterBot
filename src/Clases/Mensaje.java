@@ -37,12 +37,7 @@ public class Mensaje {
     }
     
     public boolean verificar(){
-        int largo = texto.length();//largo del texto        
-        if (largo>280){
-            System.out.println("Demasiado Largo !!!!!");            
-        }else if (largo==0){
-            System.out.println("Ingresa texto!!!!!!!");            
-        }               
+        int largo = texto.length();//largo del texto                      
         return largo<280&&largo>0;
     }    
 }
