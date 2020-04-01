@@ -4,6 +4,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ProgressIndicator?>
 <?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.effect.DropShadow?>
 <?import javafx.scene.effect.InnerShadow?>
 <?import javafx.scene.image.Image?>
@@ -17,7 +18,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
+<AnchorPane id="AnchorPane" fx:id="ap" prefHeight="600.0" prefWidth="1000.0" style="-fx-background-image: url('/Imagenes/background2.png');" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Ventanas.V2_Controller">
    <children>
       <AnchorPane prefHeight="602.0" prefWidth="1002.0">
          <children>
@@ -99,7 +100,7 @@
                   <ImageView fitHeight="25.0" fitWidth="24.0" layoutX="-78.0" layoutY="-14.0" pickOnBounds="true" preserveRatio="true" />
                </children>
             </AnchorPane>
-            <ListView layoutX="14.0" layoutY="134.0" opacity="0.55" prefHeight="252.0" prefWidth="169.0" style="-fx-background-radius: 15px;" />
+            <ListView fx:id="lista_de_usuarios" layoutX="22.0" layoutY="160.0" onMouseClicked="#seleccionarUser" opacity="0.9" prefHeight="252.0" prefWidth="176.0" />
             <Text fill="#03e2ffd6" layoutX="848.0" layoutY="600.0" strokeType="OUTSIDE" strokeWidth="0.0" text="LosJavaPowerRanger®" textAlignment="CENTER" wrappingWidth="169.13671875">
                <font>
                   <Font name="System Bold Italic" size="15.0" />
@@ -155,8 +156,8 @@
                   </InnerShadow>
                </effect>
             </ImageView>
-            <Line endX="71.0" layoutX="115.0" layoutY="125.0" startX="-104.0" />
-            <ImageView fitHeight="37.0" fitWidth="40.0" layoutX="78.0" layoutY="88.0">
+            <Line endX="71.0" layoutX="126.0" layoutY="149.0" startX="-104.0" />
+            <ImageView fitHeight="37.0" fitWidth="40.0" layoutX="90.0" layoutY="74.0">
                <image>
                   <Image url="@../Imagenes/user.png" />
                </image>
@@ -230,6 +231,8 @@
                </image>
             </ImageView>
             <Button layoutX="921.0" layoutY="540.0" mnemonicParsing="false" onMouseClicked="#refrescar" style="-fx-background-color: white; -fx-border-color: lightblue; -fx-border-radius: 15px;" text="Refresh" />
+            <TextField fx:id="busqueda" layoutX="30.0" layoutY="119.0" onKeyReleased="#verificarTexto2" prefHeight="25.0" prefWidth="133.0" promptText="\@Usuario" />
+            <Button fx:id="check" layoutX="166.0" layoutY="119.0" mnemonicParsing="false" onAction="#verListadoDeUsuarios" prefHeight="25.0" prefWidth="32.0" text="✔" />
          </children>
       </AnchorPane>
       <Button layoutX="987.0" layoutY="3.0" mnemonicParsing="false" onMouseClicked="#cerrarPrograma" text="X" textOverrun="CLIP" />

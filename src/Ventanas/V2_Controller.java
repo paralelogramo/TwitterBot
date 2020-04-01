@@ -18,6 +18,7 @@ import Clases.ControlVentana;
 import Clases.Mensaje;
 import Clases.Tweet;
 import Clases.Trie;
+import Clases.UserDM;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -76,6 +77,9 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.Collection;
 import java.util.HashMap;
+import javafx.scene.control.Button;
+import javafx.scene.control.TextField;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 
@@ -98,6 +102,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML ImageView imagenPerfil;
     @FXML ImageView imagenPerfil2;
     @FXML ListView lista;
+    @FXML ListView lista_de_usuarios;
+    @FXML TextField busqueda;
+    @FXML Button check;
     @FXML ImageView preImage;
     @FXML Text avisolimite;
     @FXML ImageView equis;
@@ -121,6 +128,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Twitter sender;
     private List<Status> lineaDeTiempo;   
     private final char arroa = 64;
+    private ArrayList<UserDM> userDM = new ArrayList<>();
     private final ArrayList<String> usuariosSeguidos = new ArrayList<>();
     private List<Status> listaTweets;
     private List<Status> ownTweets;
@@ -132,6 +140,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
     private Trie trieSW = new Trie();
     private boolean hayComandos = false;
     private String usuarioSeleccionado;
+    private String usuarioSeleccionado2;
     private ArrayList<long[]> retweetsID = new ArrayList<>();
     private ArrayList<long[]> retweetsID_Actual = new ArrayList<>();
     private ArrayList<long[]> likesID = new ArrayList<>();
@@ -594,21 +603,23 @@ public class V2_Controller extends ControlVentana implements Initializable {
      * twitter
      * @param event 
      */
-    public void seguirUsuario(MouseEvent event){         
-        try{
-            String seguirUsuario =  JOptionPane.showInputDialog("Ingrese un usuario a seguir","@Usuario");     
+    public int seguirUsuario(MouseEvent event){
+        if(this.usuarioSeleccionado2!=null){
             try {
-                if (seguirUsuario!=null&&!seguirUsuario.equals("") && !seguirUsuario.equals("@Usuario"))
-                    twitter.friendsFollowers().createFriendship(seguirUsuario.substring(1));
-                System.out.println("Seguir usuarios: "+seguirUsuario);
-                this.popUp(1,"Usuario "+seguirUsuario+" seguido con exito", "Seguir Usuario");
+                twitter.friendsFollowers().createFriendship(usuarioSeleccionado2);
+                this.popUp(1, "Usuario "+usuarioSeleccionado2+" Seguido con exito!", "Twitter");
             } catch (TwitterException ex) {
-                this.popUp(0, "Usuario ingresado no existe", "Error");           
-            } 
-        } catch (NullPointerException e) {
-                      
-        } 
+                this.popUp(0, "Usuario ingresado no existe o ya lo sigues", "Error");
+            }
+        }
+        else{
+            this.popUp(0, "Usuario no seleccionado", "Error");
+        }
+        
+        this.usuarioSeleccionado2 = null;
+        
         this.actualizarLista();
+        return 0;
     }   
     
     /**
@@ -625,9 +636,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             do {    
                 ids = twitter.getFriendsIDs(twitter.getScreenName(), indicador);
                 for (long id : ids.getIDs()) {
-                    System.out.println(indicador);
                     User user = twitter.showUser(id);
-                    System.out.println(user.getScreenName());
                     usuariosSeguidos.add(arroa+user.getScreenName());              
                 }
             } while ((indicador = ids.getNextCursor()) != 0);
@@ -818,13 +827,15 @@ public class V2_Controller extends ControlVentana implements Initializable {
                         try {
                             if (esNumero(ID)) {
                                 try {
-                                   
                                     twitter.retweetStatus(Long.parseLong(ID));
-                                     twitter.directMessages().sendDirectMessage(usuarioSeleccionado,"Le hemos dado retweet al tweet ID "+ID);
-                                     
                                 } catch (NumberFormatException | TwitterException e) {
                                     this.popUp(0, "Tweet ya Retweeteado", "Error");
-                                }                            
+                                }
+                                try {
+                                    twitter.directMessages().sendDirectMessage(usuarioSeleccionado,"Le hemos dado retweet al tweet ID "+ID); 
+                                } catch (Exception e) {
+                                    this.popUp(0, "Mensaje no enviado, la otra cuenta no te sigue", "Error");
+                                }
                                 mensaje_desmenuzado[i+1] = "";
                                 i+=1;
                             } else {
@@ -850,9 +861,13 @@ public class V2_Controller extends ControlVentana implements Initializable {
                             if (esNumero(ID)) {
                                 try {
                                     twitter.createFavorite(Long.parseLong(ID));
-                                    twitter.directMessages().sendDirectMessage(usuarioSeleccionado,"Le hemos dado ME GUSTA al tweet ID "+ID);
                                 } catch (NumberFormatException | TwitterException e) {
                                     this.popUp(0, "Tweet ya Likeado", "Error");
+                                }
+                                try {
+                                    twitter.directMessages().sendDirectMessage(usuarioSeleccionado,"Le hemos dado ME GUSTA al tweet ID "+ID);
+                                } catch (TwitterException e) {
+                                    this.popUp(0, "Mensaje no enviado, la otra cuenta no te sigue", "Error");
                                 }
                                 mensaje_desmenuzado[i+1] = "";
                                 i+=1;
@@ -927,6 +942,36 @@ public class V2_Controller extends ControlVentana implements Initializable {
             }
         }
         return conteo/total;
+    }
+    
+    public void verificarTexto2(){
+        if (this.busqueda.getText().length()==0){
+            this.check.setDisable(true);
+        }
+        else{
+            this.check.setDisable(false);
+        }
+    }
+    
+    public void verListadoDeUsuarios(){
+        try {
+            this.userDM.clear();
+            List<User> aux = twitter.searchUsers(this.busqueda.getText(), 1);
+            for (int i = 0; i < aux.size(); i++) {
+                this.userDM.add(new UserDM(new Image (aux.get(i).getMiniProfileImageURL()), aux.get(i).getScreenName()));
+            }
+            ObservableList<UserDM> oLista = FXCollections.observableArrayList(userDM);
+            lista_de_usuarios.setItems(oLista);
+            lista_de_usuarios.refresh();
+        } catch (TwitterException e) {
+        }
+    }
+    
+    public void seleccionarUser(){
+        UserDM auxiliar = (UserDM) lista_de_usuarios.getSelectionModel().getSelectedItem();
+        usuarioSeleccionado2 = auxiliar.getUsuario();
+        
+        System.out.println(usuarioSeleccionado2);
     }
     
     public void refrescar() throws TwitterException{  
@@ -1062,6 +1107,28 @@ public class V2_Controller extends ControlVentana implements Initializable {
         } catch (TwitterException | IllegalStateException ex) {
             this.popUp(0, "El proceso no puede establecer conexión con twitter", "Error");
         }
+        try {
+                
+                User newUser = twitter.showUser(twitter.getScreenName());
+
+                lista_de_usuarios.setCellFactory(param -> new ListCell<UserDM>(){
+                private ImageView iv = new ImageView(new Image (newUser.getMiniProfileImageURL()));
+                @Override
+                public void updateItem(UserDM name, boolean empty){
+                    super.updateItem(name, empty);
+                    if (empty) {                    
+                        setText(null);
+                        setGraphic(null);
+                    } else {                    
+                        iv.setImage(name.getImagendeperfil());    
+                        setGraphic(iv);
+                        setText(" "+name.getUsuario());
+                    }
+                }
+                });
+            } catch (IllegalStateException | TwitterException e) {
+            }
+        
         this.arrastrarVentana(this.ap);           
         this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));        
     }  
