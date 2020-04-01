@@ -86,7 +86,7 @@
             <ListView fx:id="seguidos" layoutX="20.0" layoutY="291.0" onMouseClicked="#ponerUsuario" prefHeight="68.0" prefWidth="157.0" />
             <ListView fx:id="todosLosUsers" layoutX="21.0" layoutY="96.0" onMouseClicked="#ponerUsuario2" prefHeight="142.0" prefWidth="155.0" />
             <TextField fx:id="posibleUser" layoutX="21.0" layoutY="64.0" onKeyReleased="#verificarTexto2" prefHeight="25.0" prefWidth="119.0" promptText="\@" />
-            <Button fx:id="check2" layoutX="146.0" layoutY="64.0" mnemonicParsing="false" onAction="#verListadoDeUsuarios" onMouseClicked="#verListadoDeUsuarios" prefHeight="25.0" prefWidth="29.0" text="✔" />
+            <Button fx:id="check2" layoutX="146.0" layoutY="64.0" mnemonicParsing="false" onMouseClicked="#verListadoDeUsuarios" prefHeight="25.0" prefWidth="29.0" text="✔" />
          </children>
       </AnchorPane>
    </children>
