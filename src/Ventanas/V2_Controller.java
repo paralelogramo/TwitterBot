@@ -80,6 +80,9 @@ import java.util.HashMap;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import java.util.concurrent.TimeUnit;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontPosture;
+import javafx.scene.text.TextFlow;
 
 /**
  * 
@@ -93,7 +96,8 @@ import java.util.concurrent.TimeUnit;
 public class V2_Controller extends ControlVentana implements Initializable {
     
     @FXML AnchorPane ap;
-    @FXML TextArea msj;
+    @FXML TextField msj;
+    @FXML TextFlow dos;
     @FXML Text usuario;
     @FXML Text usuario2;
     @FXML Text correo;
@@ -104,7 +108,10 @@ public class V2_Controller extends ControlVentana implements Initializable {
     @FXML ListView lista;
     @FXML ListView lista_de_usuarios;
     @FXML TextField busqueda;
+    @FXML TextField busqueda2;
     @FXML Button check;
+    @FXML Button check2;
+    @FXML Button volver;
     @FXML ImageView preImage;
     @FXML Text avisolimite;
     @FXML ImageView equis;
@@ -168,7 +175,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
      * @param event 
      */
     public void progresoTexto(Event event){   
-        System.out.println(msj.getAnchor());
         pgA.setProgress(msj.getText().length()/280.0);  
         pgA.progressProperty().addListener((ov, oldValue, newValue) -> {
             Text text = (Text) pgA.lookup(" .percentage");
@@ -234,6 +240,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         if (porcentaje>=0.70) {
             this.popUp(1, "¡ES SPAM! ¡TWEETER NO ENVIADO!", "ERROR");
             msj.clear();
+            dos.getChildren().clear();
             notificacionImagen.setVisible(false);
             this.pgA.setProgress(0);
             this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
@@ -243,6 +250,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         if (porcentaje2>=0.70) {
             this.popUp(1, "¡ORDINARIO! ¡TWEETER NO ENVIADO!", "ERROR");
             msj.clear();
+            dos.getChildren().clear();
             notificacionImagen.setVisible(false);
             this.pgA.setProgress(0);
             this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
@@ -284,6 +292,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     }
                 }
                 msj.clear();
+                dos.getChildren().clear();
                 this.hayComandos=false;
                 notificacionImagen.setVisible(false);
                 this.pgA.setProgress(0);
@@ -302,6 +311,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 System.out.println("se cayo porque no hay archivo :v");
             }
             msj.clear();
+            dos.getChildren().clear();
             this.hayComandos=false;
         }
         if(mensaje.verificar() && imgFile == null){
@@ -312,6 +322,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
                 twitter.updateStatus(status);
                 this.hayComandos = false;
                 msj.clear();
+                dos.getChildren().clear();
                 notificacionImagen.setVisible(false);
                 this.pgA.setProgress(0);
                 this.preImage.setImage(new Image(getClass().getResourceAsStream("/Imagenes/default.png")));
@@ -337,6 +348,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
             }
         }
         this.msj.clear();
+        dos.getChildren().clear();
         this.actualizarLista();
         this.hayComandos=false;
         
@@ -953,6 +965,35 @@ public class V2_Controller extends ControlVentana implements Initializable {
         }
     }
     
+    public void verificarTexto3(){
+        if (this.busqueda2.getText().length()==0){
+            this.check2.setDisable(true);
+        }
+        else{
+            this.check2.setDisable(false);
+        }
+    }
+    
+    public void verListadoDeHashtags(){
+        try { 
+            this.listaTimeline.clear();
+            listaTweets = twitter.getHomeTimeline();
+           
+            for (int i = 0; i < listaTweets.size(); i++) {    
+                if(listaTweets.get(i).getText().contains("#"+this.busqueda2.getText())){
+                    this.listaTimeline.add(new Tweet(listaTweets.get(i),new Image (listaTweets.get(i).getUser().getMiniProfileImageURL())));
+                }
+            }            
+            ObservableList<Tweet> oLista = FXCollections.observableArrayList(listaTimeline);            
+            lista.setItems(oLista);
+            lista.refresh();
+            
+        } catch (TwitterException ex) {
+            Logger.getLogger(V2_Controller.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+    }
+    
     public void verListadoDeUsuarios(){
         try {
             this.userDM.clear();
@@ -986,14 +1027,14 @@ public class V2_Controller extends ControlVentana implements Initializable {
             aux2[aux.length] = statuspropios.get(i).getId();            
             this.retweetsID_Actual.add(aux2);            
         }
-        if (this.retweetsID.isEmpty()) {
-            for (int i = 0; i < this.retweetsID_Actual.size(); i++) {
-                for (int j = 0; j < this.retweetsID_Actual.get(i).length-1; j++) {
-                    twitter.directMessages().sendDirectMessage(this.retweetsID_Actual.get(i)[j], "Gracias por tu retweet en tweet https://twitter.com/" + twitter.getScreenName() + "/status/" + this.retweetsID_Actual.get(i)[this.retweetsID_Actual.get(i).length-1]);
-                }                
-            }    
-            this.retweetsID = this.retweetsID_Actual;
-        }/*else{
+        
+        for (int i = 0; i < this.retweetsID_Actual.size(); i++) {
+            for (int j = 0; j < this.retweetsID_Actual.get(i).length-1; j++) {
+                twitter.directMessages().sendDirectMessage(this.retweetsID_Actual.get(i)[j], "Gracias por tu retweet en tweet https://twitter.com/" + twitter.getScreenName() + "/status/" + this.retweetsID_Actual.get(i)[this.retweetsID_Actual.get(i).length-1]);
+            }                
+        }    
+        this.retweetsID = this.retweetsID_Actual;
+        /*
             for (int i = 0; i < this.retweetsID.size(); i++) {
                 for (int j = 0; j < this.retweetsID.get(i).length; j++) {
                     for (int l = 0; l < retweetsID_Actual.size(); l++) {           
@@ -1009,7 +1050,6 @@ public class V2_Controller extends ControlVentana implements Initializable {
                     }
                 }        
             }
-        }
         long[] aux = twitter.getFollowersIDs(twitter.getId()).getIDs(); 
         for (int i = 0; i < aux.length; i++) {
             twitter.directMessages().sendDirectMessage(aux[i], "Gracias por ser seguidor de mi cuenta");
@@ -1017,6 +1057,35 @@ public class V2_Controller extends ControlVentana implements Initializable {
         */       
     }
     
+    public Text setFormat(Text t){
+        String texto = t.getText();
+        t.setText(t.getText()+" ");
+        if(texto.charAt(0)=='@'){
+            t.setFill(Color.GREENYELLOW);
+        }
+        if(texto.charAt(0)=='#'){
+            t.setFill(Color.BROWN);
+        }
+        t.setFont(Font.font("Helvetica",FontPosture.ITALIC,15));
+        return t;
+    }
+    
+    public void traspaso(){
+        try {
+            this.dos.getChildren().clear();
+        } catch (Exception e) {
+        }
+        ArrayList<Text> palabras = new ArrayList<>();
+        String[] split = this.msj.getText().split(" ");
+        for (int i = 0; i < split.length; i++) {
+            Text t = new Text(split[i]);
+            try {
+                palabras.add(setFormat(t));
+            } catch (Exception e) {
+            }
+        }
+        this.dos.getChildren().addAll(palabras);
+    }
             
     /**
      * Initializes the controller class.
@@ -1034,6 +1103,9 @@ public class V2_Controller extends ControlVentana implements Initializable {
         .setIncludeEmailEnabled(true);        
         TwitterFactory tf = new TwitterFactory(cb.build());
         twitter = tf.getInstance();
+
+        this.check.setDisable(true);
+        this.check2.setDisable(true);
         
         File archivo = null;
         FileReader fr = null;
@@ -1067,7 +1139,7 @@ public class V2_Controller extends ControlVentana implements Initializable {
         vista.setContextMenuEnabled(false);      
         vista.setZoom(0.50);        
         // ************ HASTA ACA *********/
-        msj.setWrapText(true);         
+//        msj.setWrapText(true);         
         try {
                
             listaTweets = twitter.getHomeTimeline(); 
